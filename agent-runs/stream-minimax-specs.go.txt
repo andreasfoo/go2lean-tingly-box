@@ -1,0 +1,147 @@
+package stream
+
+import (
+	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
+)
+
+// ----- Responses -> Chat (responsesToChatConverter.processEvent) -----
+
+// go2lean:spec responsesToChatConverter.processEvent
+// SpecResponsesToChatConverterProcessEventCompletesOnTerminal: replaying
+// response.completed through a fresh converter built from evt.Response
+// flips the converter's completed flag, the gate the iterator checks before
+// deciding the upstream turn is finished.
+func SpecResponsesToChatConverterProcessEventCompletesOnTerminal(c *responsesToChatConverter, evt *responses.ResponseStreamEventUnion) bool {
+	if c == nil || evt == nil {
+		return true
+	}
+	if evt.Type != "response.completed" {
+		return true
+	}
+	c2 := newResponsesToChatConverter(nil, "m", true)
+	e := responses.ResponseStreamEventUnion{Type: "response.completed", Response: evt.Response}
+	c2.processEvent(&e)
+	return c2.completed
+}
+
+// go2lean:spec responsesToChatConverter.processEvent
+// SpecResponsesToChatConverterProcessEventCreatedEmitsRole: response.created
+// emits the leading role-only chunk and flips hasSentCreated, the gate that
+// suppresses duplicate role chunks on later events.
+func SpecResponsesToChatConverterProcessEventCreatedEmitsRole(c *responsesToChatConverter, evt *responses.ResponseStreamEventUnion) bool {
+	if c == nil || evt == nil {
+		return true
+	}
+	if evt.Type != "response.created" {
+		return true
+	}
+	c2 := newResponsesToChatConverter(nil, "m", true)
+	e := responses.ResponseStreamEventUnion{Type: "response.created", Response: evt.Response}
+	c2.processEvent(&e)
+	return c2.hasSentCreated
+}
+
+// ----- Responses -> Anthropic (responsesToAnthropicConverter.processEvent) -----
+
+// go2lean:spec responsesToAnthropicConverter.processEvent
+// SpecResponsesToAnthropicConverterProcessEventDoneAfterCompleted: response.completed
+// drives the converter into its terminal state (done == true) so the loop
+// stops instead of spinning on a stale stream.
+func SpecResponsesToAnthropicConverterProcessEventDoneAfterCompleted(r *responsesToAnthropicConverter, currentEvent responses.ResponseStreamEventUnion) bool {
+	if r == nil {
+		return true
+	}
+	if currentEvent.Type != "response.completed" {
+		return true
+	}
+	r2 := newResponsesToAnthropicConverter(nil, nil, "m")
+	r2.processEvent(currentEvent)
+	return r2.done
+}
+
+// go2lean:spec responsesToAnthropicConverter.processEvent
+// SpecResponsesToAnthropicConverterProcessEventIncompleteAlsoTerminates: response.incomplete
+// is also a terminal Responses status (max_output_tokens / content_filter)
+// and must mark the converter done, matching the response.completed behavior.
+func SpecResponsesToAnthropicConverterProcessEventIncompleteAlsoTerminates(r *responsesToAnthropicConverter, currentEvent responses.ResponseStreamEventUnion) bool {
+	if r == nil {
+		return true
+	}
+	if currentEvent.Type != "response.incomplete" {
+		return true
+	}
+	r2 := newResponsesToAnthropicConverter(nil, nil, "m")
+	r2.processEvent(currentEvent)
+	return r2.done
+}
+
+// ----- Chat -> Responses (chatToResponsesConverter.processChunk) -----
+
+// go2lean:spec chatToResponsesConverter.processChunk
+// SpecChatToResponsesConverterProcessChunkCompletedOnFinish: a chunk whose
+// first choice has a non-empty FinishReason sets completedSent, the flag
+// that tells the loop the upstream turn is finished and prevents a
+// "ended without a finish reason" error on the trailing EOF.
+func SpecChatToResponsesConverterProcessChunkCompletedOnFinish(c *chatToResponsesConverter, chunk *openai.ChatCompletionChunk) bool {
+	if c == nil || chunk == nil {
+		return true
+	}
+	if len(chunk.Choices) == 0 || chunk.Choices[0].FinishReason == "" {
+		return true
+	}
+	c2 := NewChatToResponsesConverter(nil, "m")
+	c2.processChunk(chunk)
+	return c2.completedSent
+}
+
+// go2lean:spec chatToResponsesConverter.processChunk
+// SpecChatToResponsesConverterProcessChunkCreatedOnFirstChunk: the first
+// chunk with choices flips hasSentCreated, the gate that emits the
+// response.created + response.in_progress pair exactly once per stream.
+func SpecChatToResponsesConverterProcessChunkCreatedOnFirstChunk(c *chatToResponsesConverter, chunk *openai.ChatCompletionChunk) bool {
+	if c == nil || chunk == nil {
+		return true
+	}
+	if len(chunk.Choices) == 0 {
+		return true
+	}
+	c2 := NewChatToResponsesConverter(nil, "m")
+	c2.processChunk(chunk)
+	return c2.hasSentCreated
+}
+
+// ----- Chat -> Anthropic (openAIToAnthropicConverter.processChunk) -----
+
+// go2lean:spec openAIToAnthropicConverter.processChunk
+// SpecOpenAIToAnthropicConverterProcessChunkMessageStartedOnContent: a chunk
+// whose delta carries Content triggers the lazy message_start emission,
+// flipping messageStarted before any block event leaves the converter.
+func SpecOpenAIToAnthropicConverterProcessChunkMessageStartedOnContent(c *openAIToAnthropicConverter, chunk *openai.ChatCompletionChunk) bool {
+	if c == nil || chunk == nil {
+		return true
+	}
+	if len(chunk.Choices) == 0 || chunk.Choices[0].Delta.Content == "" {
+		return true
+	}
+	c2 := newOpenAIToAnthropicConverter(nil, "m", nil, nil, nil)
+	c2.processChunk(chunk)
+	return c2.messageStarted
+}
+
+// go2lean:spec openAIToAnthropicConverter.processChunk
+// SpecOpenAIToAnthropicConverterProcessChunkFinishSeen: a chunk with FinishReason
+// sets finishSeen, the flag that lets the Next() loop emit terminal events
+// when the upstream closes cleanly after the finish chunk (rather than
+// fabricating a "truncated" error).
+func SpecOpenAIToAnthropicConverterProcessChunkFinishSeen(c *openAIToAnthropicConverter, chunk *openai.ChatCompletionChunk) bool {
+	if c == nil || chunk == nil {
+		return true
+	}
+	if len(chunk.Choices) == 0 || chunk.Choices[0].FinishReason == "" {
+		return true
+	}
+	c2 := newOpenAIToAnthropicConverter(nil, "m", nil, nil, nil)
+	c2.processChunk(chunk)
+	return c2.finishSeen
+}

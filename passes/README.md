@@ -1,0 +1,19 @@
+# Full passes
+
+Every package of tingly-box, every function: a templated `no_panic`
+property each, plus the specs installed from `specs/`, hunted by
+go2lean and verified with `go test`. Rows are copied from go2lean's
+`docs/design.md` (section 9b), which keeps the model changes between
+passes.
+
+| pass | result |
+|---|---|
+| **full pass on the fixed core** (156 packages, 7076 properties, about two hours at four jobs): **97 confirmed, 114 spurious, 167 inconclusive, 2754 exhaustive certificates**. Confirmed by panic: 45 nil dereferences (mostly server handlers reading an interface field the test cannot populate), 18 index out of range, 11 slice bounds, 4 writes to a nil map, 4 negative `strings.Repeat` counts, two explicit panics. The inconclusive were harness compile errors in five classes (imports of types reached through the type table, `_` and `json` as parameter names, variadic parameters, func results under vet, unexported element types), all fixed after the pass; the spurious are over-approximation through havoc values (nil pointers, explicit panics and slice bounds that the real run with those inputs does not reach) | the next pass validates the harness fixes. Coverage at this point: **7112 of 7539 functions (2025 complete, 5087 partial)**, the extra functions being the agent's spec files; models/ is 378 MB |
+| **third full pass** (7088 properties, engines preferring havoc-free counterexamples, three hours): **140 confirmed, 126 spurious, 55 inconclusive, 2797 exhaustive certificates**. Confirmed by panic: 56 nil dereferences, 30 index out of range, 18 slice bounds, 18 negative `strings.Repeat` counts, 6 writes to a nil map, a division by zero, an `os.Exit` during the test, and a handful of explicit panics; 50 of the inconclusive were harnesses importing a package by the last element of its path (`anthropic-sdk-go` is package `anthropic`), 4 targets ended the process with `log.Fatal` | the preference raised confirmed findings from 112 to 140 with the same spurious count: the engine keeps looking within its budget for a refutation the real run can reproduce. Imports are now written by package name; the next pass validates |
+| **fourth full pass** (7088 properties, go2lean `0375b2e`): **149 confirmed, 141 spurious, 31 inconclusive, 2794 certificates**; 69 of the confirmed carry `nil_opaque_input`; 26 of the inconclusive are tests a `log.Fatal` in an earlier test of the same batch left without a result (fixed after the pass: each such test reruns alone), 4 harness compile errors (two packages named `anthropic`, fixed: aliases) | 80 confirmed findings do not involve a nil opaque input; by kind: 26 index out of range, 14 slice bounds, 13 nil dereferences inside `protocoltest`, 5 writes to nil maps, 2 negative `strings.Repeat`, 3 interface conversions on nil, an `os.Exit` in `Daemonize`, two spec violations |
+| **fifth full pass** (7095 properties, go2lean `d2118de`: unions one variant at a time, transitive literal pool, per-test reruns, import aliases): **140 confirmed (60 with `nil_opaque_input`), 152 spurious, 41 inconclusive, 2779 certificates**. Inconclusive: 26 harnesses redeclared a test because a run killed earlier had left its harness file in the package (fixed after the pass: the directory is cleared first), 13 targets ended the test process (`log.Fatal` in `internal/client` helpers), 2 single oddities | by panic kind: 72 nil dereferences, 38 index out of range, 12 slice bounds, 5 writes to nil maps, 3 interface conversions on nil, 2 negative `strings.Repeat`, 2 spec violations. The pass ran three hours; the container restarted minutes after it finished |
+
+The sixth pass (go2lean `5c076f5` .. `d720742`: closures, init-set
+globals, interface dispatch, reflect `IsZero`, zeroed foreign fields,
+linear string domain, dependency packages not targeted) is running;
+its summary will be added here.
