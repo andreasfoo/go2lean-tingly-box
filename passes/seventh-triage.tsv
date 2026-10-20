@@ -1,0 +1,164 @@
+test double	internal/protocoltest	automaticCacheControlBody	unsupported cache-control source protocol  model
+test double	internal/protocoltest	buildRoutingBody	strings: negative Repeat count
+test double	internal/protocoltest	cacheControlBody	unsupported cache-control source protocol  explicit
+test double	internal/protocoltest	duoFiller	strings: negative Repeat count
+test double	internal/protocoltest	flagRecorder.Fatal	flag case aborted
+test double	internal/protocoltest	flagRecorder.Fatalf	flag case aborted
+test double	internal/protocoltest	subprocessClient.Send	runtime error: slice bounds out of range [1:0]
+test double	internal/protocoltest	tailBuffer.Write	runtime error: slice bounds out of range [17:9]
+test double	internal/protocoltest	truncate	runtime error: slice bounds out of range [:-9223372036854775808]
+test double	vmodel/decision	MockModel.distribution	runtime error: index out of range [8373095959049215512] with length 2
+test file	internal/command	addProviderForTest	runtime error: invalid memory address or nil pointer dereference
+test file	internal/middleware	performModelAuthRequest	invalid NewRequest arguments; malformed HTTP version "CONNECT HTTP/1.0
+test file	internal/protocol	buildAnthropicBetaBody	strings: negative Repeat count
+test file	internal/protocol/stage	recordingEventStream.Next	runtime error: index out of range [-2347245957673249116]
+test file	internal/protocol/stage/openaibridge	memoryStream.Next	runtime error: index out of range [-9223372036854775807]
+test file	internal/protocol/stage/responsesbridge	memoryStream.Next	runtime error: index out of range [-5253441828057954836]
+test file	internal/protocol/stage/toolround	eventRounds.Stream	runtime error: index out of range [-1075950683753005747]
+test file	internal/protocol/stage/toolround	messageEvents	invalid character '}' looking for beginning of value
+test file	internal/protocol/stage/toolround	scriptedEndpoint.Complete	interface conversion: interface {} is nil, not *anthropic.BetaMessageN
+test file	internal/protocol/stage/toolround	scriptedEndpoint.Stream	interface conversion: interface {} is nil, not *anthropic.BetaMessageN
+test file	internal/protocol/stage/toolround	scriptedEndpoint.round	interface conversion: interface {} is nil, not *anthropic.BetaMessageN
+test file	internal/protocol/stage/toolround	scriptedStream.Next	runtime error: index out of range [-9223372036854775807]
+test file	internal/protocol/stream	anthropicBetaSliceStream.Current	runtime error: index out of range [-1]
+test file	internal/protocol/stream	fakeAnthropicDecoder.Event	runtime error: index out of range [2541104282491002651] with length 0
+test file	internal/protocol/stream	fakeChatDecoder.Event	runtime error: index out of range [2541104282491002651] with length 0
+test file	internal/protocol/stream	fakeResponsesDecoder.Event	runtime error: index out of range [2541104282491002651] with length 0
+test file	internal/protocol/stream	openAIChatSliceStream.Current	runtime error: index out of range [6284163485319947474] with length 0
+test file	internal/protocol/stream	responseEventIter.Current	runtime error: index out of range [-2]
+test file	internal/protocoltest	sliceStream.Next	runtime error: index out of range [-9223372036854775807]
+test file	internal/server/module/sharing	sharingRequest	invalid NewRequest arguments; invalid method ""
+test file	internal/server/module/team	performRequest	invalid NewRequest arguments; invalid method ""
+test file	internal/servertest	NewTestServerFromConfig	runtime error: invalid memory address or nil pointer dereference
+test file	internal/toolengine	chunkRoundsForwarder.ForwardStream	runtime error: index out of range [-7839791222376138990]
+test file	internal/toolengine	chunkStream.Current	runtime error: index out of range [6284163485319947474] with length 0
+test file	internal/toolengine	failingForwarder.ForwardNonStream	runtime error: index out of range [-1451735159988487567]
+test file	internal/toolengine	failingForwarder.ForwardStream	runtime error: index out of range [-1451735159988487567]
+test file	internal/vision/visionproxy	firstImagePresent	runtime error: index out of range [0] with length 0
+test file	internal/vision/visionproxy	joinedText	runtime error: index out of range [0] with length 0
+test file	remote/control/smart_guide	multiTurnModel.HandleAnthropic	runtime error: index out of range [-1]
+test file	vmodel/anthropic	truncate	runtime error: slice bounds out of range [:-9223372036854775808]
+test file	vmodel/smartcompact	truncate	runtime error: slice bounds out of range [:-9223372036854775808]
+to check	cli/harness	printMemoryReport	runtime error: integer divide by zero
+to check	internal/appconfig	AppConfig.DeleteProvider	[db] Provider store missing
+to check	internal/appconfig	AppConfig.GetProviderByName	[db] Provider store missing
+to check	internal/appconfig	AppConfig.ListProviders	[db] Provider store missing
+to check	internal/catalog	mostSpecificTemplate	runtime error: index out of range [0] with length 0
+to check	internal/client	ClaudeClient.BetaMessagesNew	invalid metadata
+to check	internal/client	ClaudeClient.BetaMessagesNewStreaming	invalid metadata
+to check	internal/client	ClaudeClient.Guard	invalid metadata
+to check	internal/client	ClaudeClient.GuardBeta	invalid metadata
+to check	internal/client	ClaudeClient.MessagesNew	invalid metadata
+to check	internal/client	ClaudeClient.MessagesNewStreaming	invalid metadata
+to check	internal/command	AgentApplyFlagCmdKong.Run	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	AgentShowFlagCmdKong.Run	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	CCmdKong.Run	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	OAuthCmdKong.Run	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	OpenCmdKong.Run	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	ProfileCmdKong.Run	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	ProviderAddCmdKong.Run	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	ProviderDeleteCmdKong.Run	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	ProviderGetCmdKong.Run	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	ProviderListCmdKong.Run	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	ProviderUpdateCmdKong.Run	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	QuotaCmdKong.Run	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	RemoteConfigCmdKong.Run	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	RemoteListCmdKong.Run	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	RemoteStartCmdKong.Run	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	RestartCmdKong.Run	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	RuleAddCmdKong.Run	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	RuleDeleteCmdKong.Run	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	RuleExportCmdKong.Run	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	RuleListCmdKong.Run	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	RuleUpdateCmdKong.Run	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	StartCmdKong.Run	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	StatusCmdKong.Run	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	addProviderCI	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	executeAgentApply	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	findProvider	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	profileLaunchInteractive	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	profileList	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	profileShow	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	profileShowInteractive	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	profileUse	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	promptForSmartGuideModel	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	quotaRelevantProviders	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	renderProgressBar	strings: negative Repeat count
+to check	internal/command	resolveAgentConfigFromRules	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	resolveProviderRef	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	runCC	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	runOAuthFlow	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	runProviderGet	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	runProviderList	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	runQuotaInteractive	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	runQuotaShowAll	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	runQuotaShowProvider	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	runRemoteConfig	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	runRemoteList	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	runRemoteStart	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	runRuleAddCI	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	runRuleList	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	runStatusCmd	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	showAgentConfig	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command	showPreview	runtime error: invalid memory address or nil pointer dereference
+to check	internal/command/tui	configuredProviders	[db] Provider store missing
+to check	internal/command/tui	pickProvider	[db] Provider store missing
+to check	internal/command/tui	pickRuleService	[db] Provider store missing
+to check	internal/command/tui	providerDelete	[db] Provider store missing
+to check	internal/command/tui	providerEdit	[db] Provider store missing
+to check	internal/command/tui	providerList	[db] Provider store missing
+to check	internal/command/tui	providerRefreshModels	[db] Provider store missing
+to check	internal/dataio	JSONLImporter.importProvider	[db] Provider store missing
+to check	internal/guardrails/core	detectShellOperator	runtime error: slice bounds out of range [-1:]
+to check	internal/loadbalance	ServiceStats.RecordLatency	runtime error: slice bounds out of range [6:5]
+to check	internal/loadbalance	ServiceStats.RecordTTFT	runtime error: slice bounds out of range [5:4]
+to check	internal/loadbalance	ServiceStats.RecordTokenSpeed	runtime error: makeslice: cap out of range
+to check	internal/obs	MemoryLogHook.Fire	runtime error: index out of range [0] with length 0
+to check	internal/obs	blobPath	runtime error: slice bounds out of range [:4] with length 3
+to check	internal/protocol/metaid	MetadataUserID.Fix	missing device id
+to check	internal/protocol/stream	SendForwardingError	err is nil
+to check	internal/protocol/stream	SendStreamingError	err is nil
+to check	internal/protocolserver	ProtocolHandler.DispatchChainResult	interface conversion: interface {} is nil, not *anthropic.MessageNewPa
+to check	internal/protocolserver	ProtocolHandler.DispatchGenericOpenAIChatNonStream	interface conversion: interface {} is nil, not *openai.ChatCompletionN
+to check	internal/protocolserver	ProtocolHandler.DispatchGenericOpenAIChatStream	interface conversion: interface {} is nil, not *openai.ChatCompletionN
+to check	internal/protocolserver	ProtocolHandler.dispatchAnthropicBeta	interface conversion: interface {} is nil, not *anthropic.BetaMessageN
+to check	internal/protocolserver	ProtocolHandler.dispatchGoogle	interface conversion: interface {} is nil, not *protocol.GoogleRequest
+to check	internal/protocolserver	ProtocolHandler.dispatchOpenAIChat	interface conversion: interface {} is nil, not *openai.ChatCompletionN
+to check	internal/protocolserver	ProtocolHandler.dispatchOpenAIResponses	interface conversion: interface {} is nil, not *responses.ResponseNewP
+to check	internal/protocolserver	ProtocolHandler.failForward	err is nil
+to check	internal/protocolserver	ProtocolHandler.handlePreStreamFailure	err is nil
+to check	internal/protocolserver	ProtocolHandler.nonstreamOpenAIChatToResponses	interface conversion: interface {} is nil, not *openai.ChatCompletionN
+to check	internal/protocolserver	ProtocolHandler.nonstreamOpenAIResponses	interface conversion: interface {} is nil, not *responses.ResponseNewP
+to check	internal/protocolserver	ProtocolHandler.nonstreamResponsesToChat	interface conversion: interface {} is nil, not *responses.ResponseNewP
+to check	internal/protocolserver	ProtocolHandler.serveAnthropicBetaStage	interface conversion: interface {} is nil, not *anthropic.BetaMessageN
+to check	internal/protocolserver	ProtocolHandler.streamOpenAIResponses	interface conversion: interface {} is nil, not *responses.ResponseNewP
+to check	internal/protocolserver	ProtocolHandler.streamResponsesToChat	interface conversion: interface {} is nil, not *responses.ResponseNewP
+to check	internal/routing/smartrouting	minFloat	runtime error: index out of range [0] with length 0
+to check	internal/server	WebHandler.GetStatus	[db] Provider store missing
+to check	internal/server/module/oauth	Handler.ListOAuthTokens	[db] Provider store missing
+to check	internal/server/module/oauth	generateRandomSuffix	runtime error: slice bounds out of range [:-1]
+to check	internal/server/module/provider	Handler.DeleteProvider	[db] Provider store missing
+to check	internal/server/module/provider	Handler.GetProviders	[db] Provider store missing
+to check	internal/shortcut	render	shortcut: template : template: : unknown node: %!s(<nil>)
+to check	internal/typ	TierTactic.pickWithinTier	runtime error: index out of range [0] with length 0
+to check	internal/usecase	ProviderUseCase.Delete	[db] Provider store missing
+to check	internal/usecase	ProviderUseCase.List	[db] Provider store missing
+to check	internal/vision/imagegen	buildWanxEditBody	runtime error: index out of range [0] with length 0
+to check	internal/vision/imagegen	dashscopeClient.editWanx	runtime error: index out of range [0] with length 0
+to check	pkg/daemon	Daemonize	unexpected call to os.Exit(0) during test
+to check	pkg/envsubst	readRef	runtime error: index out of range [-9223372036854775808]
+to check	remote/control/bot	SelectPendingRequest	runtime error: index out of range [0] with length 0
+to check	remote/control/smart_guide	MustLoadPrompt	smart_guide: failed to load prompt 
+To fix:x: open prompts/
+To fix:x.t
+to check	remote/control/smart_guide	SessionStore.archivePath	runtime error: invalid memory address or nil pointer dereference
+to check	remote/control/smart_guide	SessionStore.legacyPath	runtime error: invalid memory address or nil pointer dereference
+to check	remote/control/smart_guide	SessionStore.open	runtime error: invalid memory address or nil pointer dereference
+to check	remote/control/smart_guide	SessionStore.path	runtime error: invalid memory address or nil pointer dereference
+to check	remote/scenario/builtin/claudecode	budgetDuration	
+truncate helper	cli/harness	truncateString	runtime error: slice bounds out of range [:-4]
+truncate helper	internal/routing/smartrouting	snippetHead	runtime error: slice bounds out of range [:-9223372036854775808]
+truncate helper	internal/vision/visionproxy	truncateForLog	runtime error: slice bounds out of range [:-1]
+truncate helper	remote/control/smart_guide	sliceLines	runtime error: slice bounds out of range [:-9223372036854775808]
+truncate helper	remote/scenario/builtin/claudecode	shortenPath	runtime error: slice bounds out of range [-9223372036854775807:]
+truncate helper	remote/scenario/builtin/claudecode	truncate	runtime error: slice bounds out of range [:-4]

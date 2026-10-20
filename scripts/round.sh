@@ -13,13 +13,12 @@ cd "$G"
 "$bin" compile -deps -module "$H" -workspace "$WS" ./ai ./internal/protocol ./internal/protocol/wire \
   ./internal/protocol/stream ./internal/protocol/request ./internal/protocol/usage \
   ./internal/protocol/nonstream ./internal/protocol/sse > "$LOG.compile" 2>&1 || { echo "compile failed" >> "$LOG"; exit 1; }
-for p in stream request; do
+for p in stream request nonstream sse usage; do
   "$bin" props -module "$H" -workspace "$WS" -package "github.com/tingly-dev/tingly-box/internal/protocol/$p" > /dev/null 2>&1
 done
 ls "$WS/properties" | grep -E "$PAT" | sed 's/\.json$//' > "$LOG.ids"
-while read -r id; do
-  "$bin" hunt -module "$H" -workspace "$WS" -property "$id" -budget 180 -maxlen 6 >> "$LOG" 2>&1
-done < "$LOG.ids"
+# BUDGET seconds per property (default 120), JOBS hunts at a time (default 2).
+xargs -P "${JOBS:-2}" -I{} sh -c "\"$bin\" hunt -module \"$H\" -workspace \"$WS\" -property {} -budget ${BUDGET:-120} -maxlen 6 >> \"$LOG\" 2>&1" < "$LOG.ids"
 cxs=$(ls "$WS/counterexamples" 2>/dev/null | sed 's/\.json$//')
 if [ -n "$cxs" ]; then
   "$bin" poc -module "$H" -workspace "$WS" -counterexample $cxs >> "$LOG" 2>&1
