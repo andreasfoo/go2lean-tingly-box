@@ -15,7 +15,7 @@ go2lean, which is then closed (go2lean `docs/design.md` §9c).
 | [responses-done-only-arguments](findings/responses-done-only-arguments.md) | `SpecResponsesToChatConverterProcessEventArgumentsAnySchedule` | found at trial 13, confirmed | spec: the event schedule is an input (the earlier stream specs replayed one fixed schedule) |
 | (found by go2lean) [chat-anthropic-interleaved-blocks](findings/chat-anthropic-interleaved-blocks.md) | `SpecOpenAIToAnthropicConverterProcessChunkOneOpenBlock` | found at trial 24, confirmed | harness: an empty map is not nil |
 | [chat-anthropic-reasoning-null](findings/chat-anthropic-reasoning-null.md), stream | `SpecOpenAIToAnthropicConverterProcessChunkOneOpenTextBlock` | found at trial 80, confirmed (a delta with `reasoning_content` after text) | go2lean: map and interface inputs, `json.Unmarshal`, SDK raw JSON (`RawJSON()`) generated from compared strings, documented enums (`// Any of ...`); harness: SDK values decoded from one JSON document, inline union variants; spec: finish reasons cleared, converter without a token counter (tiktoken out of reach) |
-| [chat-anthropic-reasoning-null](findings/chat-anthropic-reasoning-null.md), non-stream | — | out of reach | the converter marshals a struct and unmarshals it into an SDK type: struct JSON encoding / decoding is not modelled |
+| [chat-anthropic-reasoning-null](findings/chat-anthropic-reasoning-null.md), non-stream | `SpecConvertOpenAIChatToAnthropicBetaThinkingIsText` | go2lean `74f24df`: found at trial 160, confirmed | struct JSON encoding and decoding (`JDesc` tables, go2lean `docs/design.md` §9c); pointers to SDK types described by their element |
 | [usage-nonstream-cached-input](findings/usage-nonstream-cached-input.md) | — | out of reach | inline in an HTTP handler |
 | [env-credentials-upstream](findings/env-credentials-upstream.md) | — | out of reach | the environment is read inside the SDK |
 | [recording-client-credentials](findings/recording-client-credentials.md) | — | no property yet | — |
@@ -43,7 +43,7 @@ trigger values; each was checked to fail on the hand-found trigger), and
 | [anthropic-abnormal-stop-reasons](findings/anthropic-abnormal-stop-reasons.md), Responses | `SpecConvertAnthropicBetaToResponsesWireCutShortIsIncomplete` | found at trial 2, confirmed |
 | [chat-tool-call-empty-id](findings/chat-tool-call-empty-id.md), Responses | `SpecConvertChatToResponsesWireCallIDs` | found at trial 1, confirmed |
 | [chat-tool-call-empty-id](findings/chat-tool-call-empty-id.md), Anthropic stream | `SpecOpenAIToAnthropicConverterProcessChunkToolUseIDs` | found at trial 4, confirmed |
-| [chat-tool-call-empty-id](findings/chat-tool-call-empty-id.md), Anthropic non-stream | `SpecConvertOpenAIChatToAnthropicBetaToolUseIDs` | missed: stuck in `json.Marshal` (see below) |
+| [chat-tool-call-empty-id](findings/chat-tool-call-empty-id.md), Anthropic non-stream | `SpecConvertOpenAIChatToAnthropicBetaToolUseIDs` | missed: stuck in `json.Marshal` (see below); go2lean `74f24df`: found at trial 4, confirmed |
 | [chat-anthropic-request-coverage](findings/chat-anthropic-request-coverage.md), developer messages | `SpecConvertOpenAIToAnthropicRequestKeepsInstructions` | found at trial 0, confirmed |
 | [chat-anthropic-request-coverage](findings/chat-anthropic-request-coverage.md), tools and tool_choice | `SpecConvertOpenAIToAnthropicRequestKeepsTools` | found at trial 1169, confirmed |
 | [chat-responses-request-params](findings/chat-responses-request-params.md) | `SpecConvertChatToOpenAIResponsesKeepsLimits` | found at trial 0, confirmed |
@@ -55,6 +55,10 @@ Both misses get stuck in the same place: the non-stream Chat -> Anthropic
 converter marshals a struct whose `interface{}` member holds a slice of
 SDK param unions, and the frontend described every pointer variant
 (`*BetaTextBlockParam`, ...) as an opaque custom marshaler, because a
-pointer has its element's `MarshalJSON` method (go2lean gap, fixed next).
+pointer has its element's `MarshalJSON` method. Fixed in go2lean `74f24df`
+(pointers described by their element, with the other JSON-model fixes of a
+review against Go's and the SDKs' sources): the tool-id case is found at
+trial 4 and the round-1 thinking case at trial 160, both confirmed.
+**17 of 17 reachable cases.**
 
 Run with `scripts/benchmark.sh <go2lean> <tingly-box> <workspace>` (`REUSE=1` hunts again in a workspace compiled before); the cases are `benchmark.tsv`.
