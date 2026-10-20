@@ -105,6 +105,23 @@ declare -A finding=(
   [RecordingAssemblerKeepsInputUsage]="recording-anthropic-stream-usage (new, minor)"
   [ResponsesAssemblerToolCallArguments]="responses-assembler-tool-call-arguments (new, latent)"
   [StreamCounterResetClearsUpstream]="stream-counter-reset-upstream (new, latent)"
+  [AnthropicToGeminiKeepsToolUseArgs]="anthropic-gemini-tool-use-args (new, go2lean blind specs)"
+  [AnthropicToolChoiceNoneReachesResponses]="anthropic-tool-choice-none-responses-gemini, Responses (new, go2lean blind specs)"
+  [AnthropicToolChoiceNoneReachesGemini]="anthropic-tool-choice-none-responses-gemini, Gemini (new, go2lean blind specs)"
+  [ChatDeveloperMessageReachesResponses]="chat-responses-developer-dropped (new, go2lean blind specs)"
+  [ChatToGeminiKeepsMaxCompletionTokens]="chat-gemini-request-coverage, max_completion_tokens (new, go2lean blind specs)"
+  [ChatToGeminiKeepsDeveloperAndSystemText]="chat-gemini-request-coverage, developer and system text (new, go2lean blind specs)"
+  [ChatToGeminiKeepsUserImages]="chat-gemini-request-coverage, user images (new, go2lean blind specs)"
+  [ChatStopWithToolCallsIsToolUse]="chat-stop-with-tool-calls-end-turn, non-stream (new, go2lean blind specs)"
+  [StreamChatStopWithToolCallsIsToolUse]="chat-stop-with-tool-calls-end-turn, stream (new, go2lean blind specs)"
+  [GeminiThoughtsTokensCountedAsOutput]="gemini-thoughts-tokens-dropped (new, go2lean blind specs)"
+  [AnthropicToGeminiImageBytesDecoded]="anthropic-gemini-image-double-encoded (new, by hand in blind triage)"
+  [DisableParallelToolUseCarried]="anthropic-disable-parallel-tool-use (new, go2lean blind specs)"
+  [AnthropicChatToolStrictCarried]="anthropic-chat-tool-strict (new, go2lean blind specs)"
+  [ChatToResponsesKeepsRequestFlags]="chat-responses-request-flags (new, go2lean blind specs)"
+  [AnthropicThinkingReachesResponsesClient]="anthropic-responses-thinking-dropped (new, go2lean blind specs)"
+  [ChatRefusalReachesResponsesClient]="chat-responses-refusal-dropped (new, go2lean blind specs)"
+  [GeminiToAnthropicKeepsSampling]="gemini-anthropic-sampling-dropped (new, latent, go2lean blind specs)"
 )
 status=0
 printf '\n%-40s  %-11s  %s\n' test result finding

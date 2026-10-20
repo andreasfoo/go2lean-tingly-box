@@ -28,6 +28,7 @@ severity; `#` is the finding's fixed number (the order it was recorded in).
 | 35 | high | [Anthropic Beta metadata transform panics on a user_id without account](anthropic-metadata-empty-account-panic.md) | Anthropic Beta client -> `api.anthropic.com` provider with an API key | new | `repro/internal/protocol/ops/` |
 | 36 | high | [budget-thinking models: thinking stripped from the tool turn while thinking stays on](anthropic-budget-thinking-stripped.md) | Anthropic client -> Anthropic / Claude Code provider (vendor transform), V1 and Beta | new | `repro/internal/protocol/ops/` |
 | 37 | high | [Codex without streaming drops function calls](codex-nonstream-function-calls-dropped.md) | Chat and Responses clients -> Codex provider, non-stream | new | `repro/internal/protocol/assembler/` |
+| 44 | high | [Anthropic -> Gemini drops tool_use arguments](anthropic-gemini-tool-use-args.md) | Anthropic -> Gemini (Google-style providers) request | new (go2lean, blind specs) | `repro/internal/protocol/request/` |
 | 4 | medium | [reasoning_content empty without streaming](reasoning-content-nonstream.md) | Anthropic -> Chat non-stream | new | `poc/round3/` |
 | 5 | medium | [refusal lost when streaming](responses-chat-stream-refusal.md) | Responses -> Chat stream | new | direct test, below |
 | 7 | medium | [cache reads counted twice without streaming](usage-nonstream-cached-input.md) | usage tracking, Chat passthrough | new | `repro/internal/protocolserver/` |
@@ -44,6 +45,12 @@ severity; `#` is the finding's fixed number (the order it was recorded in).
 | 33 | medium | [tool_choice "none" becomes auto](responses-anthropic-tool-choice-none.md) | Responses -> Anthropic request | new (found by the go2lean M2 agent) | `repro/internal/protocol/request/` |
 | 38 | medium | [count_tokens estimate ignores tool_use, tool_result, document and image blocks](count-tokens-ignores-tool-blocks.md) | Anthropic count_tokens, providers without a native endpoint | new | `repro/internal/protocol/token/` |
 | 39 | medium | [Gemini tool schemas: exclusive bounds overwrite minimum/maximum at random, nested schemas not filtered](gemini-schema-exclusive-bounds.md) | Chat -> Gemini (Google, Poe) request | new | `repro/internal/protocol/ops/` |
+| 45 | medium | [tool_choice "none" becomes auto](anthropic-tool-choice-none-responses-gemini.md) | Anthropic -> Responses, Anthropic -> Gemini requests | new (go2lean, blind specs) | `repro/internal/protocol/request/` |
+| 46 | medium | [Chat -> Responses requests drop developer messages](chat-responses-developer-dropped.md) | Chat -> Responses request | new (go2lean, blind specs) | `repro/internal/protocol/request/` |
+| 47 | medium | [Chat -> Gemini requests drop max_completion_tokens, developer and array-form system text, user images](chat-gemini-request-coverage.md) | Chat -> Gemini (Google-style providers) request | new (go2lean, blind specs) | `repro/internal/protocol/request/` |
+| 48 | medium | [finish_reason "stop" with tool calls becomes end_turn](chat-stop-with-tool-calls-end-turn.md) | Chat -> Anthropic non-stream and stream | new (go2lean, blind specs) | `repro/internal/protocol/{nonstream,stream}/` |
+| 49 | medium | [Gemini thoughtsTokenCount not counted as output](gemini-thoughts-tokens-dropped.md) | Gemini -> Anthropic, Gemini -> Chat responses, usage tracking | new (go2lean, blind specs) | `repro/internal/protocol/nonstream/` |
+| 50 | medium | [base64 images encoded twice](anthropic-gemini-image-double-encoded.md) | Anthropic -> Gemini (Google-style providers) request | new (found by hand, triaging the blind run) | `repro/internal/protocol/request/` |
 | 11 | low | [Chat -> Anthropic stream opens a block while another is open](chat-anthropic-interleaved-blocks.md) | Chat -> Anthropic stream | found by go2lean, minor | `benchmark.md` |
 | 27 | low | [one assistant turn becomes two assistant messages](responses-chat-split-assistant-turn.md) | Responses -> Chat request | new | `repro/internal/protocol/request/` |
 | 28 | low | [reasoning summaries dropped without streaming](responses-anthropic-nonstream-reasoning-summary.md) | Responses -> Anthropic non-stream | new (related: #1863) | `repro/internal/protocol/nonstream/` |
@@ -56,6 +63,12 @@ severity; `#` is the finding's fixed number (the order it was recorded in).
 | 41 | low | [recordings of Anthropic streams lose input and cache usage](recording-anthropic-stream-usage.md) | recording, Anthropic streams | new, minor | `repro/internal/protocol/assembler/` |
 | 42 | low | [`ResponsesAssembler.ToolCalls()` arguments always empty](responses-assembler-tool-call-arguments.md) | Responses stream assembler (no gateway caller) | new, latent | `repro/internal/protocol/assembler/` |
 | 43 | low | [`StreamTokenCounter.Reset` keeps the upstream usage](stream-counter-reset-upstream.md) | streaming token counter (no gateway caller) | new, latent | `repro/internal/protocol/token/` |
+| 51 | low | [disable_parallel_tool_use dropped](anthropic-disable-parallel-tool-use.md) | Anthropic -> Chat, Anthropic -> Responses requests | new (go2lean, blind specs) | `repro/internal/protocol/request/` |
+| 52 | low | [tool `strict` flag lost](anthropic-chat-tool-strict.md) | Anthropic -> Chat, Anthropic -> Responses, Chat -> Anthropic requests | new (go2lean, blind specs) | `repro/internal/protocol/request/` |
+| 53 | low | [Chat -> Responses requests drop user, safety_identifier, metadata, service_tier, store, top_logprobs](chat-responses-request-flags.md) | Chat -> Responses request | new (go2lean, blind specs) | `repro/internal/protocol/request/` |
+| 54 | low | [Claude's thinking dropped for Responses clients](anthropic-responses-thinking-dropped.md) | Anthropic -> Responses non-stream (stream by reading) | new (go2lean, blind specs) | `repro/internal/protocol/nonstream/` |
+| 55 | low | [a Chat refusal dropped without streaming](chat-responses-refusal-dropped.md) | Chat -> Responses non-stream | new (go2lean, blind specs) | `repro/internal/protocol/nonstream/` |
+| 56 | low | [Gemini -> Anthropic requests drop sampling parameters and stop sequences](gemini-anthropic-sampling-dropped.md) | Gemini -> Anthropic request (no gateway caller) | new, latent (go2lean, blind specs) | `repro/internal/protocol/request/` |
 
 Findings 6-11 came from reading code for the four spec directions
 (usage, credentials, routing, config) and from the bug classes of similar
@@ -78,7 +91,19 @@ found by hand: the go2lean M2 agent found them with its own spec
 of code reading over the vendor request transforms (Anthropic model and
 metadata, Gemini thinking and tool schemas), the stream assemblers (the
 Codex non-stream path, recordings) and the token counters, and confirmed
-with `go test`; their pages follow the same form.
+with `go test`; their pages follow the same form. Findings 44-56 (from
+`anthropic-gemini-tool-use-args` to `gemini-anthropic-sampling-dropped`)
+were found by go2lean from specs written blind: a Claude agent (Opus 5.5)
+that had never seen the findings wrote specs for the request and
+non-stream converters from the package source and go2lean's agent prompt
+only (no findings, no earlier specs); go2lean searched them, `go test`
+confirmed the counterexamples, and triage then separated the new bugs from
+the known ones (the other confirmed counterexamples were earlier findings
+or wrong specs). `index.tsv` lists the blind specs that refuted each one;
+the repro tests were written afterwards. The exception is #50
+(`anthropic-gemini-image-double-encoded`), found by hand while triaging a
+spurious counterexample of that run (its spec's refutation was spurious,
+so `index.tsv` has no row for it).
 
 Not bugs (the converters' intended repairs, recorded so they are not
 reported): orphan tool calls get an "aborted" result, an unmatched
