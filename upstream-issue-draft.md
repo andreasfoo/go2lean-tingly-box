@@ -3,7 +3,7 @@
 Form: `.github/ISSUE_TEMPLATE/bug.yml` ("Bug"; blank issues are disabled
 upstream). Verified on tingly-box main `bc460f6` (bc460f6be2e3570fe60c38f56c87dd55d29b6f52,
 2026-10-20); the findings were first recorded on `b788a3b`
-(b788a3b77eb91acfb6f8dd2307fb145d1ee60d7e). Nothing has been posted.
+(b788a3b77eb91acfb6f8dd2307fb145d1ee60d7e). Filed as [tingly-dev/tingly-box#2148](https://github.com/tingly-dev/tingly-box/issues/2148) on 2026-10-20 (body rendered as the Bug form renders it, label `bug`).
 
 ## Title
 
