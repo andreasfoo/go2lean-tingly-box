@@ -4,12 +4,13 @@
 # test, and print one row per case (found at which trial, verdict, or what
 # the search reported). Run it after every go2lean change.
 # usage: scripts/benchmark.sh <go2lean checkout> <tingly-box checkout> <workspace>
+#   REUSE=1 hunts again in a workspace compiled by an earlier run.
 set -e
 here=$(cd "$(dirname "$0")/.." && pwd)
 G=$1; H=$2; WS=$3
 "$here/scripts/install-specs.sh" "$H" > /dev/null
 pat=$(grep -v '^#' "$here/benchmark.tsv" | cut -f1 | tr 'A-Z' 'a-z' | paste -sd'|')
-BUDGET=${BUDGET:-300} JOBS=${JOBS:-2} "$here/scripts/round.sh" "$G" "$H" "$WS" "($pat)\$" "$WS.log"
+BUDGET=${BUDGET:-300} JOBS=${JOBS:-2} "$here/scripts/round.sh" "$G" "$H" "$WS" "_($pat)\.json\$" "$WS.log"
 python3 - "$here/benchmark.tsv" "$WS" "$(git -C "$G" rev-parse --short HEAD)" <<'PY'
 import glob, json, os, sys
 tsv, ws, rev = sys.argv[1:]
