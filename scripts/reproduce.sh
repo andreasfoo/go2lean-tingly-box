@@ -48,6 +48,8 @@ declare -A finding=(
   [StreamedRefusalReachesChatClient]="responses-chat-stream-refusal (new)"
   [EnvAuthTokenNotSentUpstream]="env-credentials-upstream, ANTHROPIC_AUTH_TOKEN (new)"
   [EnvOpenAIOrgNotSentUpstream]="env-credentials-upstream, OPENAI_ORG_ID (new)"
+  [NullReasoningOpensNoThinkingBlock]="chat-anthropic-reasoning-null, stream (new)"
+  [NonStreamThinkingIsPlainText]="chat-anthropic-reasoning-null, non-stream (new)"
   [NonStreamUsageExcludesCachedInput]="usage-nonstream-cached-input (new)"
 )
 status=0
@@ -64,5 +66,5 @@ if grep -q -E '^(# |FAIL\s.*\[build failed\])' <<<"$out"; then
   status=1
 fi
 echo
-grep -E '^\s+zz_go2lean_repro_test.go:[0-9]+:' <<<"$out" || true
+grep -E '^\s+zz_go2lean_repro\w*_test.go:[0-9]+:' <<<"$out" || true
 exit $status

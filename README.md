@@ -24,11 +24,14 @@ record of every run.
 
 | 6 | [Gateway environment credentials sent to every upstream](findings/env-credentials-upstream.md): the SDK clients keep their environment defaults, so `ANTHROPIC_AUTH_TOKEN` (Claude Code's gateway token) goes out as `Authorization: Bearer` next to the provider's key, and `OPENAI_ORG_ID` / `OPENAI_PROJECT_ID` to every OpenAI-compatible vendor | upstream clients | new, not reported |
 | 7 | [Cache reads counted twice without streaming](findings/usage-nonstream-cached-input.md): the non-streaming Chat passthrough records `prompt_tokens` as input next to `cached_tokens`; the streaming path subtracts them (1000/900 records input 1000 vs 100) | usage tracking | new, not reported |
-| 8 | [Recordings keep client credentials](findings/recording-client-credentials.md): recorded request headers and URL are not redacted | recording | new, minor |
+| 8 | [DeepSeek-style `reasoning_content` breaks thinking blocks](findings/chat-anthropic-reasoning-null.md): DeepSeek streams answers with `"reasoning_content":null`; for an Anthropic client this opens a second, empty thinking block while the text block is open, and without streaming the thinking text arrives JSON-quoted (`"…\n…"`) or as `null` | Chat → Anthropic, both | new, not reported |
+| 9 | [Recordings keep client credentials](findings/recording-client-credentials.md): recorded request headers and URL are not redacted | recording | new, minor |
 
-Findings 1-5 come from go2lean searches. 6-8 come from reading the code
+Findings 1-5 come from go2lean searches. 6-9 come from reading the code
 for the next spec directions (usage, credentials, routing, config) and
-are confirmed by `go test` (6, 7) or by reading (8). 1-5 reproduce on
+from the bug classes of similar gateways
+([hunting-similar-tools.md](hunting-similar-tools.md)); 6-8 are confirmed
+by `go test` (6-8 also on main), 9 by reading. 1-5 reproduce on
 tingly-box `5f83f04` (where they were found) and on `b788a3b` (main,
 2026-10-20).
 

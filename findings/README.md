@@ -12,11 +12,13 @@ One page per finding. Status: **tracked** (an issue exists upstream),
 | [refusal lost when streaming](responses-chat-stream-refusal.md) | Responses -> Chat stream | new | direct test, below |
 | [gateway environment credentials sent upstream](env-credentials-upstream.md) | upstream clients | new | `repro/internal/client/` |
 | [cache reads counted twice without streaming](usage-nonstream-cached-input.md) | usage tracking, Chat passthrough | new | `repro/internal/protocolserver/` |
+| [DeepSeek-style reasoning_content breaks thinking blocks](chat-anthropic-reasoning-null.md) | Chat -> Anthropic stream and non-stream | new | `repro/internal/protocol/{stream,nonstream}/` |
 | [recordings keep client credentials](recording-client-credentials.md) | recording | new, minor | code reading |
 
-Findings 6-8 came from reading code for the four spec directions
-(usage, credentials, routing, config), not from a go2lean search; they are
-marked so on their pages.
+Findings 6-9 came from reading code for the four spec directions
+(usage, credentials, routing, config) and from the bug classes of similar
+gateways (`../hunting-similar-tools.md`), not from a go2lean search; they
+are marked so on their pages.
 
 Not bugs (the converters' intended repairs, recorded so they are not
 reported): orphan tool calls get an "aborted" result, an unmatched
