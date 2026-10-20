@@ -17,11 +17,24 @@ One page per finding. Status: **tracked** (an issue exists upstream),
 | [Anthropic -> Chat requests drop sampling, stop and tool_choice](chat-request-params.md) | Anthropic -> Chat request | new | `repro/internal/protocol/request/` |
 | [Chat -> Anthropic stream opens a block while another is open](chat-anthropic-interleaved-blocks.md) | Chat -> Anthropic stream | found by go2lean, minor | `benchmark.md` |
 | [recordings keep client credentials](recording-client-credentials.md) | recording | new, minor | code reading |
+| [Responses clients get no usage when streaming from a Chat provider](responses-stream-trailing-usage.md) | Chat -> Responses stream, Responses -> Chat request | new | `repro/internal/protocol/stream/`, `repro/internal/protocolserver/` |
+| [Chat tool call index taken from the Responses output index](responses-chat-tool-call-index.md) | Responses -> Chat stream | new | `repro/internal/protocol/stream/` |
+| [Responses developer messages become user messages](responses-developer-message-as-user.md) | Responses -> Chat request | new | `repro/internal/protocol/request/`, `repro/internal/protocolserver/` |
+| [`model_context_window_exceeded` and `refusal` reported as normal completions](anthropic-abnormal-stop-reasons.md) | Anthropic -> Chat non-stream, Anthropic -> Responses stream and non-stream | new | `repro/internal/protocol/{stream,nonstream}/` |
+| [Chat tool calls without an id stay without one](chat-tool-call-empty-id.md) | Chat -> Anthropic stream and non-stream, Chat -> Responses non-stream | new | `repro/internal/protocol/{stream,nonstream}/`, `repro/internal/protocolserver/` |
+| [Chat -> Anthropic requests drop developer messages, parameterless tools, tool_choice modes](chat-anthropic-request-coverage.md) | Chat -> Anthropic request | new | `repro/internal/protocol/request/`, `repro/internal/protocolserver/` |
+| [Chat -> Responses requests drop max_completion_tokens, zero sampling values, parallel_tool_calls](chat-responses-request-params.md) | Chat -> Responses request | new | `repro/internal/protocol/request/`, `repro/internal/protocolserver/` |
+| [upstream errors not translated to the client's protocol](upstream-errors-not-translated.md) | error responses, all converted paths | new (related: #2052) | `repro/internal/protocolserver/` |
 
 Findings 6-11 came from reading code for the four spec directions
 (usage, credentials, routing, config) and from the bug classes of similar
 gateways (`../hunting-similar-tools.md`), not from a go2lean search; they
-are marked so on their pages.
+are marked so on their pages. Findings 13-20 (from
+`responses-stream-trailing-usage` to `upstream-errors-not-translated`) were
+also found by hand, in a second round of code reading over the converters
+and error paths, and confirmed with `go test`; each page ends with the
+general property the bug refutes, stated without the trigger values, and the
+function it specifies.
 
 Not bugs (the converters' intended repairs, recorded so they are not
 reported): orphan tool calls get an "aborted" result, an unmatched

@@ -55,6 +55,23 @@ declare -A finding=(
   [ChatRequestKeepsSamplingAndStop]="chat-request-params, sampling and stop (new)"
   [ChatRequestKeepsToolChoiceMode]="chat-request-params, tool_choice (new)"
   [NonStreamUsageExcludesCachedInput]="usage-nonstream-cached-input (new)"
+  [ResponsesStreamUsageAfterFinishChunk]="responses-stream-trailing-usage, converter (new)"
+  [GatewayResponsesStreamGetsUsage]="responses-stream-trailing-usage, gateway (new)"
+  [ToolCallIndexAfterReasoningItem]="responses-chat-tool-call-index (new)"
+  [ResponsesDeveloperMessageStaysDeveloper]="responses-developer-message-as-user, request (new)"
+  [GatewayDeveloperRoleReachesChatUpstream]="responses-developer-message-as-user, gateway (new)"
+  [AbnormalStopReasonsNotCompleted]="anthropic-abnormal-stop-reasons, non-stream (new)"
+  [ContextWindowExceededStreamIncomplete]="anthropic-abnormal-stop-reasons, stream (new)"
+  [StreamToolCallWithoutIDGetsID]="chat-tool-call-empty-id, stream (new)"
+  [NonStreamToolCallWithoutIDGetsID]="chat-tool-call-empty-id, non-stream (new)"
+  [GatewayToolCallWithoutIDGetsID]="chat-tool-call-empty-id, gateway (new)"
+  [AnthropicRequestKeepsDeveloperAndTools]="chat-anthropic-request-coverage, developer and tools (new)"
+  [AnthropicRequestKeepsSamplingAndStop]="chat-anthropic-request-coverage, sampling and stop (new)"
+  [GatewayAnthropicUpstreamGetsChatParams]="chat-anthropic-request-coverage, gateway (new)"
+  [ResponsesRequestKeepsTokensAndSampling]="chat-responses-request-params, request (new)"
+  [GatewayResponsesUpstreamGetsChatParams]="chat-responses-request-params, gateway (new)"
+  [GatewayErrorIsAnthropicShaped]="upstream-errors-not-translated, Anthropic client (new)"
+  [GatewayErrorCodeReachesResponsesClient]="upstream-errors-not-translated, Responses client (new)"
 )
 status=0
 printf '\n%-40s  %-11s  %s\n' test result finding
