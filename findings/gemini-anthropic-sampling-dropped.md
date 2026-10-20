@@ -28,8 +28,9 @@ Expected: `temperature: 0.2`, `top_p: 0.9`, `top_k: 40`,
 Realism: low at `b788a3b`, latent: it matters as soon as a Gemini client
 endpoint is wired to these converters.
 
-Status: **new** (not reported; not yet checked against the tracker for an
-existing issue).
+Status: **new, latent** (tracker search 2026-10-20 over the full text of all
+issues and PRs for `gemini` with `temperature`, `stop`, `sampling`:
+nothing). Reproduces on main `bc460f6`.
 
 How it was found: by go2lean, from a spec written blind (see the
 [provenance note](README.md)):

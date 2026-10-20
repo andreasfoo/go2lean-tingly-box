@@ -40,8 +40,9 @@ or Antigravity provider resends its whole history on every step of a tool
 loop; Gemini then sees each of its earlier calls without arguments, and
 the tool results no longer answer a meaningful call.
 
-Status: **new** (not reported; not yet checked against the tracker for an
-existing issue).
+Status: **new** (tracker search 2026-10-20 over the full text of all issues
+and PRs for `functionCall` with `args`, `tool_use` with `gemini`: nothing).
+Reproduces on main `bc460f6`.
 
 How it was found: by go2lean, from specs written blind (see the
 [provenance note](README.md)): `SpecConvertAnthropicToGoogleRequestKeepsToolUseArgs`

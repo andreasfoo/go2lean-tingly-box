@@ -36,8 +36,9 @@ count_tokens to decide when to compact or truncate (to stay under the
 model's window) under-counts and then overflows the window. Only the
 estimate path is affected; native Anthropic count_tokens is exact.
 
-Status: **new** (not reported; round 4 had no access to the tracker's
-search, so it is not yet checked for an existing issue).
+Status: **new** (tracker search 2026-10-20 over the full text of all issues
+and PRs for `count_tokens`, `token estimat`: nothing). Reproduces on main
+`bc460f6`.
 
 How it was found: by hand (code reading, round 4), not by a go2lean search,
 like findings 6-11.

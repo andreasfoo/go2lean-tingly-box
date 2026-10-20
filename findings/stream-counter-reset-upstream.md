@@ -26,8 +26,9 @@ Realism: low, latent. A caller that reuses one counter across streams
 (the doc comment's usage pattern with a reset in between) reports the
 previous stream's usage for a stream whose upstream sends none.
 
-Status: **new** (not reported; round 4 had no access to the tracker's
-search, so it is not yet checked for an existing issue).
+Status: **new, latent** (tracker search 2026-10-20 over the full text of all
+issues and PRs for `StreamTokenCounter`, `stream counter`: nothing).
+Reproduces on main `bc460f6`.
 
 How it was found: by hand (code reading, round 4), not by a go2lean search,
 like findings 6-11.

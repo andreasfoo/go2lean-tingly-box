@@ -33,8 +33,11 @@ prompt. The Chat -> Anthropic twin is `chat-anthropic-request-coverage.md`
 direction; `chat-responses-request-params.md` (#19) covers this function's
 other fields.
 
-Status: **new** (not reported; not yet checked against the tracker for an
-existing issue).
+Status: **new** (tracker search 2026-10-20 over the full text of all issues
+and PRs for `developer`: no issue for this direction; upstream's IR
+round-trip registry, `internal/protocoltest/ir_roundtrip_gaps.go` from
+#1889, lists dropped developer messages as a known gap of the Stage IR, a
+different code path). Reproduces on main `bc460f6`.
 
 How it was found: by go2lean, from a spec written blind (see the
 [provenance note](README.md)):

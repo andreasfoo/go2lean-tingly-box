@@ -25,8 +25,9 @@ Realism: low, latent. Nothing in the gateway reads `ToolCalls()` at
 `b788a3b`; the first caller that does (for instance to fix finding 37 by
 adding the calls to the assembled output) gets calls without arguments.
 
-Status: **new** (not reported; round 4 had no access to the tracker's
-search, so it is not yet checked for an existing issue).
+Status: **new, latent** (tracker search 2026-10-20 over the full text of all
+issues and PRs for `ResponsesAssembler`, `ToolCalls`: nothing). Reproduces
+on main `bc460f6`.
 
 How it was found: by hand (code reading, round 4), not by a go2lean search,
 like findings 6-11.

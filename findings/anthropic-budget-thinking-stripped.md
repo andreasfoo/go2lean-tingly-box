@@ -51,8 +51,13 @@ tool loop after the first, so every agentic session that uses a tool breaks
 on its second request. Any Anthropic SDK client with extended thinking and
 tools hits it the same way.
 
-Status: **new** (not reported; round 4 had no access to the tracker's
-search, so it is not yet checked for an existing issue).
+Status: **new** (tracker search 2026-10-20 over the full text of all issues
+and PRs for `budget`, `thinking` with `strip`, `signature`: no issue about
+this). Related, not the same: #2004 (open) and its PR #2005 (open) on the
+thinking guard (`Reconcile*ThinkingWithRequest`) flipping `thinking` between
+requests for third-party providers; this finding is the model transform's
+filter that runs after the guard on Anthropic's own backend, which #2005
+does not change. Reproduces on main `bc460f6`.
 
 How it was found: by hand (code reading, round 4), not by a go2lean search,
 like findings 6-11.

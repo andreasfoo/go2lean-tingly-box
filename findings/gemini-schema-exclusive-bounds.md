@@ -47,8 +47,9 @@ not take these keywords (`:227-228`); where they survive, or where
 `minimum` becomes `true` (not a valid schema), the request can be rejected,
 and in the two-keys case only on some runs, which is hard to diagnose.
 
-Status: **new** (not reported; round 4 had no access to the tracker's
-search, so it is not yet checked for an existing issue).
+Status: **new** (tracker search 2026-10-20 over the full text of all issues
+and PRs for `exclusiveMinimum`, `exclusiveMaximum`, `gemini` with `schema`:
+nothing). Reproduces on main `bc460f6`.
 
 How it was found: by hand (code reading, round 4), not by a go2lean search,
 like findings 6-11.

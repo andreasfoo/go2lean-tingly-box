@@ -30,8 +30,9 @@ tools) set it; the model may then emit several calls in one turn. Finding
 `chat-request-params.md` (#10) lists the other fields this conversion
 drops, not this one.
 
-Status: **new** (not reported; not yet checked against the tracker for an
-existing issue).
+Status: **new** (tracker search 2026-10-20 over the full text of all issues
+and PRs for `disable_parallel_tool_use`, `parallel_tool_calls`: nothing;
+#1923 is stream indexes). Reproduces on main `bc460f6`.
 
 How it was found: by go2lean, from a spec written blind (see the
 [provenance note](README.md)):

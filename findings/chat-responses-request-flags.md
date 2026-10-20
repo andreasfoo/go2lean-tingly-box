@@ -34,8 +34,9 @@ out of storage is stored by OpenAI on a plain OpenAI Responses provider
 `chat-responses-request-params.md` (#19) lists `max_completion_tokens`, zero
 sampling values and `parallel_tool_calls` only.
 
-Status: **new** (not reported; not yet checked against the tracker for an
-existing issue).
+Status: **new** (tracker search 2026-10-20 over the full text of all issues
+and PRs for `safety_identifier`, `service_tier`, `store`, `top_logprobs`:
+nothing). Reproduces on main `bc460f6`.
 
 How it was found: by go2lean, from a spec written blind (see the
 [provenance note](README.md)):

@@ -36,8 +36,10 @@ of ten. The same response also double counts cached input
 (`usage-nonstream-cached-input.md`, #7, which names the Gemini paths "by
 reading only"); this finding is the output half.
 
-Status: **new** (not reported; not yet checked against the tracker for an
-existing issue).
+Status: **new** (tracker search 2026-10-20 over the full text of all issues
+and PRs for `thoughtsTokenCount`, `thought tokens`: nothing; #1181, merged,
+fixed the cached-token half on Google -> Anthropic responses, not thoughts).
+Reproduces on main `bc460f6`.
 
 How it was found: by go2lean, from a spec written blind (see the
 [provenance note](README.md)): `SpecHandleGoogleToAnthropicBetaUsage` was

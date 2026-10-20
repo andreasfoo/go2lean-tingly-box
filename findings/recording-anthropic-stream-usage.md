@@ -38,8 +38,9 @@ the usage clients see go through `usage.AnthropicAccumulator`, not this
 assembler. A recording read to debug cost or caching shows no input and no
 cache use for every Anthropic stream.
 
-Status: **new** (not reported; round 4 had no access to the tracker's
-search, so it is not yet checked for an existing issue).
+Status: **new, minor** (tracker search 2026-10-20 over the full text of all
+issues and PRs for `message_start` with `usage`, `cache_creation`,
+`recording`: nothing). Reproduces on main `bc460f6`.
 
 How it was found: by hand (code reading, round 4), not by a go2lean search,
 like findings 6-11.

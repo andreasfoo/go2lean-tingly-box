@@ -40,8 +40,9 @@ and Ollama versions (not re-verified here). Anthropic clients and SDK
 loops that branch on `stop_reason == "tool_use"` end the turn instead of
 running the tool. Not covered by `anthropic-abnormal-stop-reasons.md` (#16).
 
-Status: **new** (not reported; not yet checked against the tracker for an
-existing issue).
+Status: **new** (tracker search 2026-10-20 over the full text of all issues
+and PRs for `end_turn` with `tool`, `stop_reason` with `tool_use`: nothing).
+Reproduces on main `bc460f6`.
 
 How it was found: by go2lean, from a spec written blind (see the
 [provenance note](README.md)): `SpecConvertOpenAIChatToAnthropicBetaStopReason`

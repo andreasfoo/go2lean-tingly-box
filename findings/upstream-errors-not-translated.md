@@ -42,7 +42,9 @@ Anthropic SDK clients get an error body of the wrong shape and type
 correctly.
 
 Status: **new**. Related: #2052 (an error inside a 200 stream surfaces as
-500), a different bug on the same error paths.
+500), a different bug on the same error paths; #1805 (open PR) surfaces the
+upstream status and message instead of a generic 502, without translating
+the error to the client's protocol (tracker search 2026-10-20).
 
 How it was found: by hand (code reading, round 2), not by a go2lean search,
 like findings 6-11.

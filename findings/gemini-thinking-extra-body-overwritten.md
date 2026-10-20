@@ -40,8 +40,8 @@ No other code sets `extra_body` before this transform. So a client's
 transform drops it as soon as anything (a pass-through of unknown fields, a
 rule's extra parameters) puts `extra_body` on the request.
 
-Status: **new** (not reported; round 4 had no access to the tracker's
-search, so it is not yet checked for an existing issue).
+Status: **new, latent** (tracker search 2026-10-20 over the full text of all
+issues and PRs for `extra_body`: nothing). Reproduces on main `bc460f6`.
 
 How it was found: by hand (code reading, round 4), not by a go2lean search,
 like findings 6-11.

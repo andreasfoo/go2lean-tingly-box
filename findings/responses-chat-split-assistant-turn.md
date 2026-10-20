@@ -32,7 +32,10 @@ used in the test; the output-message form splits the same way). Providers
 that require alternating roles reject the request; others see two turns
 where the model made one, with an empty-content assistant message between.
 
-Status: **new** (no issue found by the round-3 tracker search, 2026-10-20).
+Status: **new** (no issue found by the round-3 tracker search, 2026-10-20;
+related, not the same: #875, merged, which merged consecutive `function_call`
+items into one assistant message but not an assistant message followed by
+the calls of the same turn).
 
 How it was found: by hand (code reading, round 3), not by a go2lean search,
 like findings 6-11.

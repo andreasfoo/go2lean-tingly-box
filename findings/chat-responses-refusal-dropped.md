@@ -26,8 +26,9 @@ empty completed answer and no reason. `responses-anthropic-nonstream-refusal.md`
 (#26) is the Responses -> Anthropic analogue,
 `responses-chat-stream-refusal.md` (#5) the Responses -> Chat stream.
 
-Status: **new** (not reported; not yet checked against the tracker for an
-existing issue).
+Status: **new** (tracker search 2026-10-20 over the full text of all issues
+and PRs for `refusal`: nothing for this direction). Reproduces on main
+`bc460f6`.
 
 How it was found: by go2lean, from a spec written blind (see the
 [provenance note](README.md)): `SpecConvertChatToResponsesWireConservation`

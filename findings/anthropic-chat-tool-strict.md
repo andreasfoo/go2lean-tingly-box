@@ -31,8 +31,8 @@ zod helpers) and by Anthropic structured-output clients; without it the
 arguments are no longer guaranteed to match the schema. Finding
 `chat-responses-tool-strict.md` (#30) covers only Chat <-> Responses.
 
-Status: **new** (not reported; not yet checked against the tracker for an
-existing issue).
+Status: **new** (tracker search 2026-10-20 over the full text of all issues
+and PRs for `strict`: nothing). Reproduces on main `bc460f6`.
 
 How it was found: by go2lean, from specs written blind (see the
 [provenance note](README.md)):

@@ -34,8 +34,10 @@ is intact. `responses-anthropic-nonstream-reasoning-summary.md` (#28) is
 the reverse direction; `anthropic-abnormal-stop-reasons.md` (#16) covers
 this function's stop reasons.
 
-Status: **new** (not reported; not yet checked against the tracker for an
-existing issue).
+Status: **new** (tracker search 2026-10-20 over the full text of all issues
+and PRs for `reasoning item`, `thinking` with `responses`: nothing; #1897,
+closed, is thinking effort on the request side). Reproduces on main
+`bc460f6`.
 
 How it was found: by go2lean, from a spec written blind (see the
 [provenance note](README.md)):

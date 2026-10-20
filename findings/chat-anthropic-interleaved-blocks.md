@@ -26,3 +26,22 @@ to it"): found at trial 683 (a refusal, then tool calls at indexes 1 and
 -5), confirmed by `go test`. The first M3 run was inconclusive because the
 harness dropped an empty map literal (an empty map is not the zero value);
 fixed in go2lean, then confirmed.
+
+Where (tingly-box `b788a3b`, unchanged on main `bc460f6`):
+`internal/protocol/stream/openai_to_anthropic_converter.go:400-423`
+(`emitCloseOpenBlock`) closes a thinking, reasoning-summary, refusal or text
+block, never a tool_use block; tool_use blocks are stopped only at the end
+(`emitStopEvents`, `:425`).
+
+Status: found by go2lean, minor (tracker search 2026-10-20 over all issues
+and PRs for `content_block_start`, `interleaved`, `block still open`:
+nothing; #1502 and #1505, both merged, fixed interleaved blocks in the
+Anthropic -> Responses direction, not this one). Reproduces on main
+`bc460f6`.
+
+Evidence: `TestGo2LeanRepro_ParallelToolCallsOneOpenBlock` (two parallel
+tool calls in the order OpenAI streams them) and
+`TestGo2LeanRepro_TextAfterToolCallOneOpenBlock`
+(`repro/internal/protocol/stream/zz_go2lean_repro_blocks_test.go`); both
+fail on `b788a3b` and `bc460f6` with "block 1 (tool_use|text) starts while
+block 0 is open".

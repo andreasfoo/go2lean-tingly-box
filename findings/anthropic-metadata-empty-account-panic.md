@@ -1,4 +1,4 @@
-# Finding 35: Anthropic Beta metadata transform panics on a user_id without account (new, not reported)
+# Finding 35: Anthropic Beta metadata transform panics on a user_id without account (fixed upstream on the gateway path; latent)
 
 Severity: **high** (see [the findings table](README.md)).
 
@@ -46,8 +46,16 @@ an API key, every request fails: the gateway is unusable for that pairing.
 OAuth (Claude Code subscription) providers are not affected, since their
 `Config.UserID` fills the account.
 
-Status: **new** (not reported; round 4 had no access to the tracker's
-search, so it is not yet checked for an existing issue).
+Status: **fixed upstream on the gateway path** in `9b15a58` (#2134, merged
+2026-10-20, after `b788a3b`): the vendor transform now runs the metadata
+transform only for Claude Code OAuth providers (`isClaudeCodeOAuth`,
+`internal/protocol/transform/vendor.go` on main `bc460f6`), whose `extra`
+always carries a `user_id`, so the API-key trigger above no longer reaches
+it. `ApplyAnthropicBetaMetadataTransform` itself is unchanged and still
+panics when called without an account (the repro test calls it directly and
+still fails on `bc460f6`): latent. No issue about the panic (tracker search
+2026-10-20 over the full text of all issues and PRs for `user_id`,
+`account_uuid`, `panic`, `metadata`).
 
 How it was found: by hand (code reading, round 4), not by a go2lean search,
 like findings 6-11.

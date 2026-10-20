@@ -38,8 +38,10 @@ Realism: medium. Current OpenAI SDK clients send `max_completion_tokens`
 array-form system messages; vision clients send `image_url`. Answers are
 cut at 4096 tokens, the prompt is lost and images silently disappear.
 
-Status: **new** (not reported; not yet checked against the tracker for an
-existing issue).
+Status: **new** (tracker search 2026-10-20 over the full text of all issues
+and PRs for `gemini` with `system`, `developer`, `image`,
+`max_completion_tokens`: nothing; #858, merged, restored images on the other
+converters). Reproduces on main `bc460f6`.
 
 How it was found: by go2lean, from specs written blind (see the
 [provenance note](README.md)):

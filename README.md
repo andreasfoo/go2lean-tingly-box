@@ -24,7 +24,7 @@ record of every run.
 
 **60 bugs**, each confirmed by a failing `go test` on tingly-box `b788a3b` (except two found by reading, marked in the table): 1 critical, 15 high, 22 medium, 22 low (6 of them latent: in code no gateway path calls). 3 were already tracked upstream ([#1921](https://github.com/tingly-dev/tingly-box/issues/1921), [#1923](https://github.com/tingly-dev/tingly-box/issues/1923), [#1924](https://github.com/tingly-dev/tingly-box/issues/1924)); the rest are new.
 
-Most of them lose or change something a client sent or a provider returned while converting between the Anthropic, OpenAI Chat, OpenAI Responses and Gemini protocols: parameters and content parts dropped (sampling, `tool_choice`, structured output, documents, images, tool schemas), tool calls broken (ids, indexes, arguments), thinking and refusals lost, stop reasons and usage reported wrong. Two go further: the gateway's own environment credentials are sent to every upstream (#6), and a malformed `user_id` panics the Anthropic Beta transform (#35).
+Most of them lose or change something a client sent or a provider returned while converting between the Anthropic, OpenAI Chat, OpenAI Responses and Gemini protocols: parameters and content parts dropped (sampling, `tool_choice`, structured output, documents, images, tool schemas), tool calls broken (ids, indexes, arguments), thinking and refusals lost, stop reasons and usage reported wrong. Two go further: the gateway's own environment credentials are sent to every upstream (#6), and a malformed `user_id` panics the Anthropic Beta transform (#35; since upstream `9b15a58` the gateway no longer reaches that transform with the triggering request).
 
 Each row links to its page (root cause with file:line, trigger, observed and expected output, repro test); [findings/README.md](findings/README.md) has the full table with status and evidence, severity legend and how each was found.
 
@@ -50,7 +50,6 @@ Each row links to its page (root cause with file:line, trigger, observed and exp
 | 5 | medium | [refusal lost when streaming](findings/responses-chat-stream-refusal.md) | Responses -> Chat stream |
 | 7 | medium | [cache reads counted twice without streaming](findings/usage-nonstream-cached-input.md) | usage tracking, Chat passthrough |
 | 10 | medium | [Anthropic -> Chat requests drop sampling, stop and tool_choice](findings/chat-request-params.md) | Anthropic -> Chat request |
-| 12 | medium | [recordings keep client credentials](findings/recording-client-credentials.md) | recording |
 | 15 | medium | [Responses developer messages become user messages](findings/responses-developer-message-as-user.md) | Responses -> Chat request |
 | 16 | medium | [`model_context_window_exceeded` and `refusal` reported as normal completions](findings/anthropic-abnormal-stop-reasons.md) | Anthropic -> Chat non-stream, Anthropic -> Responses stream and non-stream |
 | 17 | medium | [Chat tool calls without an id stay without one](findings/chat-tool-call-empty-id.md) | Chat -> Anthropic stream and non-stream, Chat -> Responses non-stream |
@@ -69,6 +68,7 @@ Each row links to its page (root cause with file:line, trigger, observed and exp
 | 49 | medium | [Gemini thoughtsTokenCount not counted as output](findings/gemini-thoughts-tokens-dropped.md) | Gemini -> Anthropic, Gemini -> Chat responses, usage tracking |
 | 50 | medium | [base64 images encoded twice](findings/anthropic-gemini-image-double-encoded.md) | Anthropic -> Gemini (Google-style providers) request |
 | 11 | low | [Chat -> Anthropic stream opens a block while another is open](findings/chat-anthropic-interleaved-blocks.md) | Chat -> Anthropic stream |
+| 12 | low | [recordings keep the request URL's query string](findings/recording-client-credentials.md) | recording |
 | 27 | low | [one assistant turn becomes two assistant messages](findings/responses-chat-split-assistant-turn.md) | Responses -> Chat request |
 | 28 | low | [reasoning summaries dropped without streaming](findings/responses-anthropic-nonstream-reasoning-summary.md) | Responses -> Anthropic non-stream |
 | 29 | low | [images in tool output dropped](findings/responses-anthropic-tool-output-image.md) | Responses -> Anthropic request |

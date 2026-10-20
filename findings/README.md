@@ -3,6 +3,15 @@
 One page per finding. Status: **tracked** (an issue exists upstream),
 **new** (no issue found; not reported yet), **not a bug** (explained).
 
+Re-checked 2026-10-20 on tingly-box main `bc460f6` (the pages cite
+`b788a3b`, where the findings were recorded): `scripts/reproduce.sh` reports
+every repro test as still reproducing. One finding changed on the way
+there: #35 can no longer be reached on the gateway path since `9b15a58`
+(#2134), although its test, which calls the function directly, still
+fails. The tracker (all issues and PRs, full text) was searched for every
+finding the same day: no duplicates; related issues are named on the pages
+and in the status column.
+
 Severity: **critical** — a security problem (credentials reach a third
 party); **high** — a common client and provider path breaks or silently
 loses what the user asked for (requests rejected, tools or instructions
@@ -25,15 +34,14 @@ severity; `#` is the finding's fixed number (the order it was recorded in).
 | 22 | high | [structured output formats dropped](structured-output-dropped.md) | Chat <-> Responses <-> Anthropic requests, all six directions | new | `repro/internal/protocol/request/` |
 | 23 | high | [an empty thinking block stays open across the answer](responses-anthropic-stream-open-thinking.md) | Responses -> Anthropic stream | new | `repro/internal/protocol/stream/` |
 | 25 | high | [PDF, document and file content dropped](document-content-dropped.md) | Anthropic -> Chat, Anthropic -> Responses, Chat -> Anthropic, Chat -> Responses requests | new | `repro/internal/protocol/request/` |
-| 35 | high | [Anthropic Beta metadata transform panics on a user_id without account](anthropic-metadata-empty-account-panic.md) | Anthropic Beta client -> `api.anthropic.com` provider with an API key | new | `repro/internal/protocol/ops/` |
-| 36 | high | [budget-thinking models: thinking stripped from the tool turn while thinking stays on](anthropic-budget-thinking-stripped.md) | Anthropic client -> Anthropic / Claude Code provider (vendor transform), V1 and Beta | new | `repro/internal/protocol/ops/` |
+| 35 | high | [Anthropic Beta metadata transform panics on a user_id without account](anthropic-metadata-empty-account-panic.md) | Anthropic Beta client -> `api.anthropic.com` provider with an API key | fixed upstream on the gateway path in 9b15a58 (#2134); function still panics, latent | `repro/internal/protocol/ops/` |
+| 36 | high | [budget-thinking models: thinking stripped from the tool turn while thinking stays on](anthropic-budget-thinking-stripped.md) | Anthropic client -> Anthropic / Claude Code provider (vendor transform), V1 and Beta | new (related: #2004, PR #2005) | `repro/internal/protocol/ops/` |
 | 37 | high | [Codex without streaming drops function calls](codex-nonstream-function-calls-dropped.md) | Chat and Responses clients -> Codex provider, non-stream | new | `repro/internal/protocol/assembler/` |
 | 44 | high | [Anthropic -> Gemini drops tool_use arguments](anthropic-gemini-tool-use-args.md) | Anthropic -> Gemini (Google-style providers) request | new (go2lean, blind specs) | `repro/internal/protocol/request/` |
 | 4 | medium | [reasoning_content empty without streaming](reasoning-content-nonstream.md) | Anthropic -> Chat non-stream | new | `poc/round3/` |
 | 5 | medium | [refusal lost when streaming](responses-chat-stream-refusal.md) | Responses -> Chat stream | new | direct test, below |
 | 7 | medium | [cache reads counted twice without streaming](usage-nonstream-cached-input.md) | usage tracking, Chat passthrough | new | `repro/internal/protocolserver/` |
 | 10 | medium | [Anthropic -> Chat requests drop sampling, stop and tool_choice](chat-request-params.md) | Anthropic -> Chat request | new | `repro/internal/protocol/request/` |
-| 12 | medium | [recordings keep client credentials](recording-client-credentials.md) | recording | new, minor | code reading |
 | 15 | medium | [Responses developer messages become user messages](responses-developer-message-as-user.md) | Responses -> Chat request | new | `repro/internal/protocol/request/`, `repro/internal/protocolserver/` |
 | 16 | medium | [`model_context_window_exceeded` and `refusal` reported as normal completions](anthropic-abnormal-stop-reasons.md) | Anthropic -> Chat non-stream, Anthropic -> Responses stream and non-stream | new | `repro/internal/protocol/{stream,nonstream}/` |
 | 17 | medium | [Chat tool calls without an id stay without one](chat-tool-call-empty-id.md) | Chat -> Anthropic stream and non-stream, Chat -> Responses non-stream | new | `repro/internal/protocol/{stream,nonstream}/`, `repro/internal/protocolserver/` |
@@ -51,7 +59,8 @@ severity; `#` is the finding's fixed number (the order it was recorded in).
 | 48 | medium | [finish_reason "stop" with tool calls becomes end_turn](chat-stop-with-tool-calls-end-turn.md) | Chat -> Anthropic non-stream and stream | new (go2lean, blind specs) | `repro/internal/protocol/{nonstream,stream}/` |
 | 49 | medium | [Gemini thoughtsTokenCount not counted as output](gemini-thoughts-tokens-dropped.md) | Gemini -> Anthropic, Gemini -> Chat responses, usage tracking | new (go2lean, blind specs) | `repro/internal/protocol/nonstream/` |
 | 50 | medium | [base64 images encoded twice](anthropic-gemini-image-double-encoded.md) | Anthropic -> Gemini (Google-style providers) request | new (found by hand, triaging the blind run) | `repro/internal/protocol/request/` |
-| 11 | low | [Chat -> Anthropic stream opens a block while another is open](chat-anthropic-interleaved-blocks.md) | Chat -> Anthropic stream | found by go2lean, minor | `benchmark.md` |
+| 11 | low | [Chat -> Anthropic stream opens a block while another is open](chat-anthropic-interleaved-blocks.md) | Chat -> Anthropic stream | found by go2lean, minor | `repro/internal/protocol/stream/` |
+| 12 | low | [recordings keep the request URL's query string](recording-client-credentials.md) | recording (client headers only when the chain fails before the client snapshot: latent) | new, minor (scope corrected 2026-10-20) | `repro/internal/protocolserver/` |
 | 27 | low | [one assistant turn becomes two assistant messages](responses-chat-split-assistant-turn.md) | Responses -> Chat request | new | `repro/internal/protocol/request/` |
 | 28 | low | [reasoning summaries dropped without streaming](responses-anthropic-nonstream-reasoning-summary.md) | Responses -> Anthropic non-stream | new (related: #1863) | `repro/internal/protocol/nonstream/` |
 | 29 | low | [images in tool output dropped](responses-anthropic-tool-output-image.md) | Responses -> Anthropic request | new | `repro/internal/protocol/request/` |

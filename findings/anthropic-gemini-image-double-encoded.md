@@ -33,8 +33,9 @@ as bytes that are not an image, labelled `image/png`, so the model
 cannot see the image (whether Gemini then rejects the request or answers
 without it was not checked against the live API).
 
-Status: **new** (not reported; not yet checked against the tracker for an
-existing issue).
+Status: **new** (tracker search 2026-10-20 over the full text of all issues
+and PRs for `base64`, `double encod`, `inlineData`: nothing). Reproduces on
+main `bc460f6`.
 
 How it was found: by hand, while triaging a spurious counterexample of the
 blind go2lean run (see the [provenance note](README.md)). The blind spec
