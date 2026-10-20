@@ -743,3 +743,141 @@ func SpecConvertAnthropicBetaToOpenAIRequestKeepsToolChoice(anthropicReq *anthro
 	}
 	return true
 }
+
+// Specs for the hand-found round-2 findings (see benchmark.tsv). Each
+// states an input-independent property of one converter; none names the
+// values that trigger the finding.
+
+// responsesMessageText is the text of a Responses input message's content.
+func responsesMessageText(c responses.EasyInputMessageContentUnionParam) string {
+	text := c.OfString.Value
+	for _, p := range c.OfInputItemContentList {
+		if p.OfInputText != nil {
+			text += p.OfInputText.Text
+		}
+	}
+	return text
+}
+
+// go2lean:spec ConvertResponsesInputToMessages
+// SpecConvertResponsesInputToMessagesKeepsInstructionRoles: every Responses
+// input message with role system or developer and non-empty text becomes a
+// Chat system or developer message, never a user or assistant turn.
+func SpecConvertResponsesInputToMessagesKeepsInstructionRoles(items responses.ResponseInputParam, ret []openai.ChatCompletionMessageParamUnion) bool {
+	want := 0
+	for _, item := range items {
+		if item.OfMessage == nil {
+			continue
+		}
+		role := string(item.OfMessage.Role)
+		if (role == "system" || role == "developer") && responsesMessageText(item.OfMessage.Content) != "" {
+			want++
+		}
+	}
+	if want == 0 {
+		return true
+	}
+	got := 0
+	for _, m := range ret {
+		if m.OfSystem != nil || m.OfDeveloper != nil {
+			got++
+		}
+	}
+	return got >= want
+}
+
+// chatInstructionText is the text of a Chat system or developer message.
+func chatInstructionText(m openai.ChatCompletionMessageParamUnion) string {
+	text := ""
+	switch {
+	case m.OfSystem != nil:
+		text = m.OfSystem.Content.OfString.Value
+		for _, p := range m.OfSystem.Content.OfArrayOfContentParts {
+			text += p.Text
+		}
+	case m.OfDeveloper != nil:
+		text = m.OfDeveloper.Content.OfString.Value
+		for _, p := range m.OfDeveloper.Content.OfArrayOfContentParts {
+			text += p.Text
+		}
+	}
+	return text
+}
+
+// go2lean:spec ConvertOpenAIToAnthropicRequest
+// SpecConvertOpenAIToAnthropicRequestKeepsInstructions: the text of every
+// Chat system and developer message reaches the Anthropic system prompt
+// (checked by length).
+func SpecConvertOpenAIToAnthropicRequestKeepsInstructions(req *openai.ChatCompletionNewParams, defaultMaxTokens int64, ret *anthropic.BetaMessageNewParams) bool {
+	if req == nil || ret == nil {
+		return true
+	}
+	want := 0
+	for _, m := range req.Messages {
+		want += len(chatInstructionText(m))
+	}
+	got := 0
+	for _, b := range ret.System {
+		got += len(b.Text)
+	}
+	return got >= want
+}
+
+// go2lean:spec ConvertOpenAIToAnthropicRequest
+// SpecConvertOpenAIToAnthropicRequestKeepsTools: every Chat function tool
+// becomes an Anthropic tool, and the tool_choice mode keeps its meaning
+// ("required" must call a tool, "none" must not, "auto" may).
+func SpecConvertOpenAIToAnthropicRequestKeepsTools(req *openai.ChatCompletionNewParams, defaultMaxTokens int64, ret *anthropic.BetaMessageNewParams) bool {
+	if req == nil || ret == nil {
+		return true
+	}
+	fns := 0
+	for _, t := range req.Tools {
+		if t.OfFunction != nil {
+			fns++
+		}
+	}
+	if len(ret.Tools) != fns {
+		return false
+	}
+	if fns == 0 {
+		return true
+	}
+	switch req.ToolChoice.OfAuto.Value {
+	case "required":
+		return ret.ToolChoice.OfAny != nil
+	case "none":
+		return ret.ToolChoice.OfNone != nil
+	case "auto":
+		return ret.ToolChoice.OfAuto != nil
+	}
+	return true
+}
+
+// go2lean:spec ConvertChatToOpenAIResponses
+// SpecConvertChatToOpenAIResponsesKeepsLimits: every Chat sampling or limit
+// parameter with a Responses counterpart keeps its value, zero and false
+// included (max_completion_tokens or max_tokens -> max_output_tokens,
+// temperature, top_p, parallel_tool_calls).
+func SpecConvertChatToOpenAIResponsesKeepsLimits(params *openai.ChatCompletionNewParams, defaultMaxTokens int64, ret *responses.ResponseNewParams) bool {
+	if params == nil || ret == nil {
+		return true
+	}
+	limit := params.MaxCompletionTokens
+	if params.MaxTokens.Valid() {
+		limit = params.MaxTokens
+	}
+	if limit.Valid() && limit.Value > 0 && (!ret.MaxOutputTokens.Valid() || ret.MaxOutputTokens.Value != limit.Value) {
+		return false
+	}
+	if params.Temperature.Valid() && (!ret.Temperature.Valid() || ret.Temperature.Value != params.Temperature.Value) {
+		return false
+	}
+	if params.TopP.Valid() && (!ret.TopP.Valid() || ret.TopP.Value != params.TopP.Value) {
+		return false
+	}
+	if params.ParallelToolCalls.Valid() && (!ret.ParallelToolCalls.Valid() || ret.ParallelToolCalls.Value != params.ParallelToolCalls.Value) {
+		return false
+	}
+	return true
+}

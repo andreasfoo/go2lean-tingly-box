@@ -10,6 +10,7 @@ import (
 
 	"github.com/tingly-dev/tingly-box/internal/protocol"
 	"github.com/tingly-dev/tingly-box/internal/protocol/nonstream"
+	protocolusage "github.com/tingly-dev/tingly-box/internal/protocol/usage"
 	"github.com/tingly-dev/tingly-box/internal/protocol/wire"
 )
 
@@ -792,4 +793,147 @@ func SpecOpenAIToAnthropicConverterProcessChunkOneOpenTextBlock(c *openAIToAnthr
 // counterexample, the real run prints it, so the two can be compared.
 func go2leanProbe(label string, v string) {
 	fmt.Printf("GO2LEAN_PROBE %s %q\n", label, v)
+}
+
+// ----- Specs for the hand-found round-2 findings (see benchmark.tsv) -----
+
+// go2lean:spec chatToResponsesConverter.processChunk
+// SpecChatToResponsesConverterProcessChunkTerminalUsage: a Chat stream of
+// the chunk's choices (one per chunk, without tool calls) with its usage in
+// one more chunk, at any position (the chunk's created time picks it): the
+// usage on the terminal Responses event is that usage.
+func SpecChatToResponsesConverterProcessChunkTerminalUsage(c *chatToResponsesConverter, chunk *openai.ChatCompletionChunk) bool {
+	if chunk == nil || !chunkHasUsage(chunk.Usage) || len(chunk.Choices) == 0 {
+		return true
+	}
+	for _, ch := range chunk.Choices {
+		if len(ch.Delta.ToolCalls) > 0 {
+			return true // tool calls mint random item ids
+		}
+	}
+	conv := &chatToResponsesConverter{responseModel: "m", responseID: "resp_go2lean", textItemID: "msg_go2lean",
+		textOutputIndex: -1, usage: protocol.ZeroTokenUsage(), pendingToolCalls: map[int]*pendingToolCallResponse{}}
+	n := int64(len(chunk.Choices))
+	at := chunk.Created % (n + 1)
+	if at < 0 {
+		at = -at
+	}
+	usageChunk := &openai.ChatCompletionChunk{Usage: chunk.Usage}
+	for i, ch := range chunk.Choices {
+		if int64(i) == at {
+			conv.processChunk(usageChunk)
+		}
+		conv.processChunk(&openai.ChatCompletionChunk{Choices: []openai.ChatCompletionChunkChoice{ch}})
+	}
+	if at == n {
+		conv.processChunk(usageChunk)
+	}
+	if !conv.completedSent {
+		return true // no finish reason: the stream fails, no terminal event
+	}
+	var got *wire.ResponsesUsageWire
+	for _, p := range conv.pending {
+		switch e := p.(type) {
+		case wire.ResponsesCompletedEvent:
+			got = e.Response.Usage
+		case wire.ResponsesIncompleteEvent:
+			got = e.Response.Usage
+		}
+	}
+	want := protocolusage.ToResponsesUsageWire(protocolusage.FromOpenAIChatCompletion(chunk.Usage))
+	return got != nil && got.InputTokens == want.InputTokens && got.OutputTokens == want.OutputTokens
+}
+
+// streamedToolIndexes replays r to a Responses -> Chat converter as
+// replayResponsesToChat does and returns the tool_calls[].index values in
+// order of first appearance.
+func streamedToolIndexes(r responses.Response) (indexes []int) {
+	c := newResponsesToChatConverter(nil, "m", true)
+	c.processEvent(&responses.ResponseStreamEventUnion{Type: "response.created", Response: r})
+	for i, item := range r.Output {
+		c.processEvent(&responses.ResponseStreamEventUnion{Type: "response.output_item.added", Item: item, OutputIndex: int64(i)})
+		if item.Type == "function_call" {
+			c.processEvent(&responses.ResponseStreamEventUnion{Type: "response.function_call_arguments.delta", ItemID: item.ID, OutputIndex: int64(i), Delta: item.Arguments.OfString})
+		}
+		c.processEvent(&responses.ResponseStreamEventUnion{Type: "response.output_item.done", Item: item, OutputIndex: int64(i)})
+	}
+	c.processEvent(&responses.ResponseStreamEventUnion{Type: "response.completed", Response: r})
+	seen := map[int]bool{}
+	for _, p := range c.pending {
+		chunk, ok := p.(wire.ChatStreamChunk)
+		if !ok {
+			continue
+		}
+		for _, ch := range chunk.Choices {
+			for _, tc := range ch.Delta.ToolCalls {
+				if !seen[tc.Index] {
+					seen[tc.Index] = true
+					indexes = append(indexes, tc.Index)
+				}
+			}
+		}
+	}
+	return
+}
+
+// go2lean:spec responsesToChatConverter.processEvent
+// SpecResponsesToChatConverterProcessEventToolIndexesDense: a Chat client
+// streaming a Responses answer with n function calls (next to messages and
+// reasoning items) sees the tool_calls indexes 0..n-1 in order, as Chat
+// clients accumulate calls by index.
+func SpecResponsesToChatConverterProcessEventToolIndexesDense(c *responsesToChatConverter, evt *responses.ResponseStreamEventUnion) bool {
+	if evt == nil {
+		return true
+	}
+	calls := 0
+	for _, item := range evt.Response.Output {
+		switch item.Type {
+		case "message", "reasoning":
+		case "function_call":
+			if item.CallID == "" || item.ID == "" {
+				return true
+			}
+			calls++
+		default:
+			return true
+		}
+	}
+	got := streamedToolIndexes(evt.Response)
+	if len(got) != calls {
+		return false
+	}
+	for i, idx := range got {
+		if idx != i {
+			return false
+		}
+	}
+	return true
+}
+
+// go2lean:spec openAIToAnthropicConverter.processChunk
+// SpecOpenAIToAnthropicConverterProcessChunkToolUseIDs: whatever tool-call
+// deltas a Chat stream sends, every tool_use block an Anthropic client
+// reads has a non-empty id.
+func SpecOpenAIToAnthropicConverterProcessChunkToolUseIDs(c *openAIToAnthropicConverter, chunk *openai.ChatCompletionChunk) bool {
+	if chunk == nil {
+		return true
+	}
+	conv := &openAIToAnthropicConverter{responseModel: "m", mapFinishReason: mapOpenAIFinishReasonToAnthropic,
+		messageID: "msg_go2lean", state: newStreamState(), usage: protocol.ZeroTokenUsage()}
+	for _, ch := range chunk.Choices {
+		ch.FinishReason = ""
+		conv.processChunk(&openai.ChatCompletionChunk{Choices: []openai.ChatCompletionChunkChoice{ch}})
+	}
+	for _, p := range conv.pending {
+		ev, ok := p.(anthropicStreamEvent)
+		if !ok {
+			continue
+		}
+		if d, ok := ev.data.(anthropicContentBlockStartEvent); ok && d.ContentBlock.Type == "tool_use" {
+			if d.ContentBlock.ID == nil || *d.ContentBlock.ID == "" {
+				return false
+			}
+		}
+	}
+	return true
 }

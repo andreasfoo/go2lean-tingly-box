@@ -92,3 +92,60 @@ func SpecConvertOpenAIChatToAnthropicBetaThinkingIsText(chat *openai.ChatComplet
 	}
 	return got == want
 }
+
+// Specs for the hand-found round-2 findings (see benchmark.tsv).
+
+// cutShort says whether an Anthropic stop reason means the output was cut
+// short or withheld (not a normal end of turn).
+func cutShort(r anthropic.BetaStopReason) bool {
+	return r == "max_tokens" || r == "model_context_window_exceeded" || r == "refusal"
+}
+
+// go2lean:spec ConvertAnthropicBetaToOpenAIChat
+// SpecConvertAnthropicBetaToOpenAIChatCutShortIsNotStop: a stop reason
+// meaning the output was cut short or withheld never reaches a Chat client
+// as the normal finish_reason "stop".
+func SpecConvertAnthropicBetaToOpenAIChatCutShortIsNotStop(bm *anthropic.BetaMessage, responseModel string, ret wire.ChatCompletionWire) bool {
+	if bm == nil || len(ret.Choices) != 1 || !cutShort(bm.StopReason) {
+		return true
+	}
+	return ret.Choices[0].FinishReason != "stop"
+}
+
+// go2lean:spec ConvertAnthropicBetaToResponsesWire
+// SpecConvertAnthropicBetaToResponsesWireCutShortIsIncomplete: a stop
+// reason meaning the output was cut short or withheld never reaches a
+// Responses client as status "completed".
+func SpecConvertAnthropicBetaToResponsesWireCutShortIsIncomplete(resp *anthropic.BetaMessage, responseModel string, actualModel string, ret wire.ResponsesWireResponse) bool {
+	if resp == nil || !cutShort(resp.StopReason) {
+		return true
+	}
+	return ret.Status != "completed"
+}
+
+// go2lean:spec ConvertOpenAIChatToAnthropicBeta
+// SpecConvertOpenAIChatToAnthropicBetaToolUseIDs: every tool_use block an
+// Anthropic client reads has a non-empty id (it must answer it by id).
+func SpecConvertOpenAIChatToAnthropicBetaToolUseIDs(chat *openai.ChatCompletion, model string, ret0 *anthropic.BetaMessage, ret1 error) bool {
+	if ret0 == nil || ret1 != nil {
+		return true
+	}
+	for _, b := range ret0.Content {
+		if b.Type == "tool_use" && b.ID == "" {
+			return false
+		}
+	}
+	return true
+}
+
+// go2lean:spec ConvertChatToResponsesWire
+// SpecConvertChatToResponsesWireCallIDs: every function_call item a
+// Responses client reads has a non-empty call_id.
+func SpecConvertChatToResponsesWireCallIDs(resp *openai.ChatCompletion, responseModel string, actualModel string, ret wire.ResponsesWireResponse) bool {
+	for _, item := range ret.Output {
+		if item.Type == "function_call" && item.CallID == "" {
+			return false
+		}
+	}
+	return true
+}

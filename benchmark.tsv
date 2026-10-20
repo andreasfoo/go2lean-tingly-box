@@ -5,3 +5,14 @@ SpecResponsesToChatConverterProcessEventArgumentsAnySchedule	responses-done-only
 SpecOpenAIToAnthropicConverterProcessChunkOneOpenBlock	chat-anthropic-interleaved-blocks.md	any delta sequence
 SpecOpenAIToAnthropicConverterProcessChunkOneOpenTextBlock	chat-anthropic-reasoning-null.md	deltas without tool calls
 SpecConvertOpenAIChatToAnthropicBetaThinkingIsText	chat-anthropic-reasoning-null.md	non-stream thinking text
+SpecChatToResponsesConverterProcessChunkTerminalUsage	responses-stream-trailing-usage.md	usage at any position
+SpecResponsesToChatConverterProcessEventToolIndexesDense	responses-chat-tool-call-index.md	tool_calls indexes
+SpecConvertResponsesInputToMessagesKeepsInstructionRoles	responses-developer-message-as-user.md	instruction roles
+SpecConvertAnthropicBetaToOpenAIChatCutShortIsNotStop	anthropic-abnormal-stop-reasons.md	Chat, non-stream
+SpecConvertAnthropicBetaToResponsesWireCutShortIsIncomplete	anthropic-abnormal-stop-reasons.md	Responses, non-stream
+SpecConvertOpenAIChatToAnthropicBetaToolUseIDs	chat-tool-call-empty-id.md	Anthropic, non-stream
+SpecConvertChatToResponsesWireCallIDs	chat-tool-call-empty-id.md	Responses, non-stream
+SpecOpenAIToAnthropicConverterProcessChunkToolUseIDs	chat-tool-call-empty-id.md	Anthropic, stream
+SpecConvertOpenAIToAnthropicRequestKeepsInstructions	chat-anthropic-request-coverage.md	developer messages
+SpecConvertOpenAIToAnthropicRequestKeepsTools	chat-anthropic-request-coverage.md	tools and tool_choice
+SpecConvertChatToOpenAIResponsesKeepsLimits	chat-responses-request-params.md	limits and sampling
