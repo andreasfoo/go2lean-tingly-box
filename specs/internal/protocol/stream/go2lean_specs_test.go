@@ -725,19 +725,22 @@ func SpecResponsesToChatConverterProcessEventStreamFinishMatches(c *responsesToC
 	return f1 == f2
 }
 
-// go2lean:spec openAIToAnthropicConverter.processChunk
-// SpecOpenAIToAnthropicConverterProcessChunkOneOpenBlock: whatever deltas a
-// Chat stream sends (the chunk's choices, fed one per chunk in order), the
-// Anthropic events keep one content block open at a time and send every
-// delta to the open block, as the Anthropic API does.
-func SpecOpenAIToAnthropicConverterProcessChunkOneOpenBlock(c *openAIToAnthropicConverter, chunk *openai.ChatCompletionChunk) bool {
+// oneOpenBlock feeds the chunk's choices to a fresh Chat -> Anthropic
+// converter one per chunk (unfinished ones only: the stream's end is not
+// under test) and checks that one content block is open at a time and
+// every delta goes to it. With noTools, a sequence holding a tool call
+// passes untested.
+func oneOpenBlock(chunk *openai.ChatCompletionChunk, noTools bool) bool {
 	if chunk == nil {
 		return true
 	}
 	conv := newOpenAIToAnthropicConverter(nil, "m", nil, nil, mapOpenAIFinishReasonToAnthropic)
 	for _, ch := range chunk.Choices {
 		if ch.FinishReason != "" {
-			continue // the stream's end is not under test
+			continue
+		}
+		if noTools && len(ch.Delta.ToolCalls) > 0 {
+			return true
 		}
 		conv.processChunk(&openai.ChatCompletionChunk{Choices: []openai.ChatCompletionChunkChoice{ch}})
 	}
@@ -765,6 +768,21 @@ func SpecOpenAIToAnthropicConverterProcessChunkOneOpenBlock(c *openAIToAnthropic
 		}
 	}
 	return true
+}
+
+// go2lean:spec openAIToAnthropicConverter.processChunk
+// SpecOpenAIToAnthropicConverterProcessChunkOneOpenBlock: whatever deltas a
+// Chat stream sends, the Anthropic events keep one content block open at a
+// time and send every delta to the open block, as the Anthropic API does.
+func SpecOpenAIToAnthropicConverterProcessChunkOneOpenBlock(c *openAIToAnthropicConverter, chunk *openai.ChatCompletionChunk) bool {
+	return oneOpenBlock(chunk, false)
+}
+
+// go2lean:spec openAIToAnthropicConverter.processChunk
+// SpecOpenAIToAnthropicConverterProcessChunkOneOpenTextBlock: the same for
+// streams of text, refusals and reasoning only (no tool calls).
+func SpecOpenAIToAnthropicConverterProcessChunkOneOpenTextBlock(c *openAIToAnthropicConverter, chunk *openai.ChatCompletionChunk) bool {
+	return oneOpenBlock(chunk, true)
 }
 
 // go2leanProbe records v under label: go2lean's model keeps it in the

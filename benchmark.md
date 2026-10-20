@@ -13,7 +13,8 @@ go2lean, which is then closed (go2lean `docs/design.md` §9c).
 | [chat-request-params](findings/chat-request-params.md), sampling and stop | `SpecConvertAnthropicBetaToOpenAIRequestKeepsSampling` | found at trial 0, confirmed | — |
 | [chat-request-params](findings/chat-request-params.md), tool_choice | `SpecConvertAnthropicBetaToOpenAIRequestKeepsToolChoice` | found at trial 17, confirmed | — |
 | [responses-done-only-arguments](findings/responses-done-only-arguments.md) | `SpecResponsesToChatConverterProcessEventArgumentsAnySchedule` | found at trial 610, confirmed | the event schedule is an input of the spec (the earlier stream specs replayed one fixed schedule and could not see this) |
-| [chat-anthropic-reasoning-null](findings/chat-anthropic-reasoning-null.md), stream | `SpecOpenAIToAnthropicConverterProcessChunkOneOpenBlock` | pending | needed JSON metadata of SDK types and `json.Unmarshal` (both added) |
+| (new) [chat-anthropic-interleaved-blocks](findings/chat-anthropic-interleaved-blocks.md) | `SpecOpenAIToAnthropicConverterProcessChunkOneOpenBlock` | found at trial 683, confirmed | first inconclusive: the harness wrote an empty map as nil (fixed) |
+| [chat-anthropic-reasoning-null](findings/chat-anthropic-reasoning-null.md), stream | `SpecOpenAIToAnthropicConverterProcessChunkOneOpenTextBlock` (same, no tool calls) | pending | needed JSON metadata of SDK types and `json.Unmarshal` (both added) |
 | [chat-anthropic-reasoning-null](findings/chat-anthropic-reasoning-null.md), non-stream | — | out of reach | struct JSON encoding / decoding not modelled |
 | [usage-nonstream-cached-input](findings/usage-nonstream-cached-input.md) | — | out of reach | inline in an HTTP handler |
 | [env-credentials-upstream](findings/env-credentials-upstream.md) | — | out of reach | environment read inside the SDK |
