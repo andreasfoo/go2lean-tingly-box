@@ -62,3 +62,59 @@ trial 4 and the round-1 thinking case at trial 160, both confirmed.
 **17 of 17 reachable cases.**
 
 Run with `scripts/benchmark.sh <go2lean> <tingly-box> <workspace>` (`REUSE=1` hunts again in a workspace compiled before); the cases are `benchmark.tsv`.
+
+## Blind specs: what go2lean finds when nobody knows the bugs
+
+The rounds above measure whether go2lean finds a bug once someone has
+written the right spec for it. To see what it finds without that
+knowledge, a Claude subagent that had not seen [findings/](findings/)
+wrote 75 general specs for the request, non-stream and stream converters
+(`scratchpad` experiment, 2026-10-20), and go2lean hunted them blind:
+
+- 39 counterexamples confirmed by `go test`, triaged by hand:
+  - 17 hit known findings: 13 distinct ones (#4, #7, #8, #10, #15, #16,
+    #18, #19, #26, #28, #30, #33, #34).
+  - 17 were new bugs with 12 root causes, written up as findings 44-49
+    and 51-56.
+  - 5 came from wrong specs: an input the gateway never decodes into, a
+    documented deliberate mapping, or inconsistent usage numbers.
+- Triaging a spurious counterexample turned up one more bug by hand: #50,
+  base64 images encoded twice.
+- The 6 spurious counterexamples each named a gap in the model, all since
+  closed in go2lean:
+  - `base64.StdEncoding` decoding was not modelled.
+  - `json.RawMessage` was rendered differently by the harness.
+  - A JSON round trip in a callee got stuck.
+  - Map lookups and repair helpers fell back to havoc.
+
+## The M2 agent's own specs
+
+go2lean's M2 agent writes the specs itself: it reads the package and the
+model report, gets [guidance/bug-classes.md](guidance/bug-classes.md),
+and then compiles, hunts and verifies its specs. It was run with two
+models on the request, non-stream and stream packages
+(`scripts/agent-bench.sh`):
+
+| model | confirmed (spec counterexamples) | known findings hit | new findings | spec wrong |
+|---|---|---|---|---|
+| MiniMax-M3 (no thinking) | 2 | none | #33, #34 | — |
+| Claude Opus 5.5 (adaptive thinking), request | 13 | 9: #10, #18 (×2), #19 (×2), #45 (×2), #46, #47 | #57, #58 (3 counterexamples) | 1 |
+| Claude Opus 5.5, non-stream | 11 | 3: #4, #26, #55 | #59, #60 (5 counterexamples) | 3 |
+| Claude Opus 5.5, stream | 1 | — | — | — |
+
+The one stream counterexample is a v1/Beta disagreement on the legacy
+`function_call` finish reason. That reason comes only with the deprecated
+`functions` API, which the gateway never sends upstream, so it got no
+finding. Each "spec wrong" counterexample asked for something the code
+need not do: a role default, impossible usage numbers, or a token count
+beyond int32.
+
+Two go2lean gaps came out of this run:
+
+- On the stream package the agent's first answer ran out of output tokens
+  inside the spec block. go2lean now allows 64000 tokens and keeps the
+  complete declarations of a cut-off block.
+- On the request package, `ConvertOpenAIToAnthropicTools` was stuck on
+  most generated tool schemas. The SDKs' apijson decoder coerces or skips
+  a member of the wrong JSON type, and the model got stuck instead. Both
+  are fixed in go2lean (`02c071c`, `8fe99b3`).
