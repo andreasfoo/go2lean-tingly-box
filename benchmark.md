@@ -27,4 +27,34 @@ could not generate, calls it did not model, harness renderings that
 changed the value), and reach (code the function-level search does not
 get to).
 
+## Round 2: findings 13-19
+
+Eight more bugs were found by reading code (findings 13-20, pages in
+[findings/](findings/)). Each got a general spec before any search (no
+trigger values; each was checked to fail on the hand-found trigger), and
+`scripts/benchmark.sh` hunted them blind with go2lean `3191ef8`:
+
+| finding | spec | go2lean `3191ef8` |
+|---|---|---|
+| [responses-stream-trailing-usage](findings/responses-stream-trailing-usage.md) | `SpecChatToResponsesConverterProcessChunkTerminalUsage` | found at trial 5, confirmed |
+| [responses-chat-tool-call-index](findings/responses-chat-tool-call-index.md) | `SpecResponsesToChatConverterProcessEventToolIndexesDense` | found at trial 77, confirmed |
+| [responses-developer-message-as-user](findings/responses-developer-message-as-user.md) | `SpecConvertResponsesInputToMessagesKeepsInstructionRoles` | found at trial 127, confirmed |
+| [anthropic-abnormal-stop-reasons](findings/anthropic-abnormal-stop-reasons.md), Chat | `SpecConvertAnthropicBetaToOpenAIChatCutShortIsNotStop` | found at trial 7, confirmed |
+| [anthropic-abnormal-stop-reasons](findings/anthropic-abnormal-stop-reasons.md), Responses | `SpecConvertAnthropicBetaToResponsesWireCutShortIsIncomplete` | found at trial 2, confirmed |
+| [chat-tool-call-empty-id](findings/chat-tool-call-empty-id.md), Responses | `SpecConvertChatToResponsesWireCallIDs` | found at trial 1, confirmed |
+| [chat-tool-call-empty-id](findings/chat-tool-call-empty-id.md), Anthropic stream | `SpecOpenAIToAnthropicConverterProcessChunkToolUseIDs` | found at trial 4, confirmed |
+| [chat-tool-call-empty-id](findings/chat-tool-call-empty-id.md), Anthropic non-stream | `SpecConvertOpenAIChatToAnthropicBetaToolUseIDs` | missed: stuck in `json.Marshal` (see below) |
+| [chat-anthropic-request-coverage](findings/chat-anthropic-request-coverage.md), developer messages | `SpecConvertOpenAIToAnthropicRequestKeepsInstructions` | found at trial 0, confirmed |
+| [chat-anthropic-request-coverage](findings/chat-anthropic-request-coverage.md), tools and tool_choice | `SpecConvertOpenAIToAnthropicRequestKeepsTools` | found at trial 1169, confirmed |
+| [chat-responses-request-params](findings/chat-responses-request-params.md) | `SpecConvertChatToOpenAIResponsesKeepsLimits` | found at trial 0, confirmed |
+| [upstream-errors-not-translated](findings/upstream-errors-not-translated.md) | — | out of reach: HTTP error handling |
+
+**10 of 11 reachable cases found blind and confirmed**; with the round-1
+cases, 15 of 17 (the other miss is the non-stream thinking case above).
+Both misses get stuck in the same place: the non-stream Chat -> Anthropic
+converter marshals a struct whose `interface{}` member holds a slice of
+SDK param unions, and the frontend described every pointer variant
+(`*BetaTextBlockParam`, ...) as an opaque custom marshaler, because a
+pointer has its element's `MarshalJSON` method (go2lean gap, fixed next).
+
 Run with `scripts/benchmark.sh <go2lean> <tingly-box> <workspace>` (`REUSE=1` hunts again in a workspace compiled before); the cases are `benchmark.tsv`.
