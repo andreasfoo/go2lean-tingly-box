@@ -25,6 +25,20 @@ One page per finding. Status: **tracked** (an issue exists upstream),
 | [Chat -> Anthropic requests drop developer messages, parameterless tools, tool_choice modes](chat-anthropic-request-coverage.md) | Chat -> Anthropic request | new | `repro/internal/protocol/request/`, `repro/internal/protocolserver/` |
 | [Chat -> Responses requests drop max_completion_tokens, zero sampling values, parallel_tool_calls](chat-responses-request-params.md) | Chat -> Responses request | new | `repro/internal/protocol/request/`, `repro/internal/protocolserver/` |
 | [upstream errors not translated to the client's protocol](upstream-errors-not-translated.md) | error responses, all converted paths | new (related: #2052) | `repro/internal/protocolserver/` |
+| [Anthropic tool schemas lose `$defs`, `additionalProperties` and other keywords](anthropic-tool-schema-keywords.md) | Anthropic -> Chat, Anthropic -> Responses request | new | `repro/internal/protocol/request/` |
+| [structured output formats dropped](structured-output-dropped.md) | Chat <-> Responses <-> Anthropic requests, all six directions | new | `repro/internal/protocol/request/` |
+| [an empty thinking block stays open across the answer](responses-anthropic-stream-open-thinking.md) | Responses -> Anthropic stream | new | `repro/internal/protocol/stream/` |
+| [parameterless tool calls stream arguments `""`](parameterless-tool-stream-arguments.md) | Anthropic -> Chat and Anthropic -> Responses streams | new (related: #1840) | `repro/internal/protocol/stream/` |
+| [PDF, document and file content dropped](document-content-dropped.md) | Anthropic -> Chat, Anthropic -> Responses, Chat -> Anthropic, Chat -> Responses requests | new | `repro/internal/protocol/request/` |
+| [a refusal becomes `content: null`](responses-anthropic-nonstream-refusal.md) | Responses -> Anthropic non-stream | new (related: #912) | `repro/internal/protocol/nonstream/` |
+| [one assistant turn becomes two assistant messages](responses-chat-split-assistant-turn.md) | Responses -> Chat request | new | `repro/internal/protocol/request/` |
+| [reasoning summaries dropped without streaming](responses-anthropic-nonstream-reasoning-summary.md) | Responses -> Anthropic non-stream | new (related: #1863) | `repro/internal/protocol/nonstream/` |
+| [images in tool output dropped](responses-anthropic-tool-output-image.md) | Responses -> Anthropic request | new | `repro/internal/protocol/request/` |
+| [tool `strict` flag lost](chat-responses-tool-strict.md) | Chat -> Responses, Responses -> Chat requests | new | `repro/internal/protocol/request/` |
+| [stream input usage depends on which fields message_delta repeats](usage-anthropic-delta-cache-creation.md) | usage accumulation, Anthropic provider streams | new, minor | `repro/internal/protocol/usage/` |
+| [`ParseAnthropicResult` keeps only the last text block](sse-parse-anthropic-last-text.md) | test infrastructure (`sse` parsers) | new, minor | `repro/internal/protocol/sse/` |
+| [tool_choice "none" becomes auto](responses-anthropic-tool-choice-none.md) | Responses -> Anthropic request | new (found by the go2lean M2 agent) | `repro/internal/protocol/request/` |
+| [Gemini function calling mode NONE becomes auto](gemini-tool-choice-none.md) | Gemini -> Chat, Gemini -> Anthropic request (no gateway caller) | new, latent (found by the go2lean M2 agent) | `repro/internal/protocol/request/` |
 
 Findings 6-11 came from reading code for the four spec directions
 (usage, credentials, routing, config) and from the bug classes of similar
@@ -34,7 +48,14 @@ are marked so on their pages. Findings 13-20 (from
 also found by hand, in a second round of code reading over the converters
 and error paths, and confirmed with `go test`; each page ends with the
 general property the bug refutes, stated without the trigger values, and the
-function it specifies.
+function it specifies. Findings 21-32 (from `anthropic-tool-schema-keywords`
+to `sse-parse-anthropic-last-text`) were found by hand too, in a third round
+of code reading over the request, stream and non-stream converters, the
+usage accumulator and the result parsers, and confirmed with `go test`; their
+pages follow the same form. Findings 33-34
+(`responses-anthropic-tool-choice-none`, `gemini-tool-choice-none`) were not
+found by hand: the go2lean M2 agent found them with its own spec
+(MiniMax-M3); their repro tests were written afterwards.
 
 Not bugs (the converters' intended repairs, recorded so they are not
 reported): orphan tool calls get an "aborted" result, an unmatched
