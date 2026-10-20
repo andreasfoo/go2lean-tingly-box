@@ -1,7 +1,10 @@
 package nonstream
 
 import (
+	"encoding/json"
+
 	"github.com/anthropics/anthropic-sdk-go"
+	"github.com/openai/openai-go/v3"
 
 	"github.com/tingly-dev/tingly-box/internal/protocol/wire"
 )
@@ -64,4 +67,28 @@ func SpecConvertAnthropicBetaToOpenAIChatFinishReason(bm *anthropic.BetaMessage,
 		return false
 	}
 	return ret.Choices[0].Message.Role == string(bm.Role) && ret.Model == responseModel && ret.ID == bm.ID
+}
+
+// go2lean:spec ConvertOpenAIChatToAnthropicBeta
+// SpecConvertOpenAIChatToAnthropicBetaThinkingIsText: the thinking a
+// non-streaming Anthropic client reads is the reasoning text the Chat
+// answer carries in reasoning_content (the decoded JSON string), and there
+// is no thinking when it carries none.
+func SpecConvertOpenAIChatToAnthropicBetaThinkingIsText(chat *openai.ChatCompletion, model string, ret0 *anthropic.BetaMessage, ret1 error) bool {
+	if chat == nil || ret0 == nil || ret1 != nil || len(chat.Choices) == 0 {
+		return true
+	}
+	want := ""
+	if f, ok := chat.Choices[0].Message.JSON.ExtraFields["reasoning_content"]; ok {
+		if f.Raw() != "null" && json.Unmarshal([]byte(f.Raw()), &want) != nil {
+			return true // not a string: another case
+		}
+	}
+	got := ""
+	for _, b := range ret0.Content {
+		if b.Type == "thinking" {
+			got += b.Thinking
+		}
+	}
+	return got == want
 }

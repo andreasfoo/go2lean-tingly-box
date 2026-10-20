@@ -4,3 +4,4 @@ SpecConvertAnthropicBetaToOpenAIRequestKeepsToolChoice	chat-request-params.md	to
 SpecResponsesToChatConverterProcessEventArgumentsAnySchedule	responses-done-only-arguments.md	any event schedule
 SpecOpenAIToAnthropicConverterProcessChunkOneOpenBlock	chat-anthropic-interleaved-blocks.md	any delta sequence
 SpecOpenAIToAnthropicConverterProcessChunkOneOpenTextBlock	chat-anthropic-reasoning-null.md	deltas without tool calls
+SpecConvertOpenAIChatToAnthropicBetaThinkingIsText	chat-anthropic-reasoning-null.md	non-stream thinking text
