@@ -10,6 +10,13 @@ One page per finding. Status: **tracked** (an issue exists upstream),
 | [streamed tool calls all at index 0; max_tokens not "length"](issue-1923-stream-indexes.md) | Anthropic -> Chat stream | tracked (#1923) | `poc/round2/` |
 | [reasoning_content empty without streaming](reasoning-content-nonstream.md) | Anthropic -> Chat non-stream | new | `poc/round3/` |
 | [refusal lost when streaming](responses-chat-stream-refusal.md) | Responses -> Chat stream | new | direct test, below |
+| [gateway environment credentials sent upstream](env-credentials-upstream.md) | upstream clients | new | `repro/internal/client/` |
+| [cache reads counted twice without streaming](usage-nonstream-cached-input.md) | usage tracking, Chat passthrough | new | `repro/internal/protocolserver/` |
+| [recordings keep client credentials](recording-client-credentials.md) | recording | new, minor | code reading |
+
+Findings 6-8 came from reading code for the four spec directions
+(usage, credentials, routing, config), not from a go2lean search; they are
+marked so on their pages.
 
 Not bugs (the converters' intended repairs, recorded so they are not
 reported): orphan tool calls get an "aborted" result, an unmatched

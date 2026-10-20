@@ -46,6 +46,9 @@ declare -A finding=(
   [MaxTokensFinishesWithLength]="issue-1923-stream-indexes, max_tokens (tracked #1923)"
   [ThinkingReachesReasoningContent]="reasoning-content-nonstream (new)"
   [StreamedRefusalReachesChatClient]="responses-chat-stream-refusal (new)"
+  [EnvAuthTokenNotSentUpstream]="env-credentials-upstream, ANTHROPIC_AUTH_TOKEN (new)"
+  [EnvOpenAIOrgNotSentUpstream]="env-credentials-upstream, OPENAI_ORG_ID (new)"
+  [NonStreamUsageExcludesCachedInput]="usage-nonstream-cached-input (new)"
 )
 status=0
 printf '\n%-36s  %-11s  %s\n' test result finding

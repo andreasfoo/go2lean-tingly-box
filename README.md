@@ -22,8 +22,15 @@ record of every run.
 | 4 | [`reasoning_content` empty without streaming](findings/reasoning-content-nonstream.md): the non-streaming converter reads `block.Text` of a `thinking` block (always empty) instead of `block.Thinking`; the streaming converter returns the thinking | Anthropic → Chat, non-streaming | new, not reported |
 | 5 | [Refusal lost when streaming](findings/responses-chat-stream-refusal.md): a Responses answer that refuses reaches a non-streaming Chat client as `message.refusal` and a streaming one as an empty answer; the Chat stream chunk type has no refusal field | Responses → Chat stream | new, not reported |
 
-All five reproduce on tingly-box `5f83f04` (where they were found) and on
-`b788a3b` (main, 2026-10-20).
+| 6 | [Gateway environment credentials sent to every upstream](findings/env-credentials-upstream.md): the SDK clients keep their environment defaults, so `ANTHROPIC_AUTH_TOKEN` (Claude Code's gateway token) goes out as `Authorization: Bearer` next to the provider's key, and `OPENAI_ORG_ID` / `OPENAI_PROJECT_ID` to every OpenAI-compatible vendor | upstream clients | new, not reported |
+| 7 | [Cache reads counted twice without streaming](findings/usage-nonstream-cached-input.md): the non-streaming Chat passthrough records `prompt_tokens` as input next to `cached_tokens`; the streaming path subtracts them (1000/900 records input 1000 vs 100) | usage tracking | new, not reported |
+| 8 | [Recordings keep client credentials](findings/recording-client-credentials.md): recorded request headers and URL are not redacted | recording | new, minor |
+
+Findings 1-5 come from go2lean searches. 6-8 come from reading the code
+for the next spec directions (usage, credentials, routing, config) and
+are confirmed by `go test` (6, 7) or by reading (8). 1-5 reproduce on
+tingly-box `5f83f04` (where they were found) and on `b788a3b` (main,
+2026-10-20).
 
 ## Reproduce in one command
 
