@@ -5,6 +5,7 @@ import (
 	"strings"
 
 	"github.com/anthropics/anthropic-sdk-go"
+	"github.com/openai/openai-go/v3"
 	"github.com/openai/openai-go/v3/responses"
 
 	"github.com/tingly-dev/tingly-box/internal/protocol/nonstream"
@@ -630,6 +631,86 @@ func SpecResponsesToChatConverterProcessEventStreamCallsMatch(c *responsesToChat
 	return true
 }
 
+// replayResponsesToChatScheduled is replayResponsesToChat over another
+// legal event schedule of the same response: the arguments of function
+// call i go out as one delta when bit i of schedule is set and only in
+// the .done events otherwise (the API allows both), and every call gets
+// its response.function_call_arguments.done. It returns the arguments a
+// Chat client assembles per tool call, in call order.
+func replayResponsesToChatScheduled(r responses.Response, schedule int64) (args []string) {
+	c := newResponsesToChatConverter(nil, "m", true)
+	c.processEvent(&responses.ResponseStreamEventUnion{Type: "response.created", Response: r})
+	for i, item := range r.Output {
+		c.processEvent(&responses.ResponseStreamEventUnion{Type: "response.output_item.added", Item: item, OutputIndex: int64(i)})
+		if item.Type == "message" {
+			for _, part := range item.Content {
+				if part.Type == "output_text" {
+					c.processEvent(&responses.ResponseStreamEventUnion{Type: "response.output_text.delta", ItemID: item.ID, OutputIndex: int64(i), Delta: part.Text})
+				}
+			}
+		}
+		if item.Type == "function_call" {
+			if schedule&(1<<uint(i%62)) != 0 {
+				c.processEvent(&responses.ResponseStreamEventUnion{Type: "response.function_call_arguments.delta", ItemID: item.ID, OutputIndex: int64(i), Delta: item.Arguments.OfString})
+			}
+			c.processEvent(&responses.ResponseStreamEventUnion{Type: "response.function_call_arguments.done", ItemID: item.ID, OutputIndex: int64(i), Arguments: item.Arguments.OfString})
+		}
+		c.processEvent(&responses.ResponseStreamEventUnion{Type: "response.output_item.done", Item: item, OutputIndex: int64(i)})
+	}
+	c.processEvent(&responses.ResponseStreamEventUnion{Type: "response.completed", Response: r})
+	byIndex := map[int]string{}
+	var order []int
+	for _, p := range c.pending {
+		chunk, ok := p.(wire.ChatStreamChunk)
+		if !ok {
+			continue
+		}
+		for _, ch := range chunk.Choices {
+			for _, tc := range ch.Delta.ToolCalls {
+				if _, seen := byIndex[tc.Index]; !seen {
+					order = append(order, tc.Index)
+					byIndex[tc.Index] = ""
+				}
+				if tc.Function.Arguments != nil {
+					byIndex[tc.Index] += *tc.Function.Arguments
+				}
+			}
+		}
+	}
+	for _, i := range order {
+		args = append(args, byIndex[i])
+	}
+	return
+}
+
+// go2lean:spec responsesToChatConverter.processEvent
+// SpecResponsesToChatConverterProcessEventArgumentsAnySchedule: whichever
+// legal schedule the arguments come in (the event's sequence number picks
+// one), a Chat client assembles each call's arguments as the response
+// has them.
+func SpecResponsesToChatConverterProcessEventArgumentsAnySchedule(c *responsesToChatConverter, evt *responses.ResponseStreamEventUnion) bool {
+	if evt == nil || !chatShaped(evt.Response) || evt.Response.Status == "incomplete" {
+		return true
+	}
+	var want []string
+	for _, item := range evt.Response.Output {
+		if item.Type == "function_call" {
+			want = append(want, item.Arguments.OfString)
+		}
+	}
+	got := replayResponsesToChatScheduled(evt.Response, evt.SequenceNumber)
+	if len(got) != len(want) {
+		return false
+	}
+	for i := range want {
+		go2leanProbe("streamed-args", got[i])
+		if got[i] != want[i] {
+			return false
+		}
+	}
+	return true
+}
+
 // go2lean:spec responsesToChatConverter.processEvent
 // SpecResponsesToChatConverterProcessEventStreamFinishMatches: the streamed
 // finish reason is the non-streamed one.
@@ -642,6 +723,48 @@ func SpecResponsesToChatConverterProcessEventStreamFinishMatches(c *responsesToC
 	go2leanProbe("streamed", f1)
 	go2leanProbe("nonstreamed", f2)
 	return f1 == f2
+}
+
+// go2lean:spec openAIToAnthropicConverter.processChunk
+// SpecOpenAIToAnthropicConverterProcessChunkOneOpenBlock: whatever deltas a
+// Chat stream sends (the chunk's choices, fed one per chunk in order), the
+// Anthropic events keep one content block open at a time and send every
+// delta to the open block, as the Anthropic API does.
+func SpecOpenAIToAnthropicConverterProcessChunkOneOpenBlock(c *openAIToAnthropicConverter, chunk *openai.ChatCompletionChunk) bool {
+	if chunk == nil {
+		return true
+	}
+	conv := newOpenAIToAnthropicConverter(nil, "m", nil, nil, mapOpenAIFinishReasonToAnthropic)
+	for _, ch := range chunk.Choices {
+		if ch.FinishReason != "" {
+			continue // the stream's end is not under test
+		}
+		conv.processChunk(&openai.ChatCompletionChunk{Choices: []openai.ChatCompletionChunkChoice{ch}})
+	}
+	open := -1
+	for _, p := range conv.pending {
+		ev, ok := p.(anthropicStreamEvent)
+		if !ok {
+			continue
+		}
+		switch d := ev.data.(type) {
+		case anthropicContentBlockStartEvent:
+			if open != -1 {
+				return false
+			}
+			open = d.Index
+		case anthropicContentBlockDeltaEvent:
+			if d.Index != open {
+				return false
+			}
+		case anthropicContentBlockStopEvent:
+			if d.Index != open {
+				return false
+			}
+			open = -1
+		}
+	}
+	return true
 }
 
 // go2leanProbe records v under label: go2lean's model keeps it in the

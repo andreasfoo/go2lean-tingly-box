@@ -701,3 +701,45 @@ func probeConversation(side string, s, u, a string, c, r []string) {
 		go2leanProbe("result", side+": "+x)
 	}
 }
+
+// go2lean:spec ConvertAnthropicBetaToOpenAIRequest
+// SpecConvertAnthropicBetaToOpenAIRequestKeepsSampling: the sampling and
+// stop parameters a client sets reach the Chat request (Chat has
+// temperature, top_p and stop).
+func SpecConvertAnthropicBetaToOpenAIRequestKeepsSampling(anthropicReq *anthropic.BetaMessageNewParams, compatible bool, isStreaming bool, disableStreamUsage bool, ret0 *openai.ChatCompletionNewParams, ret1 *protocol.OpenAIConfig) bool {
+	if anthropicReq == nil || ret0 == nil {
+		return true
+	}
+	if anthropicReq.Temperature.Valid() && !ret0.Temperature.Valid() {
+		return false
+	}
+	if anthropicReq.TopP.Valid() && !ret0.TopP.Valid() {
+		return false
+	}
+	if n := len(anthropicReq.StopSequences); n > 0 && n <= 4 {
+		if len(ret0.Stop.OfStringArray) != n && !(n == 1 && ret0.Stop.OfString.Valid()) {
+			return false
+		}
+	}
+	return true
+}
+
+// go2lean:spec ConvertAnthropicBetaToOpenAIRequest
+// SpecConvertAnthropicBetaToOpenAIRequestKeepsToolChoice: the tool_choice
+// mode keeps its meaning: "any" must call a tool ("required"), "none" must
+// not ("none"), "auto" may.
+func SpecConvertAnthropicBetaToOpenAIRequestKeepsToolChoice(anthropicReq *anthropic.BetaMessageNewParams, compatible bool, isStreaming bool, disableStreamUsage bool, ret0 *openai.ChatCompletionNewParams, ret1 *protocol.OpenAIConfig) bool {
+	if anthropicReq == nil || ret0 == nil || len(anthropicReq.Tools) == 0 {
+		return true
+	}
+	tc := anthropicReq.ToolChoice
+	switch {
+	case tc.OfAny != nil:
+		return ret0.ToolChoice.OfAuto.Value == "required"
+	case tc.OfNone != nil:
+		return ret0.ToolChoice.OfAuto.Value == "none"
+	case tc.OfAuto != nil:
+		return ret0.ToolChoice.OfAuto.Value == "auto"
+	}
+	return true
+}
