@@ -24,7 +24,7 @@ done
 fi
 ls "$WS/properties" | grep -E "$PAT" | sed 's/\.json$//' > "$LOG.ids"
 # BUDGET seconds per property (default 120), JOBS hunts at a time (default 2).
-xargs -P "${JOBS:-2}" -I{} sh -c "\"$bin\" hunt -module \"$H\" -workspace \"$WS\" -property {} -budget ${BUDGET:-120} -maxlen 6 >> \"$LOG\" 2>&1" < "$LOG.ids"
+xargs -P "${JOBS:-2}" -I{} sh -c "\"$bin\" hunt -module \"$H\" -workspace \"$WS\" -property {} -budget ${BUDGET:-120} -maxlen 6 >> \"$LOG\" 2>&1" < "$LOG.ids" || true  # one failed hunt must not drop the others' verdicts
 cxs=$(ls "$WS/counterexamples" 2>/dev/null | sed 's/\.json$//')
 if [ -n "$cxs" ]; then
   "$bin" poc -module "$H" -workspace "$WS" -counterexample $cxs >> "$LOG" 2>&1
