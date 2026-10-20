@@ -122,6 +122,12 @@ declare -A finding=(
   [AnthropicThinkingReachesResponsesClient]="anthropic-responses-thinking-dropped (new, go2lean blind specs)"
   [ChatRefusalReachesResponsesClient]="chat-responses-refusal-dropped (new, go2lean blind specs)"
   [GeminiToAnthropicKeepsSampling]="gemini-anthropic-sampling-dropped (new, latent, go2lean blind specs)"
+  [GeminiMaxTokensDoesNotWrap]="gemini-max-tokens-int32-wrap (new, go2lean M2 agent specs)"
+  [ResponsesToChatKeepsParallelToolCalls]="responses-chat-parallel-tool-calls (new, go2lean M2 agent specs)"
+  [GeminiSafetyIsRefusalForAnthropicV1]="gemini-anthropic-safety-content-filter, non-stream (new, go2lean M2 agent specs)"
+  [StreamGeminiSafetyIsRefusalForAnthropicV1]="gemini-anthropic-safety-content-filter, stream (new, go2lean M2 agent specs)"
+  [AnthropicToGeminiResponseKeepsThinkingAndCache]="gemini-client-responses-coverage, Anthropic provider (new, latent, go2lean M2 agent specs)"
+  [ChatRefusalReachesGeminiClient]="gemini-client-responses-coverage, Chat provider (new, latent, go2lean M2 agent specs)"
 )
 status=0
 printf '\n%-40s  %-11s  %s\n' test result finding

@@ -69,6 +69,10 @@ severity; `#` is the finding's fixed number (the order it was recorded in).
 | 54 | low | [Claude's thinking dropped for Responses clients](anthropic-responses-thinking-dropped.md) | Anthropic -> Responses non-stream (stream by reading) | new (go2lean, blind specs) | `repro/internal/protocol/nonstream/` |
 | 55 | low | [a Chat refusal dropped without streaming](chat-responses-refusal-dropped.md) | Chat -> Responses non-stream | new (go2lean, blind specs) | `repro/internal/protocol/nonstream/` |
 | 56 | low | [Gemini -> Anthropic requests drop sampling parameters and stop sequences](gemini-anthropic-sampling-dropped.md) | Gemini -> Anthropic request (no gateway caller) | new, latent (go2lean, blind specs) | `repro/internal/protocol/request/` |
+| 57 | low | [max_tokens above 2^31-1 wraps in maxOutputTokens](gemini-max-tokens-int32-wrap.md) | Anthropic -> Gemini, Chat -> Gemini (Google-style providers) request | new (go2lean, M2 agent specs) | `repro/internal/protocol/request/` |
+| 58 | low | [Responses -> Chat requests drop parallel_tool_calls](responses-chat-parallel-tool-calls.md) | Responses -> Chat request | new (go2lean, M2 agent specs) | `repro/internal/protocol/request/` |
+| 59 | low | [Gemini SAFETY becomes stop_reason "content_filter"](gemini-anthropic-safety-content-filter.md) | Gemini -> Anthropic v1 non-stream and stream | new (go2lean, M2 agent specs) | `repro/internal/protocol/{nonstream,stream}/` |
+| 60 | low | [Anthropic and Chat -> Gemini responses drop thinking, refusals and cached prompt tokens](gemini-client-responses-coverage.md) | Anthropic -> Gemini, Chat -> Gemini responses (no gateway caller) | new, latent (go2lean, M2 agent specs) | `repro/internal/protocol/nonstream/` |
 
 Findings 6-11 came from reading code for the four spec directions
 (usage, credentials, routing, config) and from the bug classes of similar
@@ -103,7 +107,17 @@ or wrong specs). `index.tsv` lists the blind specs that refuted each one;
 the repro tests were written afterwards. The exception is #50
 (`anthropic-gemini-image-double-encoded`), found by hand while triaging a
 spurious counterexample of that run (its spec's refutation was spurious,
-so `index.tsv` has no row for it).
+so `index.tsv` has no row for it). Findings 57-60 (from
+`gemini-max-tokens-int32-wrap` to `gemini-client-responses-coverage`) were
+found by go2lean from the M2 agent's own specs: go2lean's M2 agent loop,
+run with a Claude agent (Opus 5.5) as the spec writer, wrote its specs for
+the request and non-stream packages blind (no findings, no earlier specs),
+go2lean searched them, `go test` confirmed the counterexamples, and triage
+separated the new bugs from the known ones and the wrong specs (the other
+confirmed counterexamples of that run were earlier findings, #10, #18,
+#19 and #45-47 for requests and #4, #26 and #55 for responses, or wrong
+specs). `index.tsv` lists the agent specs that refuted each one; the
+repro tests were written afterwards.
 
 Not bugs (the converters' intended repairs, recorded so they are not
 reported): orphan tool calls get an "aborted" result, an unmatched
