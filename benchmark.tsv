@@ -1,0 +1,6 @@
+# spec function	finding page	note
+SpecConvertAnthropicBetaToOpenAIRequestKeepsSampling	chat-request-params.md	sampling and stop
+SpecConvertAnthropicBetaToOpenAIRequestKeepsToolChoice	chat-request-params.md	tool_choice
+SpecResponsesToChatConverterProcessEventArgumentsAnySchedule	responses-done-only-arguments.md	any event schedule
+SpecOpenAIToAnthropicConverterProcessChunkOneOpenBlock	chat-anthropic-interleaved-blocks.md	any delta sequence
+SpecOpenAIToAnthropicConverterProcessChunkOneOpenTextBlock	chat-anthropic-reasoning-null.md	deltas without tool calls
