@@ -25,13 +25,14 @@ record of every run.
 | 7 | [Cache reads counted twice without streaming](findings/usage-nonstream-cached-input.md): the non-streaming Chat passthrough records `prompt_tokens` as input next to `cached_tokens`; the streaming path subtracts them (1000/900 records input 1000 vs 100) | usage tracking | new, not reported |
 | 8 | [DeepSeek-style `reasoning_content` breaks thinking blocks](findings/chat-anthropic-reasoning-null.md): DeepSeek streams answers with `"reasoning_content":null`; for an Anthropic client this opens a second, empty thinking block while the text block is open, and without streaming the thinking text arrives JSON-quoted (`"…\n…"`) or as `null` | Chat → Anthropic, both | new, not reported |
 | 9 | [Tool arguments lost when sent only in `.done`](findings/responses-done-only-arguments.md): `gpt-5.3-codex-spark` (Codex backend) streams function calls without argument deltas; both Responses stream converters emit the call with empty arguments (`""` / `input: {}`) | Responses → Chat, Responses → Anthropic streams | new, not reported |
-| 10 | [Recordings keep client credentials](findings/recording-client-credentials.md): recorded request headers and URL are not redacted | recording | new, minor |
+| 10 | [Anthropic → Chat requests drop sampling, stop and `tool_choice`](findings/chat-request-params.md): `temperature`, `top_p` and `stop_sequences` never reach a Chat provider (the Responses path carries temperature and top_p), and `tool_choice` `any` / `none` both become `auto` | Anthropic → Chat request | new, not reported |
+| 11 | [Recordings keep client credentials](findings/recording-client-credentials.md): recorded request headers and URL are not redacted | recording | new, minor |
 
-Findings 1-5 come from go2lean searches. 6-10 come from reading the code
+Findings 1-5 come from go2lean searches. 6-11 come from reading the code
 for the next spec directions (usage, credentials, routing, config) and
 from the bug classes of similar gateways
-([hunting-similar-tools.md](hunting-similar-tools.md)); 6-9 are confirmed
-by `go test` on `5f83f04` and on `b788a3b`, 10 by reading. 1-5 reproduce on
+([hunting-similar-tools.md](hunting-similar-tools.md)); 6-10 are confirmed
+by `go test` on `5f83f04` and on `b788a3b`, 11 by reading. 1-5 reproduce on
 tingly-box `5f83f04` (where they were found) and on `b788a3b` (main,
 2026-10-20).
 

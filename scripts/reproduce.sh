@@ -52,6 +52,8 @@ declare -A finding=(
   [NonStreamThinkingIsPlainText]="chat-anthropic-reasoning-null, non-stream (new)"
   [DoneOnlyArgumentsReachChatClient]="responses-done-only-arguments, Chat client (new)"
   [DoneOnlyArgumentsReachAnthropicClient]="responses-done-only-arguments, Anthropic client (new)"
+  [ChatRequestKeepsSamplingAndStop]="chat-request-params, sampling and stop (new)"
+  [ChatRequestKeepsToolChoiceMode]="chat-request-params, tool_choice (new)"
   [NonStreamUsageExcludesCachedInput]="usage-nonstream-cached-input (new)"
 )
 status=0

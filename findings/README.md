@@ -14,9 +14,10 @@ One page per finding. Status: **tracked** (an issue exists upstream),
 | [cache reads counted twice without streaming](usage-nonstream-cached-input.md) | usage tracking, Chat passthrough | new | `repro/internal/protocolserver/` |
 | [DeepSeek-style reasoning_content breaks thinking blocks](chat-anthropic-reasoning-null.md) | Chat -> Anthropic stream and non-stream | new | `repro/internal/protocol/{stream,nonstream}/` |
 | [tool arguments lost when sent only in `.done`](responses-done-only-arguments.md) | Responses -> Chat and Responses -> Anthropic streams | new | `repro/internal/protocol/stream/` |
+| [Anthropic -> Chat requests drop sampling, stop and tool_choice](chat-request-params.md) | Anthropic -> Chat request | new | `repro/internal/protocol/request/` |
 | [recordings keep client credentials](recording-client-credentials.md) | recording | new, minor | code reading |
 
-Findings 6-10 came from reading code for the four spec directions
+Findings 6-11 came from reading code for the four spec directions
 (usage, credentials, routing, config) and from the bug classes of similar
 gateways (`../hunting-similar-tools.md`), not from a go2lean search; they
 are marked so on their pages.
