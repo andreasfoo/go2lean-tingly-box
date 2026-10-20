@@ -28,3 +28,4 @@ SpecHandleResponsesToAnthropicBetaKeepsRefusal	responses-anthropic-nonstream-ref
 SpecConvertResponsesInputToMessagesNoConsecutiveAssistant	responses-chat-split-assistant-turn.md	one assistant turn
 SpecHandleResponsesToAnthropicBetaKeepsReasoningSummary	responses-anthropic-nonstream-reasoning-summary.md	non-stream
 SpecConvertOpenAIResponsesToAnthropicBetaRequestKeepsToolOutputImages	responses-anthropic-tool-output-image.md	tool output images
+SpecResponsesToAnthropicConverterProcessEventOneOpenBlock	responses-anthropic-stream-open-thinking.md	stream, replayed from JSON

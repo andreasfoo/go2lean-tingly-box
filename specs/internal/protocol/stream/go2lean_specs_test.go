@@ -3,6 +3,7 @@ package stream
 import (
 	"encoding/json"
 	"fmt"
+	"strconv"
 	"strings"
 
 	"github.com/anthropics/anthropic-sdk-go"
@@ -1007,6 +1008,111 @@ func SpecAnthropicToOpenAIConverterProcessEventToolArgsAreJSON(c *anthropicToOpe
 		var obj map[string]any
 		if json.Unmarshal([]byte(a), &obj) != nil {
 			return false
+		}
+	}
+	return true
+}
+
+// jsonQuote is s as a JSON string.
+func jsonQuote(s string) string {
+	b, _ := json.Marshal(s)
+	return string(b)
+}
+
+// replayResponsesToAnthropic feeds r to a fresh Responses -> Anthropic
+// converter as the Responses API streams it: per output item its added
+// event, the reasoning summary parts, message text parts or call
+// arguments, its done event, then response.completed. The events are
+// decoded from JSON built from the items' own JSON, as the converter
+// reads them (the SDK's As* methods decode an event's raw JSON). ok is
+// false for items it does not replay.
+func replayResponsesToAnthropic(r responses.Response) (events []interface{}, ok bool) {
+	conv := &responsesToAnthropicConverter{responseModel: "m", messageID: "msg_go2lean", state: newStreamState(),
+		toolCalls: map[string]*responsesToAnthropicToolCall{}, usage: protocol.ZeroTokenUsage()}
+	feed := func(text string) {
+		var ev responses.ResponseStreamEventUnion
+		if json.Unmarshal([]byte(text), &ev) == nil {
+			conv.processEvent(ev)
+		}
+	}
+	for i, item := range r.Output {
+		raw := item.RawJSON()
+		if raw == "" {
+			return nil, false
+		}
+		at := `"output_index":` + strconv.Itoa(i) + `,"item_id":` + jsonQuote(item.ID)
+		feed(`{"type":"response.output_item.added",` + at + `,"item":` + raw + `}`)
+		switch item.Type {
+		case "reasoning":
+			for j, part := range item.Summary {
+				sj := `,"summary_index":` + strconv.Itoa(j)
+				feed(`{"type":"response.reasoning_summary_part.added",` + at + sj + `,"part":{"type":"summary_text","text":""}}`)
+				feed(`{"type":"response.reasoning_summary_text.delta",` + at + sj + `,"delta":` + jsonQuote(part.Text) + `}`)
+				feed(`{"type":"response.reasoning_summary_text.done",` + at + sj + `,"text":` + jsonQuote(part.Text) + `}`)
+				feed(`{"type":"response.reasoning_summary_part.done",` + at + sj + `,"part":{"type":"summary_text","text":` + jsonQuote(part.Text) + `}}`)
+			}
+		case "message":
+			for k, part := range item.Content {
+				if part.Type != "output_text" {
+					return nil, false
+				}
+				ck := `,"content_index":` + strconv.Itoa(k)
+				feed(`{"type":"response.content_part.added",` + at + ck + `,"part":{"type":"output_text","text":""}}`)
+				feed(`{"type":"response.output_text.delta",` + at + ck + `,"delta":` + jsonQuote(part.Text) + `}`)
+				feed(`{"type":"response.output_text.done",` + at + ck + `,"text":` + jsonQuote(part.Text) + `}`)
+				feed(`{"type":"response.content_part.done",` + at + ck + `,"part":{"type":"output_text","text":` + jsonQuote(part.Text) + `}}`)
+			}
+		case "function_call":
+			feed(`{"type":"response.function_call_arguments.delta",` + at + `,"delta":` + jsonQuote(item.Arguments.OfString) + `}`)
+			feed(`{"type":"response.function_call_arguments.done",` + at + `,"arguments":` + jsonQuote(item.Arguments.OfString) + `}`)
+		default:
+			return nil, false
+		}
+		feed(`{"type":"response.output_item.done",` + at + `,"item":` + raw + `}`)
+	}
+	if r.RawJSON() == "" {
+		return nil, false
+	}
+	feed(`{"type":"response.completed","response":` + r.RawJSON() + `}`)
+	return conv.pending, true
+}
+
+// go2lean:spec responsesToAnthropicConverter.processEvent
+// SpecResponsesToAnthropicConverterProcessEventOneOpenBlock: an Anthropic
+// client streaming a Responses answer (reasoning, messages, function calls)
+// sees one content block open at a time, every delta in the open block,
+// and no thinking block without thinking text.
+func SpecResponsesToAnthropicConverterProcessEventOneOpenBlock(r *responsesToAnthropicConverter, currentEvent responses.ResponseStreamEventUnion) bool {
+	events, ok := replayResponsesToAnthropic(currentEvent.Response)
+	if !ok {
+		return true
+	}
+	open := -1
+	thinking, text := false, ""
+	for _, p := range events {
+		ev, isEv := p.(anthropicStreamEvent)
+		if !isEv {
+			continue
+		}
+		switch d := ev.data.(type) {
+		case anthropicContentBlockStartEvent:
+			if open != -1 {
+				return false
+			}
+			open = d.Index
+			thinking, text = d.ContentBlock.Type == "thinking", ""
+		case anthropicContentBlockDeltaEvent:
+			if d.Index != open {
+				return false
+			}
+			if d.Delta.Thinking != nil {
+				text += *d.Delta.Thinking
+			}
+		case anthropicContentBlockStopEvent:
+			if d.Index != open || thinking && text == "" {
+				return false
+			}
+			open = -1
 		}
 	}
 	return true

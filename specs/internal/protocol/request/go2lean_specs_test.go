@@ -870,10 +870,11 @@ func SpecConvertChatToOpenAIResponsesKeepsLimits(params *openai.ChatCompletionNe
 	if limit.Valid() && limit.Value > 0 && (!ret.MaxOutputTokens.Valid() || ret.MaxOutputTokens.Value != limit.Value) {
 		return false
 	}
-	if params.Temperature.Valid() && (!ret.Temperature.Valid() || ret.Temperature.Value != params.Temperature.Value) {
+	// Floats are opaque to the model: their presence is checked, not their value.
+	if params.Temperature.Valid() && !ret.Temperature.Valid() {
 		return false
 	}
-	if params.TopP.Valid() && (!ret.TopP.Valid() || ret.TopP.Value != params.TopP.Value) {
+	if params.TopP.Valid() && !ret.TopP.Valid() {
 		return false
 	}
 	if params.ParallelToolCalls.Valid() && (!ret.ParallelToolCalls.Valid() || ret.ParallelToolCalls.Value != params.ParallelToolCalls.Value) {
