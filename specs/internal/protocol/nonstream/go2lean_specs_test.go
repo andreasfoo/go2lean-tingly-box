@@ -2,9 +2,11 @@ package nonstream
 
 import (
 	"encoding/json"
+	"strings"
 
 	"github.com/anthropics/anthropic-sdk-go"
 	"github.com/openai/openai-go/v3"
+	"github.com/openai/openai-go/v3/responses"
 
 	"github.com/tingly-dev/tingly-box/internal/protocol/wire"
 )
@@ -145,6 +147,57 @@ func SpecConvertChatToResponsesWireCallIDs(resp *openai.ChatCompletion, response
 	for _, item := range ret.Output {
 		if item.Type == "function_call" && item.CallID == "" {
 			return false
+		}
+	}
+	return true
+}
+
+// Specs for the hand-found round-3 findings (see benchmark.tsv).
+
+// go2lean:spec HandleResponsesToAnthropicBeta
+// SpecHandleResponsesToAnthropicBetaKeepsRefusal: every non-empty refusal
+// in a Responses message reaches the Anthropic client as text.
+func SpecHandleResponsesToAnthropicBetaKeepsRefusal(rs *responses.Response, model string, ret anthropic.BetaMessage) bool {
+	if rs == nil {
+		return true
+	}
+	text := ""
+	for _, b := range ret.Content {
+		if b.Type == "text" {
+			text += b.Text
+		}
+	}
+	for _, item := range rs.Output {
+		for _, c := range item.Content {
+			if c.Type == "refusal" && c.Refusal != "" && !strings.Contains(text, c.Refusal) {
+				return false
+			}
+		}
+	}
+	return true
+}
+
+// go2lean:spec HandleResponsesToAnthropicBeta
+// SpecHandleResponsesToAnthropicBetaKeepsReasoningSummary: every non-empty
+// reasoning summary reaches the Anthropic client as thinking.
+func SpecHandleResponsesToAnthropicBetaKeepsReasoningSummary(rs *responses.Response, model string, ret anthropic.BetaMessage) bool {
+	if rs == nil {
+		return true
+	}
+	thinking := ""
+	for _, b := range ret.Content {
+		if b.Type == "thinking" {
+			thinking += b.Thinking
+		}
+	}
+	for _, item := range rs.Output {
+		if item.Type != "reasoning" {
+			continue
+		}
+		for _, s := range item.Summary {
+			if s.Text != "" && !strings.Contains(thinking, s.Text) {
+				return false
+			}
 		}
 	}
 	return true

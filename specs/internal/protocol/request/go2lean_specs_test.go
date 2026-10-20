@@ -881,3 +881,204 @@ func SpecConvertChatToOpenAIResponsesKeepsLimits(params *openai.ChatCompletionNe
 	}
 	return true
 }
+
+// ----- Specs for the hand-found round-3 findings (see benchmark.tsv) -----
+
+// go2lean:spec ConvertAnthropicBetaToOpenAIRequest
+// SpecConvertAnthropicBetaToOpenAIRequestKeepsToolSchema: every keyword of
+// a tool's input schema beyond type/properties/required (its ExtraFields:
+// $defs, additionalProperties, ...) reaches the Chat function's parameters.
+func SpecConvertAnthropicBetaToOpenAIRequestKeepsToolSchema(anthropicReq *anthropic.BetaMessageNewParams, compatible bool, isStreaming bool, disableStreamUsage bool, ret0 *openai.ChatCompletionNewParams, ret1 *protocol.OpenAIConfig) bool {
+	if anthropicReq == nil || ret0 == nil {
+		return true
+	}
+	for _, t := range anthropicReq.Tools {
+		if t.OfTool == nil {
+			continue
+		}
+		for _, out := range ret0.Tools {
+			if out.OfFunction == nil || out.OfFunction.Function.Name != t.OfTool.Name {
+				continue
+			}
+			for k := range t.OfTool.InputSchema.ExtraFields {
+				if _, ok := out.OfFunction.Function.Parameters[k]; !ok {
+					return false
+				}
+			}
+		}
+	}
+	return true
+}
+
+// go2lean:spec ConvertAnthropicBetaToResponsesRequest
+// SpecConvertAnthropicBetaToResponsesRequestKeepsToolSchema: the same for
+// the Responses function tools.
+func SpecConvertAnthropicBetaToResponsesRequestKeepsToolSchema(anthropicReq *anthropic.BetaMessageNewParams, ret *responses.ResponseNewParams) bool {
+	if anthropicReq == nil || ret == nil {
+		return true
+	}
+	for _, t := range anthropicReq.Tools {
+		if t.OfTool == nil {
+			continue
+		}
+		for _, out := range ret.Tools {
+			if out.OfFunction == nil || out.OfFunction.Name != t.OfTool.Name {
+				continue
+			}
+			for k := range t.OfTool.InputSchema.ExtraFields {
+				if _, ok := out.OfFunction.Parameters[k]; !ok {
+					return false
+				}
+			}
+		}
+	}
+	return true
+}
+
+// go2lean:spec ConvertChatToOpenAIResponses
+// SpecConvertChatToOpenAIResponsesKeepsOutputFormat: a JSON-schema output
+// format reaches the Responses request (text.format) under its name.
+func SpecConvertChatToOpenAIResponsesKeepsOutputFormat(params *openai.ChatCompletionNewParams, defaultMaxTokens int64, ret *responses.ResponseNewParams) bool {
+	if params == nil || ret == nil || params.ResponseFormat.OfJSONSchema == nil {
+		return true
+	}
+	f := ret.Text.Format.OfJSONSchema
+	return f != nil && f.Name == params.ResponseFormat.OfJSONSchema.JSONSchema.Name
+}
+
+// go2lean:spec ConvertOpenAIResponsesToChat
+// SpecConvertOpenAIResponsesToChatKeepsOutputFormat: the other way round.
+func SpecConvertOpenAIResponsesToChatKeepsOutputFormat(params *responses.ResponseNewParams, defaultMaxTokens int64, ret *openai.ChatCompletionNewParams) bool {
+	if params == nil || ret == nil || params.Text.Format.OfJSONSchema == nil {
+		return true
+	}
+	f := ret.ResponseFormat.OfJSONSchema
+	return f != nil && f.JSONSchema.Name == params.Text.Format.OfJSONSchema.Name
+}
+
+// go2lean:spec ConvertOpenAIToAnthropicRequest
+// SpecConvertOpenAIToAnthropicRequestKeepsOutputFormat: a Chat JSON-schema
+// output format with a schema reaches Anthropic's output_config.format.
+func SpecConvertOpenAIToAnthropicRequestKeepsOutputFormat(req *openai.ChatCompletionNewParams, defaultMaxTokens int64, ret *anthropic.BetaMessageNewParams) bool {
+	if req == nil || ret == nil || req.ResponseFormat.OfJSONSchema == nil || req.ResponseFormat.OfJSONSchema.JSONSchema.Schema == nil {
+		return true
+	}
+	return ret.OutputConfig.Format.Schema != nil
+}
+
+// go2lean:spec ConvertOpenAIToAnthropicRequest
+// SpecConvertOpenAIToAnthropicRequestKeepsFiles: every file part with
+// inline data in a Chat user message reaches the Anthropic request as a
+// document block.
+func SpecConvertOpenAIToAnthropicRequestKeepsFiles(req *openai.ChatCompletionNewParams, defaultMaxTokens int64, ret *anthropic.BetaMessageNewParams) bool {
+	if req == nil || ret == nil {
+		return true
+	}
+	want := 0
+	for _, m := range req.Messages {
+		if m.OfUser == nil {
+			continue
+		}
+		for _, p := range m.OfUser.Content.OfArrayOfContentParts {
+			if p.OfFile != nil && p.OfFile.File.FileData.Value != "" {
+				want++
+			}
+		}
+	}
+	got := 0
+	for _, m := range ret.Messages {
+		for _, b := range m.Content {
+			if b.OfDocument != nil {
+				got++
+			}
+		}
+	}
+	return got >= want
+}
+
+// go2lean:spec ConvertAnthropicBetaToOpenAIRequest
+// SpecConvertAnthropicBetaToOpenAIRequestKeepsDocuments: every document
+// block with base64 data reaches the Chat request as a file part.
+func SpecConvertAnthropicBetaToOpenAIRequestKeepsDocuments(anthropicReq *anthropic.BetaMessageNewParams, compatible bool, isStreaming bool, disableStreamUsage bool, ret0 *openai.ChatCompletionNewParams, ret1 *protocol.OpenAIConfig) bool {
+	if anthropicReq == nil || ret0 == nil {
+		return true
+	}
+	want := 0
+	for _, m := range anthropicReq.Messages {
+		if string(m.Role) != "user" {
+			continue
+		}
+		for _, b := range m.Content {
+			if b.OfDocument != nil && b.OfDocument.Source.OfBase64 != nil && b.OfDocument.Source.OfBase64.Data != "" {
+				want++
+			}
+		}
+	}
+	got := 0
+	for _, m := range ret0.Messages {
+		if m.OfUser == nil {
+			continue
+		}
+		for _, p := range m.OfUser.Content.OfArrayOfContentParts {
+			if p.OfFile != nil {
+				got++
+			}
+		}
+	}
+	return got >= want
+}
+
+// go2lean:spec ConvertResponsesInputToMessages
+// SpecConvertResponsesInputToMessagesNoConsecutiveAssistant: two adjacent
+// assistant messages come out only where the input already had two
+// adjacent assistant messages (one assistant turn is one Chat message).
+func SpecConvertResponsesInputToMessagesNoConsecutiveAssistant(items responses.ResponseInputParam, ret []openai.ChatCompletionMessageParamUnion) bool {
+	prevAssistant := false
+	for _, item := range items {
+		isAssistant := item.OfMessage != nil && string(item.OfMessage.Role) == "assistant" || item.OfOutputMessage != nil
+		if isAssistant && prevAssistant {
+			return true // the input itself has adjacent assistant messages
+		}
+		prevAssistant = isAssistant
+	}
+	for i := 1; i < len(ret); i++ {
+		if ret[i].OfAssistant != nil && ret[i-1].OfAssistant != nil {
+			return false
+		}
+	}
+	return true
+}
+
+// go2lean:spec ConvertOpenAIResponsesToAnthropicBetaRequest
+// SpecConvertOpenAIResponsesToAnthropicBetaRequestKeepsToolOutputImages:
+// every image in a function_call_output reaches the tool_result.
+func SpecConvertOpenAIResponsesToAnthropicBetaRequestKeepsToolOutputImages(params responses.ResponseNewParams, defaultMaxTokens int64, ret *anthropic.BetaMessageNewParams) bool {
+	if ret == nil {
+		return true
+	}
+	want := 0
+	for _, item := range params.Input.OfInputItemList {
+		if item.OfFunctionCallOutput == nil {
+			continue
+		}
+		for _, o := range item.OfFunctionCallOutput.Output.OfResponseFunctionCallOutputItemArray {
+			if o.OfInputImage != nil && o.OfInputImage.ImageURL.Value != "" {
+				want++
+			}
+		}
+	}
+	got := 0
+	for _, m := range ret.Messages {
+		for _, b := range m.Content {
+			if b.OfToolResult == nil {
+				continue
+			}
+			for _, c := range b.OfToolResult.Content {
+				if c.OfImage != nil {
+					got++
+				}
+			}
+		}
+	}
+	return got >= want
+}

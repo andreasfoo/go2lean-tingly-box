@@ -1,6 +1,7 @@
 package stream
 
 import (
+	"encoding/json"
 	"fmt"
 	"strings"
 
@@ -933,6 +934,79 @@ func SpecOpenAIToAnthropicConverterProcessChunkToolUseIDs(c *openAIToAnthropicCo
 			if d.ContentBlock.ID == nil || *d.ContentBlock.ID == "" {
 				return false
 			}
+		}
+	}
+	return true
+}
+
+// ----- Specs for the hand-found round-3 findings (see benchmark.tsv) -----
+
+// go2lean:spec anthropicToOpenAIConverter.processEvent
+// SpecAnthropicToOpenAIConverterProcessEventToolArgsAreJSON: replaying the
+// message's tool calls as the Anthropic API streams them (the input as one
+// input_json_delta; an empty input as an empty delta), every tool call a
+// Chat client assembles has arguments that decode as a JSON object.
+func SpecAnthropicToOpenAIConverterProcessEventToolArgsAreJSON(c *anthropicToOpenAIConverter, event *anthropic.BetaRawMessageStreamEventUnion) bool {
+	if event == nil {
+		return true
+	}
+	bm := event.Message
+	conv := newAnthropicToOpenAIConverter(nil, "m", true, nil)
+	start := anthropic.BetaRawMessageStreamEventUnion{Type: "message_start"}
+	start.Message = bm
+	conv.processEvent(&start)
+	calls := 0
+	for i, b := range bm.Content {
+		if b.Type != "tool_use" {
+			continue
+		}
+		var input map[string]any
+		if json.Unmarshal(b.Input, &input) != nil {
+			return true // not an object: the API never sends it
+		}
+		partial := string(b.Input)
+		if len(input) == 0 {
+			partial = ""
+		}
+		calls++
+		cbs := anthropic.BetaRawMessageStreamEventUnion{Type: "content_block_start"}
+		cbs.Index = int64(i)
+		cbs.ContentBlock.Type = "tool_use"
+		cbs.ContentBlock.ID = b.ID
+		cbs.ContentBlock.Name = b.Name
+		conv.processEvent(&cbs)
+		delta := anthropic.BetaRawMessageStreamEventUnion{Type: "content_block_delta"}
+		delta.Index = int64(i)
+		delta.Delta.Type = "input_json_delta"
+		delta.Delta.PartialJSON = partial
+		conv.processEvent(&delta)
+		cbstop := anthropic.BetaRawMessageStreamEventUnion{Type: "content_block_stop"}
+		cbstop.Index = int64(i)
+		conv.processEvent(&cbstop)
+	}
+	var args []string
+	for _, p := range conv.pending {
+		chunk, ok := p.(wire.ChatStreamChunk)
+		if !ok || len(chunk.Choices) == 0 {
+			continue
+		}
+		for _, tc := range chunk.Choices[0].Delta.ToolCalls {
+			if tc.Type == "function" {
+				args = append(args, "")
+			}
+			if tc.Function.Arguments != nil && len(args) > 0 {
+				args[len(args)-1] += *tc.Function.Arguments
+			}
+		}
+	}
+	if len(args) != calls {
+		return true // a hook suppressed a call
+	}
+	for _, a := range args {
+		go2leanProbe("args", a)
+		var obj map[string]any
+		if json.Unmarshal([]byte(a), &obj) != nil {
+			return false
 		}
 	}
 	return true

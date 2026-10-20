@@ -16,3 +16,15 @@ SpecOpenAIToAnthropicConverterProcessChunkToolUseIDs	chat-tool-call-empty-id.md	
 SpecConvertOpenAIToAnthropicRequestKeepsInstructions	chat-anthropic-request-coverage.md	developer messages
 SpecConvertOpenAIToAnthropicRequestKeepsTools	chat-anthropic-request-coverage.md	tools and tool_choice
 SpecConvertChatToOpenAIResponsesKeepsLimits	chat-responses-request-params.md	limits and sampling
+SpecConvertAnthropicBetaToOpenAIRequestKeepsToolSchema	anthropic-tool-schema-keywords.md	Chat
+SpecConvertAnthropicBetaToResponsesRequestKeepsToolSchema	anthropic-tool-schema-keywords.md	Responses
+SpecConvertChatToOpenAIResponsesKeepsOutputFormat	structured-output-dropped.md	Chat -> Responses
+SpecConvertOpenAIResponsesToChatKeepsOutputFormat	structured-output-dropped.md	Responses -> Chat
+SpecConvertOpenAIToAnthropicRequestKeepsOutputFormat	structured-output-dropped.md	Chat -> Anthropic
+SpecAnthropicToOpenAIConverterProcessEventToolArgsAreJSON	parameterless-tool-stream-arguments.md	Chat stream
+SpecConvertOpenAIToAnthropicRequestKeepsFiles	document-content-dropped.md	Chat -> Anthropic
+SpecConvertAnthropicBetaToOpenAIRequestKeepsDocuments	document-content-dropped.md	Anthropic -> Chat
+SpecHandleResponsesToAnthropicBetaKeepsRefusal	responses-anthropic-nonstream-refusal.md	non-stream
+SpecConvertResponsesInputToMessagesNoConsecutiveAssistant	responses-chat-split-assistant-turn.md	one assistant turn
+SpecHandleResponsesToAnthropicBetaKeepsReasoningSummary	responses-anthropic-nonstream-reasoning-summary.md	non-stream
+SpecConvertOpenAIResponsesToAnthropicBetaRequestKeepsToolOutputImages	responses-anthropic-tool-output-image.md	tool output images
