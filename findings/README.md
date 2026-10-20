@@ -21,7 +21,7 @@ triggers, latent code, test infrastructure. The table is sorted by
 severity; `#` is the finding's fixed number (the order it was recorded in).
 
 
-Reported upstream as one issue, [tingly-dev/tingly-box#2148](https://github.com/tingly-dev/tingly-box/issues/2148), with every finding here except 1-3 (their own issues) and 35 (fixed upstream on the gateway path).
+Reported upstream as one issue, marked draft for now, [tingly-dev/tingly-box#2148](https://github.com/tingly-dev/tingly-box/issues/2148), with every finding here except 1-3 (their own issues) and 35 (fixed upstream on the gateway path).
 
 | # | severity | finding | path | status | evidence |
 |---|---|---|---|---|---|

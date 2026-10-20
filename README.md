@@ -26,7 +26,7 @@ record of every run.
 
 Most of them lose or change something a client sent or a provider returned while converting between the Anthropic, OpenAI Chat, OpenAI Responses and Gemini protocols: parameters and content parts dropped (sampling, `tool_choice`, structured output, documents, images, tool schemas), tool calls broken (ids, indexes, arguments), thinking and refusals lost, stop reasons and usage reported wrong. Two go further: the gateway's own environment credentials are sent to every upstream (#6), and a malformed `user_id` panics the Anthropic Beta transform (#35; since upstream `9b15a58` the gateway no longer reaches that transform with the triggering request).
 
-**Reported upstream** as one issue, [tingly-dev/tingly-box#2148](https://github.com/tingly-dev/tingly-box/issues/2148) (2026-10-20): every finding below except 1-3 (tracked in their own issues) and 35 (fixed upstream on the gateway path by `9b15a58`), re-checked on upstream main `bc460f6`.
+**Reported upstream** as one issue, still marked draft (`[DRAFT]` in its title, not handed over yet), [tingly-dev/tingly-box#2148](https://github.com/tingly-dev/tingly-box/issues/2148) (2026-10-20): every finding below except 1-3 (tracked in their own issues) and 35 (fixed upstream on the gateway path by `9b15a58`), re-checked on upstream main `bc460f6`.
 
 Each row links to its page (root cause with file:line, trigger, observed and expected output, repro test); [findings/README.md](findings/README.md) has the full table with status and evidence, severity legend and how each was found.
 
