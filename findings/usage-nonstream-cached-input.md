@@ -1,4 +1,4 @@
-# Cache reads counted twice in non-streaming Chat usage (new, not reported)
+# Finding 7: Cache reads counted twice in non-streaming Chat usage (new, not reported)
 
 `ai.TokenUsage` defines `InputTokens` as the prompt *without* cache reads
 (`CacheReadTokens` is separate; the prompt total is their sum), and

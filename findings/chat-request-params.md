@@ -1,4 +1,4 @@
-# Anthropic -> Chat requests drop sampling, stop and tool_choice (new, not reported)
+# Finding 10: Anthropic -> Chat requests drop sampling, stop and tool_choice (new, not reported)
 
 `convertAnthropicViewToOpenAIRequest` (`internal/protocol/request/anthropic_view.go`),
 which builds every Chat request for an Anthropic client, carries model,

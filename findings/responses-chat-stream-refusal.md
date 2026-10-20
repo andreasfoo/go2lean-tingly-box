@@ -1,4 +1,4 @@
-# Refusal lost when streaming Responses -> Chat (new, not reported)
+# Finding 5: Refusal lost when streaming Responses -> Chat (new, not reported)
 
 A Responses upstream answer whose message holds a `refusal` part:
 

@@ -1,4 +1,4 @@
-# Chat -> Anthropic requests drop developer messages, parameterless tools and tool_choice modes (new, not reported)
+# Finding 18: Chat -> Anthropic requests drop developer messages, parameterless tools and tool_choice modes (new, not reported)
 
 Path: Chat client -> Anthropic provider (request conversion; streaming or
 not).

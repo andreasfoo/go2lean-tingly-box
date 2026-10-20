@@ -1,4 +1,4 @@
-# Chat tool call index taken from the Responses output index (new, not reported)
+# Finding 14: Chat tool call index taken from the Responses output index (new, not reported)
 
 Path: Chat client -> Responses provider, streaming.
 

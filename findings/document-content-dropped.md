@@ -1,4 +1,4 @@
-# PDF, document and file content dropped from requests (new, not reported)
+# Finding 25: PDF, document and file content dropped from requests (new, not reported)
 
 Path: Anthropic client -> Chat or Responses provider, Chat client ->
 Anthropic or Responses provider (request conversion; streaming or not).

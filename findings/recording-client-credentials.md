@@ -1,4 +1,4 @@
-# Recordings keep the client's credentials (new, not reported; minor)
+# Finding 12: Recordings keep the client's credentials (new, not reported; minor)
 
 `internal/recording/recorder.go:68` stores the inbound request as
 `Headers: headerToMap(c.Request.Header)` and `URL: c.Request.URL.String()`

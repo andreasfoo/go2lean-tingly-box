@@ -1,4 +1,4 @@
-# Tool arguments lost when a Responses stream sends them only in `.done` (new, not reported)
+# Finding 9: Tool arguments lost when a Responses stream sends them only in `.done` (new, not reported)
 
 Some Responses backends stream a function call without
 `response.function_call_arguments.delta` events: the arguments arrive only

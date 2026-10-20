@@ -1,4 +1,4 @@
-# Tool-call ids truncated on one side only (tracked: #1924)
+# Finding 1: Tool-call ids truncated on one side only (tracked: #1924)
 
 `ConvertAnthropicBetaToOpenAIRequest` passes the `tool_use` id to the
 assistant's `tool_calls[].id` unchanged

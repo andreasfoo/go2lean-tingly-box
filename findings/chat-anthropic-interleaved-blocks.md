@@ -1,4 +1,4 @@
-# Chat -> Anthropic stream opens a block while another is open (found by go2lean; minor)
+# Finding 11: Chat -> Anthropic stream opens a block while another is open (found by go2lean; minor)
 
 The Anthropic streaming API sends content blocks one after another: a
 `content_block_start`, its deltas, its `content_block_stop`, then the next

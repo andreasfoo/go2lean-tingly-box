@@ -1,4 +1,4 @@
-# System messages dropped (tracked: #1921)
+# Finding 2: System messages dropped (tracked: #1921)
 
 A message with role `"system"` inside `messages` (the request's top-level
 `system` empty) is dropped:

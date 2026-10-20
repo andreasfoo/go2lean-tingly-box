@@ -1,4 +1,4 @@
-# Structured output formats dropped in every request direction (new, not reported)
+# Finding 22: Structured output formats dropped in every request direction (new, not reported)
 
 Path: every converted request path: Chat <-> Responses, Chat <->
 Anthropic, Responses <-> Anthropic (request conversion; streaming or not).

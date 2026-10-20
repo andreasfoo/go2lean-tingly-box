@@ -1,4 +1,4 @@
-# Tool `strict` flag lost between Chat and Responses (new, not reported)
+# Finding 30: Tool `strict` flag lost between Chat and Responses (new, not reported)
 
 Path: Chat client -> Responses provider and Responses client -> Chat
 provider (request conversion; streaming or not).

@@ -1,4 +1,4 @@
-# Responses -> Anthropic without streaming: reasoning summaries dropped (new, not reported)
+# Finding 28: Responses -> Anthropic without streaming: reasoning summaries dropped (new, not reported)
 
 Path: Anthropic client -> Responses provider, not streaming.
 

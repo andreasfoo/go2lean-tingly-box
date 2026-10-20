@@ -1,4 +1,4 @@
-# Responses -> Anthropic stream: an empty thinking block stays open across the answer (new, not reported)
+# Finding 23: Responses -> Anthropic stream: an empty thinking block stays open across the answer (new, not reported)
 
 Path: Anthropic client -> Responses provider, streaming.
 

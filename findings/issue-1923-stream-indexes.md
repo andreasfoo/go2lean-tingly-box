@@ -1,4 +1,4 @@
-# Streamed tool calls at index 0; max_tokens not "length" (tracked: #1923)
+# Finding 3: Streamed tool calls at index 0; max_tokens not "length" (tracked: #1923)
 
 `anthropicToOpenAIConverter.processEvent`
 (`internal/protocol/stream/anthropic_to_openai_converter.go`):

@@ -1,4 +1,4 @@
-# reasoning_content empty without streaming (new, not reported)
+# Finding 4: reasoning_content empty without streaming (new, not reported)
 
 Anthropic -> Chat, non-streaming: for a `thinking` block the converter
 fills `reasoning_content` from `block.Text` (empty for thinking blocks)

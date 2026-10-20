@@ -1,4 +1,4 @@
-# Chat tool calls without an id reach Anthropic and Responses clients without one (new, not reported)
+# Finding 17: Chat tool calls without an id reach Anthropic and Responses clients without one (new, not reported)
 
 Path: Anthropic client -> Chat provider (streaming and non-streaming),
 Responses client -> Chat provider (non-streaming).

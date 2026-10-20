@@ -1,4 +1,4 @@
-# Responses -> Anthropic: images in tool output dropped (new, not reported)
+# Finding 29: Responses -> Anthropic: images in tool output dropped (new, not reported)
 
 Path: Responses client -> Anthropic provider (request conversion; streaming
 or not).

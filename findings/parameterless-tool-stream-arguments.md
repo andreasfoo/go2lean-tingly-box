@@ -1,4 +1,4 @@
-# Parameterless tool calls stream arguments `""` instead of `{}` (new, not reported)
+# Finding 24: Parameterless tool calls stream arguments `""` instead of `{}` (new, not reported)
 
 Path: Chat client -> Anthropic provider and Responses client -> Anthropic
 provider, streaming.

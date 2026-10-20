@@ -1,4 +1,4 @@
-# Anthropic stream usage: input depends on which fields message_delta repeats (new, not reported; low)
+# Finding 31: Anthropic stream usage: input depends on which fields message_delta repeats (new, not reported; low)
 
 Path: usage from an Anthropic provider's stream: what tingly-box records
 and what it reports to Chat and Responses clients converted from it.

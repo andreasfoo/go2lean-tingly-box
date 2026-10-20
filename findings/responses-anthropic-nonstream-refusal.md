@@ -1,4 +1,4 @@
-# Responses -> Anthropic without streaming: a refusal becomes `content: null` (new, not reported)
+# Finding 26: Responses -> Anthropic without streaming: a refusal becomes `content: null` (new, not reported)
 
 Path: Anthropic client -> Responses provider, not streaming.
 

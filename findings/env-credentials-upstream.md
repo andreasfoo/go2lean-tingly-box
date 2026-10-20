@@ -1,4 +1,4 @@
-# Gateway environment credentials sent to every upstream (new, not reported)
+# Finding 6: Gateway environment credentials sent to every upstream (new, not reported)
 
 Both SDK clients are built with the SDKs' environment defaults
 (`anthropic.NewClient` / `openai.NewClient` without

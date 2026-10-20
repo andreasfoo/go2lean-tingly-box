@@ -1,4 +1,4 @@
-# Responses developer messages become user messages on a Chat provider (new, not reported)
+# Finding 15: Responses developer messages become user messages on a Chat provider (new, not reported)
 
 Path: Responses client -> Chat provider (request conversion; streaming or
 not).

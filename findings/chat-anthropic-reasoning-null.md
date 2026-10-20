@@ -1,4 +1,4 @@
-# DeepSeek-style reasoning_content breaks thinking blocks for Anthropic clients (new, not reported)
+# Finding 8: DeepSeek-style reasoning_content breaks thinking blocks for Anthropic clients (new, not reported)
 
 DeepSeek's reasoning models (and servers that copy their format) stream
 the reasoning with `"content":null` and then the answer with

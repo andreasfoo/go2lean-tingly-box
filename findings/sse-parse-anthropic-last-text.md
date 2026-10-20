@@ -1,4 +1,4 @@
-# `sse.ParseAnthropicResult` keeps only the last text block (new, not reported; test infrastructure)
+# Finding 32: `sse.ParseAnthropicResult` keeps only the last text block (new, not reported; test infrastructure)
 
 Path: tingly-box's result parsers, used by its own test harnesses
 (`internal/protocoltest/testenv.go:677`, `internal/protocoltest/duo_routing.go:442`,

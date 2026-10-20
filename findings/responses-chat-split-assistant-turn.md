@@ -1,4 +1,4 @@
-# Responses -> Chat: one assistant turn becomes two assistant messages (new, not reported)
+# Finding 27: Responses -> Chat: one assistant turn becomes two assistant messages (new, not reported)
 
 Path: Responses client -> Chat provider (request conversion; streaming or
 not).

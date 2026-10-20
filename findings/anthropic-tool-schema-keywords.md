@@ -1,4 +1,4 @@
-# Anthropic tool schemas lose `$defs`, `additionalProperties` and every other keyword (new, not reported)
+# Finding 21: Anthropic tool schemas lose `$defs`, `additionalProperties` and every other keyword (new, not reported)
 
 Path: Anthropic client -> Chat provider and Anthropic client -> Responses
 provider (request conversion; streaming or not).
