@@ -43,7 +43,8 @@ for l in open(index):
     if l.startswith("#") or not l.strip():
         continue
     page, specs = l.rstrip("\n").split("\t")
-    hit = [s for s in specs.split() if any(r[0] == s.lower() and "confirmed" in r[1] for r in rows)]
+    names = [s.lower().removeprefix("spec") for s in specs.split()]
+    hit = [n for n in names if any(r[0] == n and "confirmed" in r[1] for r in rows)]
     findings.append((page, "still reproduces" if hit else "not reproduced"))
 with open(os.path.join(out, "report.md"), "w") as w:
     w.write(f"# tingly-box {tb} with go2lean {g2l}\n\n## Known findings\n\n| finding | status |\n|---|---|\n")

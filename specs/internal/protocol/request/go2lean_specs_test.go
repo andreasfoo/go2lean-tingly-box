@@ -17,6 +17,7 @@ import (
 const openAIToolCallIDLimit = 40
 
 // go2lean:spec ConvertAnthropicBetaToOpenAIRequest
+// go2lean:maxlen 48 (ids over the 40-character limit need long strings)
 // SpecConvertAnthropicBetaToOpenAIRequestToolCallIDsBounded: every tool_call
 // id on an assistant message of the converted request is within OpenAI's
 // 40-character limit, as the tool messages' ids are (otherwise a tool
@@ -39,6 +40,7 @@ func SpecConvertAnthropicBetaToOpenAIRequestToolCallIDsBounded(anthropicReq *ant
 }
 
 // go2lean:spec ConvertAnthropicBetaToOpenAIRequest
+// go2lean:maxlen 48 (ids over the 40-character limit need long strings)
 // SpecConvertAnthropicBetaToOpenAIRequestToolMessageIDsBounded: every tool
 // message's tool_call_id is within the limit.
 func SpecConvertAnthropicBetaToOpenAIRequestToolMessageIDsBounded(anthropicReq *anthropic.BetaMessageNewParams, compatible bool, isStreaming bool, disableStreamUsage bool, ret0 *openai.ChatCompletionNewParams, ret1 *protocol.OpenAIConfig) bool {
