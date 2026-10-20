@@ -29,3 +29,7 @@ SpecConvertResponsesInputToMessagesNoConsecutiveAssistant	responses-chat-split-a
 SpecHandleResponsesToAnthropicBetaKeepsReasoningSummary	responses-anthropic-nonstream-reasoning-summary.md	non-stream
 SpecConvertOpenAIResponsesToAnthropicBetaRequestKeepsToolOutputImages	responses-anthropic-tool-output-image.md	tool output images
 SpecResponsesToAnthropicConverterProcessEventOneOpenBlock	responses-anthropic-stream-open-thinking.md	stream, replayed from JSON
+ApplyAnthropicBetaMetadataTransform_nopanic	anthropic-metadata-empty-account-panic.md	no-panic template
+SpecApplyAnthropicBetaModelTransformToolTurnThinking	anthropic-budget-thinking-stripped.md	API rule on output
+SpecResponsesAssemblerAccumulateKeepsItems	codex-nonstream-function-calls-dropped.md	stream replayed from JSON
+SpecFilterGeminiSchemaNoExclusiveBounds	gemini-schema-exclusive-bounds.md	nested keys

@@ -17,8 +17,8 @@ else
 rm -rf "$WS"
 "$bin" compile -deps -module "$H" -workspace "$WS" ./ai ./internal/protocol ./internal/protocol/wire \
   ./internal/protocol/stream ./internal/protocol/request ./internal/protocol/usage \
-  ./internal/protocol/nonstream ./internal/protocol/sse > "$LOG.compile" 2>&1 || { echo "compile failed" >> "$LOG"; exit 1; }
-for p in stream request nonstream sse usage; do
+  ./internal/protocol/nonstream ./internal/protocol/sse ./internal/protocol/ops ./internal/protocol/assembler > "$LOG.compile" 2>&1 || { echo "compile failed" >> "$LOG"; exit 1; }
+for p in stream request nonstream sse usage ops assembler; do
   "$bin" props -module "$H" -workspace "$WS" -package "github.com/tingly-dev/tingly-box/internal/protocol/$p" > /dev/null 2>&1
 done
 fi
