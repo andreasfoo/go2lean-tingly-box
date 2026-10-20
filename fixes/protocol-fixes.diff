@@ -1,0 +1,726 @@
+diff --git a/internal/protocol/assembler/openai_responses_assembler.go b/internal/protocol/assembler/openai_responses_assembler.go
+index 066a8df..68738c3 100644
+--- a/internal/protocol/assembler/openai_responses_assembler.go
++++ b/internal/protocol/assembler/openai_responses_assembler.go
+@@ -34,6 +34,10 @@ type ResponsesAssembler struct {
+ 
+ 	// Image generation tracking - maps output index to image data
+ 	images map[int]*pendingImageData
++
++	// Items of the response.output_item.done events, used when the terminal
++	// response carries an empty output (the ChatGPT Codex backend does so).
++	doneItems []responses.ResponseOutputItemUnion
+ }
+ 
+ // pendingImageData tracks an image being assembled from stream chunks
+@@ -132,6 +136,7 @@ func (a *ResponsesAssembler) Accumulate(event responses.ResponseStreamEventUnion
+ 	case "response.output_item.done":
+ 		// Item is complete - check for image_generation_call result
+ 		doneItem := event.Item
++		a.doneItems = append(a.doneItems, doneItem)
+ 		if doneItem.Type == "image_generation_call" {
+ 			// Extract result from the done event if we haven't received partial images
+ 			imgCall := doneItem.AsImageGenerationCall()
+@@ -391,6 +396,13 @@ func (a *ResponsesAssembler) ensureResponseHasAccumulatedOutput(resp *responses.
+ 	if resp == nil || len(resp.Output) > 0 {
+ 		return
+ 	}
++	// Prefer the items the stream delivered (messages, function calls,
++	// reasoning, ...), in stream order, as the Stage pipeline's
++	// completeFromStream does.
++	if len(a.doneItems) > 0 {
++		resp.Output = append([]responses.ResponseOutputItemUnion(nil), a.doneItems...)
++		return
++	}
+ 	if a.accumulatedText.Len() == 0 && a.currentRefusal.Len() == 0 {
+ 		return
+ 	}
+diff --git a/internal/protocol/metaid/user_id.go b/internal/protocol/metaid/user_id.go
+index 8070c24..078898b 100644
+--- a/internal/protocol/metaid/user_id.go
++++ b/internal/protocol/metaid/user_id.go
+@@ -6,6 +6,7 @@ package metaid
+ 
+ import (
+ 	"encoding/json"
++	"errors"
+ 	"regexp"
+ 
+ 	"github.com/google/uuid"
+@@ -77,33 +78,43 @@ func (m *MetadataUserID) Format() string {
+ // =============================================
+ 
+ func (m *MetadataUserID) Fix(extras map[string]any) {
+-	// Generate default device_id if not set (use extras UUID as identifier)
+-	if extras != nil {
+-		if v, ok := extras["device"]; ok {
+-			m.DeviceID = v.(string)
+-		}
++	if err := m.TryFix(extras); err != nil {
++		panic(err.Error())
+ 	}
++}
+ 
+-	// force to guard
+-	if m.DeviceID == "" {
+-		panic("missing device id")
++// TryFix is Fix without the panic: it fills m from extras ("device",
++// "user_id") and a fresh session id, or returns an error and leaves m
++// unchanged when the device id or account uuid would stay empty (or an
++// extra is not a string).
++func (m *MetadataUserID) TryFix(extras map[string]any) error {
++	deviceID, accountUUID := m.DeviceID, m.AccountUUID
++	if v, ok := extras["device"]; ok {
++		s, isString := v.(string)
++		if !isString {
++			return errors.New("device is not a string")
++		}
++		deviceID = s
+ 	}
+-
+-	// Set account id if given
+-	if extras != nil {
+-		if v, ok := extras["user_id"]; ok {
+-			m.AccountUUID = v.(string)
++	if deviceID == "" {
++		return errors.New("missing device id")
++	}
++	if v, ok := extras["user_id"]; ok {
++		s, isString := v.(string)
++		if !isString {
++			return errors.New("user_id is not a string")
+ 		}
++		accountUUID = s
+ 	}
+-
+-	if m.AccountUUID == "" {
+-		panic("missing account uuid")
++	if accountUUID == "" {
++		return errors.New("missing account uuid")
+ 	}
+-
++	m.DeviceID, m.AccountUUID = deviceID, accountUUID
+ 	// Ensure session_id is set
+ 	if m.SessionID == "" {
+ 		m.SessionID = uuid.New().String()
+ 	}
++	return nil
+ }
+ 
+ // =============================================
+@@ -135,14 +146,10 @@ func (m *MetadataUserID) IsEmpty() bool {
+ func BuildMetadataUserID(extra map[string]any) *MetadataUserID {
+ 	m := &MetadataUserID{}
+ 
+-	// Always call Fix to generate default values if needed
+-	// Recover from panic if Fix() fails due to missing required fields
+-	defer func() {
+-		if r := recover(); r != nil {
+-			// Fix() panicked, return nil
+-		}
+-	}()
+-	m.Fix(extra)
++	// Fill device, account and session from extra; nil when it cannot.
++	if m.TryFix(extra) != nil {
++		return nil
++	}
+ 
+ 	// Only return nil if all fields are empty after fixing
+ 	if m.IsEmpty() {
+@@ -160,15 +167,9 @@ func FixMetadataUserID(raw string) *MetadataUserID {
+ 		m = &MetadataUserID{}
+ 	}
+ 
+-	// Recover from panic if Fix() fails due to missing required fields
+-	defer func() {
+-		if r := recover(); r != nil {
+-			// Fix() panicked, return nil
+-			m = nil
+-		}
+-	}()
+-	m.Fix(nil)
+-
++	if m.TryFix(nil) != nil {
++		return nil
++	}
+ 	return m
+ }
+ 
+diff --git a/internal/protocol/nonstream/openai_to_anthropic.go b/internal/protocol/nonstream/openai_to_anthropic.go
+index f24ff4f..886196f 100644
+--- a/internal/protocol/nonstream/openai_to_anthropic.go
++++ b/internal/protocol/nonstream/openai_to_anthropic.go
+@@ -9,6 +9,7 @@ import (
+ 	"github.com/anthropics/anthropic-sdk-go"
+ 	"github.com/google/uuid"
+ 	"github.com/openai/openai-go/v3"
++	"github.com/openai/openai-go/v3/packages/respjson"
+ 	"github.com/openai/openai-go/v3/responses"
+ 	protocol "github.com/tingly-dev/tingly-box/ai"
+ 	usageconv "github.com/tingly-dev/tingly-box/internal/protocol/usage"
+@@ -61,6 +62,21 @@ func ConvertOpenAIChatToAnthropicV1(chat *openai.ChatCompletion, model string) (
+ 	return &msg, nil
+ }
+ 
++// chatReasoningContent returns the text of a Chat message's reasoning_content
++// extra field (DeepSeek-style providers): the decoded JSON string, or ""
++// when the field is missing, null or not a string.
++func chatReasoningContent(extra map[string]respjson.Field) string {
++	f, ok := extra["reasoning_content"]
++	if !ok {
++		return ""
++	}
++	var text string
++	if err := json.Unmarshal([]byte(f.Raw()), &text); err != nil {
++		return ""
++	}
++	return text
++}
++
+ func marshalOpenAIChatToAnthropic(chat *openai.ChatCompletion, model string) ([]byte, error) {
+ 	if chat == nil {
+ 		return nil, fmt.Errorf("convert OpenAI Chat response to Anthropic: response is nil")
+@@ -77,17 +93,16 @@ func marshalOpenAIChatToAnthropic(chat *openai.ChatCompletion, model string) ([]
+ 
+ 	var contentBlocks []anthropic.ContentBlockParamUnion
+ 	for _, choice := range chat.Choices {
++		// Thinking comes first, as in an Anthropic response.
++		if thinking := chatReasoningContent(choice.Message.JSON.ExtraFields); thinking != "" {
++			contentBlocks = append(contentBlocks, anthropic.NewThinkingBlock("thinking-"+uuid.New().String()[0:6], thinking))
++		}
+ 		if choice.Message.Refusal != "" {
+ 			contentBlocks = append(contentBlocks, anthropic.NewTextBlock(choice.Message.Refusal))
+ 		}
+ 		if choice.Message.Content != "" {
+ 			contentBlocks = append(contentBlocks, anthropic.NewTextBlock(choice.Message.Content))
+ 		}
+-		if extra := choice.Message.JSON.ExtraFields; extra != nil {
+-			if thinking, ok := extra["reasoning_content"]; ok {
+-				contentBlocks = append(contentBlocks, anthropic.NewThinkingBlock("thinking-"+uuid.New().String()[0:6], fmt.Sprintf("%s", thinking.Raw())))
+-			}
+-		}
+ 		for _, toolCall := range choice.Message.ToolCalls {
+ 			var input map[string]interface{}
+ 			if err := json.Unmarshal([]byte(toolCall.Function.Arguments), &input); err != nil {
+@@ -129,17 +144,16 @@ func ConvertOpenAIChatToAnthropicBeta(chat *openai.ChatCompletion, model string)
+ 
+ 	var contentBlocks []anthropic.BetaContentBlockParamUnion
+ 	for _, choice := range chat.Choices {
++		// Thinking comes first, as in an Anthropic response.
++		if thinking := chatReasoningContent(choice.Message.JSON.ExtraFields); thinking != "" {
++			contentBlocks = append(contentBlocks, anthropic.NewBetaThinkingBlock("thinking-"+uuid.New().String()[0:6], thinking))
++		}
+ 		if choice.Message.Refusal != "" {
+ 			contentBlocks = append(contentBlocks, anthropic.NewBetaTextBlock(choice.Message.Refusal))
+ 		}
+ 		if choice.Message.Content != "" {
+ 			contentBlocks = append(contentBlocks, anthropic.NewBetaTextBlock(choice.Message.Content))
+ 		}
+-		if extra := choice.Message.JSON.ExtraFields; extra != nil {
+-			if thinking, ok := extra["reasoning_content"]; ok {
+-				contentBlocks = append(contentBlocks, anthropic.NewBetaThinkingBlock("thinking-"+uuid.New().String()[0:6], fmt.Sprintf("%s", thinking.Raw())))
+-			}
+-		}
+ 		for _, toolCall := range choice.Message.ToolCalls {
+ 			var input map[string]interface{}
+ 			if err := json.Unmarshal([]byte(toolCall.Function.Arguments), &input); err != nil {
+diff --git a/internal/protocol/ops/request_anthropic_model.go b/internal/protocol/ops/request_anthropic_model.go
+index 43ea8f1..d605e30 100644
+--- a/internal/protocol/ops/request_anthropic_model.go
++++ b/internal/protocol/ops/request_anthropic_model.go
+@@ -11,6 +11,7 @@ import (
+ 	"github.com/anthropics/anthropic-sdk-go/packages/param"
+ 	"github.com/tingly-dev/tingly-box/internal/catalog"
+ 	"github.com/tingly-dev/tingly-box/internal/protocol/metaid"
++	"github.com/tingly-dev/tingly-box/internal/protocol/thinking"
+ 	"github.com/tingly-dev/tingly-box/internal/typ"
+ )
+ 
+@@ -94,7 +95,6 @@ func ApplyAnthropicV1ModelTransform(req *anthropic.MessageNewParams, model strin
+ 	caps := anthropicModelThinkingCaps(model)
+ 
+ 	if !caps.ThinkingAdaptive {
+-		req.Messages = filterThinkingBlocksInMessages(req.Messages)
+ 		if req.Thinking.OfAdaptive != nil {
+ 			if budget, ok := typ.ThinkingBudgetMapping[string(req.OutputConfig.Effort)]; ok && caps.ThinkingEnabled {
+ 				if budget, err := fitAnthropicThinkingBudget(budget, req.MaxTokens); err == nil {
+@@ -121,10 +121,21 @@ func ApplyAnthropicV1ModelTransform(req *anthropic.MessageNewParams, model strin
+ 		}
+ 	}
+ 
++	// Budget thinking (possibly mapped from adaptive above) cannot continue a
++	// tool-use turn whose assistant message has no thinking block.
++	thinking.DisableV1ForUnsignedToolTurn(req)
++
+ 	if caps.ThinkingMandatory && req.Thinking.OfDisabled != nil {
+ 		req.Thinking = anthropic.ThinkingConfigParamUnion{OfAdaptive: &anthropic.ThinkingConfigAdaptiveParam{}}
+ 	}
+ 
++	// Drop thinking blocks only when thinking ends up off: with budget thinking
++	// enabled, Anthropic requires the final assistant tool-use turn to start
++	// with its (signed) thinking block.
++	if !caps.ThinkingAdaptive && req.Thinking.OfEnabled == nil {
++		req.Messages = filterThinkingBlocksInMessages(req.Messages)
++	}
++
+ 	req.OutputConfig.Effort = clampAnthropicEffort(req.OutputConfig.Effort, caps)
+ 
+ 	return req
+@@ -139,7 +150,6 @@ func ApplyAnthropicBetaModelTransform(req *anthropic.BetaMessageNewParams, model
+ 	caps := anthropicModelThinkingCaps(model)
+ 
+ 	if !caps.ThinkingAdaptive {
+-		req.Messages = filterBetaThinkingBlocksInMessages(req.Messages)
+ 		if req.Thinking.OfAdaptive != nil {
+ 			if budget, ok := typ.ThinkingBudgetMapping[string(req.OutputConfig.Effort)]; ok && caps.ThinkingEnabled {
+ 				if budget, err := fitAnthropicThinkingBudget(budget, req.MaxTokens); err == nil {
+@@ -166,10 +176,19 @@ func ApplyAnthropicBetaModelTransform(req *anthropic.BetaMessageNewParams, model
+ 		}
+ 	}
+ 
++	// Budget thinking (possibly mapped from adaptive above) cannot continue a
++	// tool-use turn whose assistant message has no thinking block.
++	thinking.DisableBetaForUnsignedToolTurn(req)
++
+ 	if caps.ThinkingMandatory && req.Thinking.OfDisabled != nil {
+ 		req.Thinking = anthropic.BetaThinkingConfigParamUnion{OfAdaptive: &anthropic.BetaThinkingConfigAdaptiveParam{}}
+ 	}
+ 
++	// Drop thinking blocks only when thinking ends up off (see the V1 transform).
++	if !caps.ThinkingAdaptive && req.Thinking.OfEnabled == nil {
++		req.Messages = filterBetaThinkingBlocksInMessages(req.Messages)
++	}
++
+ 	req.OutputConfig.Effort = anthropic.BetaOutputConfigEffort(
+ 		clampAnthropicEffort(anthropic.OutputConfigEffort(req.OutputConfig.Effort), caps))
+ 
+@@ -306,18 +325,11 @@ func ApplyAnthropicV1MetadataTransform(req *anthropic.MessageNewParams, extra ma
+ 	}
+ 	if req.Metadata.UserID.Valid() {
+ 		m := metaid.ParseMetadataUserID(req.Metadata.UserID.String())
+-		if m != nil {
+-			// Recover from panic if Fix() fails due to missing required fields
+-			func() {
+-				defer func() {
+-					if r := recover(); r != nil {
+-						// Fix() panicked, skip setting metadata
+-					}
+-				}()
+-				m.Fix(extra)
+-				s := m.Format()
+-				req.Metadata.UserID = param.NewOpt(s)
+-			}()
++		// A user_id without device or account (Claude Code signed in with an
++		// API key sends an empty account_uuid) that extra cannot complete is
++		// kept as sent.
++		if m != nil && m.TryFix(extra) == nil {
++			req.Metadata.UserID = param.NewOpt(m.Format())
+ 		}
+ 	} else {
+ 		m := metaid.BuildMetadataUserID(extra)
+@@ -362,10 +374,11 @@ func ApplyAnthropicBetaMetadataTransform(req *anthropic.BetaMessageNewParams, ex
+ 	}
+ 	if req.Metadata.UserID.Valid() {
+ 		m := metaid.ParseMetadataUserID(req.Metadata.UserID.String())
+-		if m != nil {
+-			m.Fix(extra)
+-			s := m.Format()
+-			req.Metadata.UserID = param.NewOpt(s)
++		// A user_id without device or account (Claude Code signed in with an
++		// API key sends an empty account_uuid) that extra cannot complete is
++		// kept as sent.
++		if m != nil && m.TryFix(extra) == nil {
++			req.Metadata.UserID = param.NewOpt(m.Format())
+ 		}
+ 	} else {
+ 		m := metaid.BuildMetadataUserID(extra)
+diff --git a/internal/protocol/request/anthropic_beta_to_responses.go b/internal/protocol/request/anthropic_beta_to_responses.go
+index 217e820..579e4c9 100644
+--- a/internal/protocol/request/anthropic_beta_to_responses.go
++++ b/internal/protocol/request/anthropic_beta_to_responses.go
+@@ -183,6 +183,7 @@ func ConvertAnthropicBetaToolsToResponses(tools []anthropic.BetaToolUnionParam)
+ 		if len(tool.InputSchema.Required) > 0 {
+ 			parameters["required"] = tool.InputSchema.Required
+ 		}
++		addAnthropicInputSchemaExtraFields(parameters, tool.InputSchema.ExtraFields)
+ 
+ 		// Create function tool
+ 		fn := &responses.FunctionToolParam{
+diff --git a/internal/protocol/request/anthropic_v1_to_openai.go b/internal/protocol/request/anthropic_v1_to_openai.go
+index 823bbee..482f7a2 100644
+--- a/internal/protocol/request/anthropic_v1_to_openai.go
++++ b/internal/protocol/request/anthropic_v1_to_openai.go
+@@ -61,6 +61,18 @@ func convertAnthropicInputSchemaToOpenAIParameters(properties any, required []st
+ 	return parameters
+ }
+ 
++// addAnthropicInputSchemaExtraFields copies the input_schema keywords other
++// than type, properties and required ($defs, additionalProperties, ...),
++// which the SDK keeps in ExtraFields, into the function parameters, without
++// overriding the keys already set.
++func addAnthropicInputSchemaExtraFields(parameters map[string]any, extra map[string]any) {
++	for k, v := range extra {
++		if _, ok := parameters[k]; !ok {
++			parameters[k] = v
++		}
++	}
++}
++
+ // ConvertAnthropicToolsToOpenAIWithTransformedSchema is an alias for ConvertAnthropicToolsToOpenAI
+ // Schema transformation is handled by provider-specific transforms
+ func ConvertAnthropicToolsToOpenAIWithTransformedSchema(tools []anthropic.ToolUnionParam) []openai.ChatCompletionToolUnionParam {
+diff --git a/internal/protocol/request/anthropic_v1_to_responses.go b/internal/protocol/request/anthropic_v1_to_responses.go
+index 74e293f..50a714d 100644
+--- a/internal/protocol/request/anthropic_v1_to_responses.go
++++ b/internal/protocol/request/anthropic_v1_to_responses.go
+@@ -342,6 +342,7 @@ func ConvertAnthropicV1ToolsToResponses(tools []anthropic.ToolUnionParam) []resp
+ 		if len(tool.InputSchema.Required) > 0 {
+ 			parameters["required"] = tool.InputSchema.Required
+ 		}
++		addAnthropicInputSchemaExtraFields(parameters, tool.InputSchema.ExtraFields)
+ 
+ 		// Create function tool
+ 		fn := &responses.FunctionToolParam{
+diff --git a/internal/protocol/request/anthropic_view.go b/internal/protocol/request/anthropic_view.go
+index 4d703b0..24e11ca 100644
+--- a/internal/protocol/request/anthropic_view.go
++++ b/internal/protocol/request/anthropic_view.go
+@@ -703,6 +703,7 @@ func convertAnthropicToolViewsToOpenAI(tools []anthropic.ToolUnionParam) []opena
+ 		}
+ 		// Convert Anthropic input schema to OpenAI function parameters
+ 		parameters := convertAnthropicInputSchemaToOpenAIParameters(tool.InputSchema.Properties, tool.InputSchema.Required)
++		addAnthropicInputSchemaExtraFields(parameters, tool.InputSchema.ExtraFields)
+ 
+ 		out = append(out, openai.ChatCompletionFunctionTool(shared.FunctionDefinitionParam{
+ 			Name:        tool.Name,
+@@ -845,6 +846,8 @@ func convertAnthropicViewMessageToGoogle(msg anthropic.MessageParam) *genai.Cont
+ 				var argsInput map[string]interface{}
+ 				if inputBytes, ok := block.OfToolUse.Input.([]byte); ok {
+ 					_ = json.Unmarshal(inputBytes, &argsInput)
++				} else if inputBytes, err := json.Marshal(block.OfToolUse.Input); err == nil {
++					_ = json.Unmarshal(inputBytes, &argsInput)
+ 				}
+ 				content.Parts = append(content.Parts, &genai.Part{
+ 					FunctionCall: &genai.FunctionCall{
+diff --git a/internal/protocol/stream/openai_responses_to_anthropic_converter.go b/internal/protocol/stream/openai_responses_to_anthropic_converter.go
+index be5ea82..86a7148 100644
+--- a/internal/protocol/stream/openai_responses_to_anthropic_converter.go
++++ b/internal/protocol/stream/openai_responses_to_anthropic_converter.go
+@@ -22,6 +22,7 @@ type responsesToAnthropicToolCall struct {
+ 	truncatedID string
+ 	name        string
+ 	completed   bool
++	hasInput    bool // an input_json_delta was sent
+ }
+ 
+ // responsesToAnthropicConverter is a stateful iterator that reads OpenAI Responses API
+@@ -260,6 +261,9 @@ func (r *responsesToAnthropicConverter) processEvent(currentEvent responses.Resp
+ 
+ 	case "response.reasoning_text.delta":
+ 		reasoningDelta := currentEvent.AsResponseReasoningTextDelta()
++		if reasoningDelta.Delta == "" {
++			break
++		}
+ 		if r.state.thinkingBlockIndex == -1 {
+ 			r.state.thinkingBlockIndex = r.state.nextBlockIndex
+ 			r.state.nextBlockIndex++
+@@ -279,6 +283,9 @@ func (r *responsesToAnthropicConverter) processEvent(currentEvent responses.Resp
+ 
+ 	case "response.reasoning_summary_text.delta":
+ 		summaryDelta := currentEvent.AsResponseReasoningSummaryTextDelta()
++		if summaryDelta.Delta == "" {
++			break
++		}
+ 		if r.state.reasoningSummaryBlockIndex == -1 {
+ 			r.state.reasoningSummaryBlockIndex = r.state.nextBlockIndex
+ 			r.state.hasTextContent = true
+@@ -314,15 +321,10 @@ func (r *responsesToAnthropicConverter) processEvent(currentEvent responses.Resp
+ 		itemAdded := currentEvent.AsResponseOutputItemAdded()
+ 		switch itemAdded.Item.Type {
+ 		case "reasoning":
+-			reasoningDelta := currentEvent.AsResponseReasoningTextDelta()
+-			if r.state.thinkingBlockIndex == -1 {
+-				r.state.thinkingBlockIndex = r.state.nextBlockIndex
+-				r.state.nextBlockIndex++
+-				r.state.thinkingBlocks[r.state.thinkingBlockIndex] = true
+-				logrus.WithContext(r.ctx).Debugf("[Thinking][ResponsesAPI] Initializing thinking block at index %d", r.state.thinkingBlockIndex)
+-				r.emitContentBlockStart(r.state.thinkingBlockIndex, anthropicThinkingBlockStart())
+-			}
+-			r.emitContentBlockDelta(r.state.thinkingBlockIndex, anthropicThinkingDelta(reasoningDelta.Delta))
++			// The thinking block is opened by the first non-empty reasoning
++			// text or summary delta and closed at the item's output_item.done:
++			// a reasoning item without text (no summary requested) adds no
++			// empty thinking block, and none stays open across the answer.
+ 		case "message":
+ 			if r.state.textBlockIndex == -1 {
+ 				r.state.textBlockIndex = r.state.nextBlockIndex
+@@ -359,13 +361,15 @@ func (r *responsesToAnthropicConverter) processEvent(currentEvent responses.Resp
+ 		argsDelta := currentEvent.AsResponseFunctionCallArgumentsDelta()
+ 		if tc, ok := r.toolCalls[argsDelta.ItemID]; ok {
+ 			r.emitContentBlockDelta(tc.blockIndex, anthropicInputJSONDelta(argsDelta.Delta))
++			tc.hasInput = tc.hasInput || argsDelta.Delta != ""
+ 		}
+ 
+ 	case "response.function_call_arguments.done":
+ 		argsDone := currentEvent.AsResponseFunctionCallArgumentsDone()
+ 		if tc, ok := r.toolCalls[argsDone.ItemID]; ok {
+-			r.emitContentBlockStop(tc.blockIndex)
+-			tc.completed = true
++			// Some backends (e.g. gpt-5.3-codex-spark on Codex) send the
++			// arguments only here, without any .delta.
++			r.completeToolCall(tc, argsDone.Arguments)
+ 		}
+ 
+ 	case "response.custom_tool_call_input.delta":
+@@ -395,7 +399,23 @@ func (r *responsesToAnthropicConverter) processEvent(currentEvent responses.Resp
+ 		}
+ 
+ 	case "response.output_item.done":
+-		// handled by respective .done events above
++		itemDone := currentEvent.AsResponseOutputItemDone()
++		switch itemDone.Item.Type {
++		case "reasoning":
++			r.closeThinkingBlock(&r.state.thinkingBlockIndex)
++			r.closeThinkingBlock(&r.state.reasoningSummaryBlockIndex)
++		case "message":
++			if r.state.textBlockIndex != -1 {
++				r.emitContentBlockStop(r.state.textBlockIndex)
++				r.state.textBlockIndex = -1
++			}
++		case "function_call":
++			// Normally completed by function_call_arguments.done; covers
++			// a stream that sends the arguments only in the finished item.
++			if tc, ok := r.toolCalls[itemDone.Item.ID]; ok {
++				r.completeToolCall(tc, itemDone.Item.Arguments.OfString)
++			}
++		}
+ 
+ 	case "response.completed":
+ 		completed := currentEvent.AsResponseCompleted()
+@@ -422,7 +442,7 @@ func (r *responsesToAnthropicConverter) processEvent(currentEvent responses.Resp
+ 
+ 	case "response.reasoning_summary_part.added":
+ 		summaryPartAdded := currentEvent.AsResponseReasoningSummaryPartAdded()
+-		if summaryPartAdded.Part.Type == "text" {
++		if summaryPartAdded.Part.Type == "text" && summaryPartAdded.Part.Text != "" {
+ 			if r.state.reasoningSummaryBlockIndex == -1 {
+ 				r.state.reasoningSummaryBlockIndex = r.state.nextBlockIndex
+ 				r.state.hasTextContent = true
+@@ -528,6 +548,30 @@ func (r *responsesToAnthropicConverter) processEvent(currentEvent responses.Resp
+ 	}
+ }
+ 
++// completeToolCall sends the arguments of a tool call no delta streamed
++// and stops its block, once.
++func (r *responsesToAnthropicConverter) completeToolCall(tc *responsesToAnthropicToolCall, arguments string) {
++	if tc.completed {
++		return
++	}
++	if !tc.hasInput && arguments != "" {
++		r.emitContentBlockDelta(tc.blockIndex, anthropicInputJSONDelta(arguments))
++		tc.hasInput = true
++	}
++	r.emitContentBlockStop(tc.blockIndex)
++	tc.completed = true
++}
++
++// closeThinkingBlock signs and stops the thinking block at *index if it is
++// still open, and clears *index.
++func (r *responsesToAnthropicConverter) closeThinkingBlock(index *int) {
++	if *index != -1 && !r.state.stoppedBlocks[*index] {
++		r.emitThinkingSignature(*index)
++		r.emitContentBlockStop(*index)
++	}
++	*index = -1
++}
++
+ // finalize emits the terminal Anthropic events for a completed or incomplete
+ // Responses API response: it records usage, backfills any non-streamed tool
+ // calls from the output array, closes open blocks, and sends message_delta +
+diff --git a/internal/protocol/stream/openai_responses_to_chat_converter.go b/internal/protocol/stream/openai_responses_to_chat_converter.go
+index 433d4e8..42462ca 100644
+--- a/internal/protocol/stream/openai_responses_to_chat_converter.go
++++ b/internal/protocol/stream/openai_responses_to_chat_converter.go
+@@ -29,7 +29,9 @@ type responsesToChatConverter struct {
+ 	serviceTier     *string // stamped on every chunk; refined at completion
+ 	hasToolCalls    bool
+ 	completed       bool
+-	toolCallIndexes map[string]int
++	toolCallIndexes map[string]int // Responses item id -> Chat tool_calls index
++	toolCallOutputs map[int64]int  // Responses output_index -> Chat tool_calls index
++	toolCallCount   int
+ 	toolCalls       map[int]*responsesToChatToolCall
+ 
+ 	// internal event queue
+@@ -54,6 +56,7 @@ func newResponsesToChatConverter(stream ResponsesStreamIter, responseModel strin
+ 		createdAt:       time.Now().Unix(),
+ 		usage:           protocol.ZeroTokenUsage(),
+ 		toolCallIndexes: make(map[string]int),
++		toolCallOutputs: make(map[int64]int),
+ 		toolCalls:       make(map[int]*responsesToChatToolCall),
+ 	}
+ }
+@@ -127,12 +130,11 @@ func (c *responsesToChatConverter) processEvent(evt *responses.ResponseStreamEve
+ 			if !c.hasSentCreated {
+ 				c.pending = append(c.pending, c.roleChunk())
+ 			}
+-			index := int(evt.OutputIndex)
++			index := c.newChatToolCallIndex(evt.Item.ID, evt.OutputIndex)
+ 			callID := evt.Item.CallID
+ 			if callID == "" {
+ 				callID = evt.Item.ID
+ 			}
+-			c.toolCallIndexes[evt.Item.ID] = index
+ 			c.toolCalls[index] = &responsesToChatToolCall{id: evt.Item.ID, callID: callID, name: evt.Item.Name}
+ 			c.hasToolCalls = true
+ 			c.pending = append(c.pending, c.toolCallStartChunk(index, callID, evt.Item.Name))
+@@ -142,10 +144,7 @@ func (c *responsesToChatConverter) processEvent(evt *responses.ResponseStreamEve
+ 		if !c.hasSentCreated {
+ 			c.pending = append(c.pending, c.roleChunk())
+ 		}
+-		index, ok := c.toolCallIndexes[evt.ItemID]
+-		if !ok {
+-			index = int(evt.OutputIndex)
+-		}
++		index := c.chatToolCallIndex(evt.ItemID, evt.OutputIndex)
+ 		if toolCall, ok := c.toolCalls[index]; ok {
+ 			toolCall.arguments.WriteString(evt.Delta)
+ 		}
+@@ -153,34 +152,38 @@ func (c *responsesToChatConverter) processEvent(evt *responses.ResponseStreamEve
+ 		c.pending = append(c.pending, c.toolCallDeltaChunk(index, evt.Delta))
+ 
+ 	case "response.function_call_arguments.done":
+-		index, ok := c.toolCallIndexes[evt.ItemID]
+-		if !ok {
+-			index = int(evt.OutputIndex)
+-		}
+-		if toolCall, ok := c.toolCalls[index]; ok && toolCall.arguments.Len() == 0 {
++		// Some backends (e.g. gpt-5.3-codex-spark on Codex) send the
++		// arguments only here, without any .delta: stream them as one delta.
++		index := c.chatToolCallIndex(evt.ItemID, evt.OutputIndex)
++		if toolCall, ok := c.toolCalls[index]; ok && toolCall.arguments.Len() == 0 && evt.Arguments != "" {
+ 			toolCall.arguments.WriteString(evt.Arguments)
++			c.pending = append(c.pending, c.toolCallDeltaChunk(index, evt.Arguments))
+ 		}
+ 
+ 	case "response.output_item.done":
+ 		if evt.Item.Type == "function_call" {
+-			index, ok := c.toolCallIndexes[evt.Item.ID]
+-			if !ok {
+-				index = int(evt.OutputIndex)
+-			}
++			index := c.chatToolCallIndex(evt.Item.ID, evt.OutputIndex)
+ 			callID := evt.Item.CallID
+ 			if callID == "" {
+ 				callID = evt.Item.ID
+ 			}
+ 			toolCall, ok := c.toolCalls[index]
+ 			if !ok {
++				// A call never announced by output_item.added: start it here.
++				if !c.hasSentCreated {
++					c.pending = append(c.pending, c.roleChunk())
++				}
+ 				toolCall = &responsesToChatToolCall{id: evt.Item.ID}
+ 				c.toolCalls[index] = toolCall
++				c.pending = append(c.pending, c.toolCallStartChunk(index, callID, evt.Item.Name))
+ 			}
+ 			toolCall.id = evt.Item.ID
+ 			toolCall.callID = callID
+ 			toolCall.name = evt.Item.Name
+-			if toolCall.arguments.Len() == 0 {
++			if toolCall.arguments.Len() == 0 && evt.Item.Arguments.OfString != "" {
++				// Arguments not streamed by any delta or .done event.
+ 				toolCall.arguments.WriteString(evt.Item.Arguments.OfString)
++				c.pending = append(c.pending, c.toolCallDeltaChunk(index, evt.Item.Arguments.OfString))
+ 			}
+ 			c.hasToolCalls = true
+ 		}
+@@ -247,7 +250,7 @@ func (c *responsesToChatConverter) emitCompletedOutput(output []responses.Respon
+ 			if !c.hasSentCreated {
+ 				c.pending = append(c.pending, c.roleChunk())
+ 			}
+-			index := outputIndex
++			index := c.newChatToolCallIndex(item.ID, int64(outputIndex))
+ 			callID := item.CallID
+ 			if callID == "" {
+ 				callID = item.ID
+@@ -261,6 +264,34 @@ func (c *responsesToChatConverter) emitCompletedOutput(output []responses.Respon
+ 	}
+ }
+ 
++// newChatToolCallIndex assigns the next Chat tool_calls index to a Responses
++// function call item that starts. Chat indexes number the tool calls of the
++// choice 0, 1, ... in the order they start; the Responses output_index also
++// counts reasoning and message items, so it cannot be used as is.
++func (c *responsesToChatConverter) newChatToolCallIndex(itemID string, outputIndex int64) int {
++	index := c.toolCallCount
++	c.toolCallCount++
++	if itemID != "" {
++		c.toolCallIndexes[itemID] = index
++	}
++	c.toolCallOutputs[outputIndex] = index
++	return index
++}
++
++// chatToolCallIndex returns the Chat tool_calls index of the function call
++// item an event refers to, by item id or else by output_index; an item not
++// seen before gets the next index.
++func (c *responsesToChatConverter) chatToolCallIndex(itemID string, outputIndex int64) int {
++	if itemID != "" {
++		if index, ok := c.toolCallIndexes[itemID]; ok {
++			return index
++		}
++	} else if index, ok := c.toolCallOutputs[outputIndex]; ok {
++		return index
++	}
++	return c.newChatToolCallIndex(itemID, outputIndex)
++}
++
+ // responsesToChatFinishReason maps a terminal Responses API response to the
+ // OpenAI Chat finish_reason. Tool calls take precedence; an incomplete
+ // response is mapped to "length"/"content_filter" by its incomplete reason.
+diff --git a/internal/protocol/stream/openai_responses_to_chat_golden_test.go b/internal/protocol/stream/openai_responses_to_chat_golden_test.go
+index 21e41b9..c518c21 100644
+--- a/internal/protocol/stream/openai_responses_to_chat_golden_test.go
++++ b/internal/protocol/stream/openai_responses_to_chat_golden_test.go
+@@ -138,7 +138,7 @@ func TestResponsesToChatConverter_GoldenSequence(t *testing.T) {
+ 	// 4. Tool call start chunk.
+ 	require.Len(t, got[3].Choices[0].Delta.ToolCalls, 1)
+ 	tc := got[3].Choices[0].Delta.ToolCalls[0]
+-	assert.Equal(t, 1, tc.Index)
++	assert.Equal(t, 0, tc.Index) // the first tool call, after a message item
+ 	assert.Equal(t, "call_1", tc.ID)
+ 	assert.Equal(t, "function", tc.Type)
+ 	assert.Equal(t, "get_weather", tc.Function.Name)
+diff --git a/internal/protocol/stream/openai_to_anthropic_converter.go b/internal/protocol/stream/openai_to_anthropic_converter.go
+index 66a0951..9dba867 100644
+--- a/internal/protocol/stream/openai_to_anthropic_converter.go
++++ b/internal/protocol/stream/openai_to_anthropic_converter.go
+@@ -201,17 +201,23 @@ func (c *openAIToAnthropicConverter) processChunk(chunk *openai.ChatCompletionCh
+ 		extras = FilterOpenAIProtocolFields(extras)
+ 		for k, v := range extras {
+ 			if k == OpenaiFieldReasoningContent {
++				// DeepSeek-style streams send "reasoning_content": null (or "")
++				// with every answer chunk: only reasoning text opens a block.
++				thinkingText := extractString(v)
++				if thinkingText == "" {
++					continue
++				}
+ 				if c.state.thinkingBlockIndex == -1 {
++					// One block open at a time: close the text block first.
++					c.emitCloseOpenBlock()
+ 					c.state.thinkingBlockIndex = c.state.nextBlockIndex
+ 					c.state.nextBlockIndex++
+ 					c.state.thinkingBlocks[c.state.thinkingBlockIndex] = true
+ 					c.emitEnsureMessageStart()
+ 					c.emitContentBlockStart(c.state.thinkingBlockIndex, anthropicThinkingBlockStart())
+ 				}
+-				if thinkingText := extractString(v); thinkingText != "" {
+-					c.emitEnsureMessageStart()
+-					c.emitContentBlockDelta(c.state.thinkingBlockIndex, anthropicThinkingDelta(thinkingText))
+-				}
++				c.emitEnsureMessageStart()
++				c.emitContentBlockDelta(c.state.thinkingBlockIndex, anthropicThinkingDelta(thinkingText))
+ 				continue
+ 			}
+ 			c.state.deltaExtras[k] = v
