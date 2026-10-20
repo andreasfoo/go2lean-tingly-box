@@ -8,6 +8,7 @@ import (
 	"github.com/openai/openai-go/v3"
 	"github.com/openai/openai-go/v3/responses"
 
+	"github.com/tingly-dev/tingly-box/internal/protocol"
 	"github.com/tingly-dev/tingly-box/internal/protocol/nonstream"
 	"github.com/tingly-dev/tingly-box/internal/protocol/wire"
 )
@@ -726,7 +727,7 @@ func SpecResponsesToChatConverterProcessEventStreamFinishMatches(c *responsesToC
 }
 
 // oneOpenBlock feeds the chunk's choices to a fresh Chat -> Anthropic
-// converter one per chunk (unfinished ones only: the stream's end is not
+// converter one per chunk (finish reasons cleared: the stream's end is not
 // under test) and checks that one content block is open at a time and
 // every delta goes to it. With noTools, a sequence holding a tool call
 // passes untested.
@@ -734,11 +735,13 @@ func oneOpenBlock(chunk *openai.ChatCompletionChunk, noTools bool) bool {
 	if chunk == nil {
 		return true
 	}
-	conv := newOpenAIToAnthropicConverter(nil, "m", nil, nil, mapOpenAIFinishReasonToAnthropic)
+	// The converter newOpenAIToAnthropicConverter builds when its token
+	// counter cannot be made (it then counts from upstream usage only): the
+	// tiktoken tables are out of the model's reach.
+	conv := &openAIToAnthropicConverter{responseModel: "m", mapFinishReason: mapOpenAIFinishReasonToAnthropic,
+		messageID: "msg_go2lean", state: newStreamState(), usage: protocol.ZeroTokenUsage()}
 	for _, ch := range chunk.Choices {
-		if ch.FinishReason != "" {
-			continue
-		}
+		ch.FinishReason = "" // the stream's end is not under test
 		if noTools && len(ch.Delta.ToolCalls) > 0 {
 			return true
 		}
