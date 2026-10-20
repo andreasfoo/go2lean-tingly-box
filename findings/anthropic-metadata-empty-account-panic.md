@@ -67,6 +67,19 @@ Fix direction: recover as the V1 transform does, or better, make `Fix`
 return an error instead of panicking and keep the inbound user_id when it
 fails.
 
+## Further triggers
+
+Found while triaging the M2 agent's run on `ops`. `ParseMetadataUserID`
+accepts any JSON object, and `null`, so a `user_id` of `{}` (not only
+Claude Code's `"account_uuid":""`) reaches the unguarded `m.Fix(extra)`
+(`ops/request_anthropic_model.go:366`) and panics with "missing account
+uuid". The other panic in `metaid.(*MetadataUserID).Fix`, "missing device
+id" (`internal/protocol/metaid/user_id.go:79-107`), is not reachable from a
+client: the gateway always fills `extra["device"]` (`config.go:335-341`
+fills `ClaudeCodeDeviceID` when empty, `protocol_transform.go:129` and
+`transform/chain.go:204-206` pass it on); only an operator blanking it in
+a hot-reloaded config gets there.
+
 ## General property
 
 For every Anthropic Beta request and every provider config (`extra` map),

@@ -46,6 +46,17 @@ Evidence: `TestGo2LeanRepro_AccumulatorDeltaRepeatingCacheCreation` and
 `TestGo2LeanRepro_AccumulatorDeltaRepeatingInput`
 (`repro/internal/protocol/usage/zz_go2lean_repro_hunt3_test.go`).
 
+## Further triggers
+
+Found while triaging the M2 agent's run on `usage`: the page's remark that
+Anthropic's own "repeat every field" `message_delta` gives the right total
+does not hold when `input_tokens` is 0 (plausible when the whole prompt
+sits behind a cache breakpoint). The delta's `input_tokens: 0` fails the
+`> 0` guards (`usage/accumulator.go:107-120`) and cache creation is added
+a second time (`:149-157`): streamed input 10 against 5 without
+streaming in the agent's counterexample. Not checked against the live
+API.
+
 ## General property
 
 For every Anthropic event stream whose usage fields are cumulative (each

@@ -55,6 +55,15 @@ Evidence: `TestGo2LeanRepro_ChatStopWithToolCallsIsToolUse`
 `TestGo2LeanRepro_StreamChatStopWithToolCallsIsToolUse`
 (`repro/internal/protocol/stream/zz_go2lean_repro_blind_test.go`).
 
+## Further triggers
+
+Found while triaging the M2 agent's run on `stream`: the V1 stream mapper
+`mapOpenAIFinishReasonToAnthropic` (`stream/openai_to_anthropic.go:38`)
+has no `function_call` case, which the Beta mapper has
+(`openai_to_anthropic_beta.go:21`), so `finish_reason: "function_call"`
+with tool calls also becomes `end_turn` on V1. The fix suggested above
+(`tool_use` whenever a tool_use block was sent) covers it.
+
 ## General property
 
 For every Chat completion (or chunk stream) converted to Anthropic, if the
