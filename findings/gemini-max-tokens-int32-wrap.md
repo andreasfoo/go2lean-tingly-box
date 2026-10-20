@@ -1,4 +1,4 @@
-# Finding 57: Anthropic and Chat -> Gemini: max_tokens above 2^31-1 wraps in maxOutputTokens (found by go2lean, M2 agent specs; new, not reported)
+# Finding 57: Anthropic and Chat -> Gemini: max_tokens above 2^31-1 wraps in maxOutputTokens (found by go2lean, M2 agent specs; new, not reported; minor)
 
 Severity: **low** (see [the findings table](README.md)).
 
@@ -24,9 +24,13 @@ Where (tingly-box `b788a3b`):
   below `MaxAllowed` and passes. On the Anthropic, Chat and Responses paths
   the same transform clamps the int64 field and works.
 
-Trigger: a client sends a very large `max_tokens` to mean "no limit" (for
-example JavaScript's `Number.MAX_SAFE_INTEGER`, or any value at or above
-2^31), and the request is routed to a Google-style provider.
+Trigger: a request with `max_tokens` at or above 2^31 (2147483648),
+routed to a Google-style provider. No mainstream client is known to send
+such a value: the Anthropic and OpenAI APIs reject a `max_tokens` above the
+model's limit, so clients written against them stay far below 2^31. It
+takes a client that relies on the gateway to clamp the limit (which
+tingly-box does on the other targets, see above) and passes a huge
+sentinel for "no limit", such as JavaScript's `Number.MAX_SAFE_INTEGER`.
 
 Observed (`{"model":"gemini-2.5-pro","max_tokens":N,"messages":[{"role":"user","content":"Write a long story."}]}`,
 JSON-parsed as an Anthropic v1, Anthropic Beta and Chat request):
@@ -42,11 +46,16 @@ Expected: the value clamped (to the model limit or to `math.MaxInt32`)
 before it is narrowed to int32, or the request rejected; never a wrapped
 value.
 
-Realism: low. The native Anthropic and OpenAI APIs reject such values, but
-with a clear error; here a value that wraps to a small positive number
-silently truncates the answer (2^32+100 becomes 100 tokens) and a negative
-one makes Gemini reject the request with an error the client cannot
-explain.
+Realism: very low, hence low and minor: the trigger is a value no known
+client sends. When it happens, the effect is wrong rather than merely
+rejected: a value that wraps to a small positive number cuts the answer
+short (2^32+100 becomes 100 output tokens; the client sees a normal
+`max_tokens` / `length` stop with no hint why), and one that wraps to a
+negative number sends a negative `maxOutputTokens`, which is outside
+Gemini's documented range and is rejected with an error about a value the
+client never sent (not checked against the live API). Values below 2^31 are
+narrowed exactly and, above the model limit, clamped by the output limit
+transform as on the other targets.
 
 Status: **new** (not reported; not yet checked against the tracker for an
 existing issue). Not covered by `chat-gemini-request-coverage.md` (#47),

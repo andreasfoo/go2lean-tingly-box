@@ -5,8 +5,13 @@ Severity: **low** (see [the findings table](README.md)).
 Path: Anthropic or Chat response -> Gemini response conversion, non-stream.
 No gateway caller at `b788a3b`: no Gemini client endpoint routes through
 `HandleAnthropicToGoogle` or `HandleOpenAIToGoogle` (nor through the stream
-converters in `internal/protocol/stream/any_to_google.go`), so the bug is
-latent, like `gemini-anthropic-sampling-dropped.md` (#56).
+converters in `internal/protocol/stream/any_to_google.go`); the only
+references outside these files are tests
+(`internal/protocol/nonstream/nonstream_test.go`), and the gateway has no
+Gemini-protocol client route (`generateContent` appears only in the
+upstream clients, comments and the virtual upstream servers used by
+benchmarks and tests). The bug is latent, like
+`gemini-anthropic-sampling-dropped.md` (#56).
 
 Where (tingly-box `b788a3b`), `internal/protocol/nonstream/any_to_google.go`:
 

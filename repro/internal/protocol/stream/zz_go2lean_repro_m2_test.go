@@ -19,16 +19,28 @@ import (
 )
 
 func TestGo2LeanRepro_StreamGeminiSafetyIsRefusalForAnthropicV1(t *testing.T) {
-	var g genai.GenerateContentResponse
-	if err := json.Unmarshal([]byte(`{"candidates":[{"content":{"role":"model","parts":[{"text":"I"}]},"finishReason":"SAFETY","index":0}],
-	 "usageMetadata":{"promptTokenCount":12,"candidatesTokenCount":1,"totalTokenCount":13}}`), &g); err != nil {
+	// Gemini streams part of the answer, then blocks it: the last chunk has
+	// no content, only the finish reason and the rating that blocked it.
+	var text, blocked genai.GenerateContentResponse
+	if err := json.Unmarshal([]byte(`{"candidates":[{"content":{"role":"model","parts":[{"text":"Here is how"}]},"index":0}],
+	 "usageMetadata":{"promptTokenCount":12,"totalTokenCount":12},"modelVersion":"gemini-2.5-flash"}`), &text); err != nil {
 		t.Fatal(err)
+	}
+	if err := json.Unmarshal([]byte(`{"candidates":[{"finishReason":"SAFETY","index":0,
+	 "safetyRatings":[{"category":"HARM_CATEGORY_DANGEROUS_CONTENT","probability":"HIGH","blocked":true}]}],
+	 "usageMetadata":{"promptTokenCount":12,"candidatesTokenCount":3,"totalTokenCount":15},"modelVersion":"gemini-2.5-flash"}`), &blocked); err != nil {
+		t.Fatal(err)
+	}
+	if len(blocked.Candidates) != 1 || blocked.Candidates[0].FinishReason != genai.FinishReasonSafety {
+		t.Fatalf("fixture not parsed: %+v", blocked.Candidates)
 	}
 	gin.SetMode(gin.TestMode)
 	w := httptest.NewRecorder()
 	c, _ := gin.CreateTestContext(w)
 	c.Request = httptest.NewRequest("POST", "/v1/messages", nil)
-	chunks := func(yield func(*genai.GenerateContentResponse, error) bool) { yield(&g, nil) }
+	chunks := func(yield func(*genai.GenerateContentResponse, error) bool) {
+		_ = yield(&text, nil) && yield(&blocked, nil)
+	}
 	if _, err := HandleGoogleToAnthropicStreamResponse(c, chunks, "m"); err != nil {
 		t.Fatal(err)
 	}

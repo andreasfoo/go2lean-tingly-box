@@ -24,19 +24,31 @@ Where (tingly-box `b788a3b`):
 Trigger: Gemini blocks the answer for safety (`finishReason: "SAFETY"`)
 and the client speaks the Anthropic v1 Messages API.
 
-Observed: non-stream `"stop_reason":"content_filter"`; stream
+Observed (a blocked candidate as Gemini sends it, with no content:
+`{"candidates":[{"finishReason":"SAFETY","index":0,"safetyRatings":[{"category":"HARM_CATEGORY_DANGEROUS_CONTENT","probability":"HIGH","blocked":true}]}],…}`;
+in the stream, after a chunk of answer text): non-stream
+`"stop_reason":"content_filter"`; stream
 `{"type":"message_delta","delta":{"stop_reason":"content_filter",…}}`.
 The same response gives `"stop_reason":"refusal"` to a Beta client.
 
 Expected: `"stop_reason":"refusal"`, as on the Beta path.
 
-Realism: low. Safety blocks are rare and the path (Anthropic v1 client,
-Gemini provider) is not the most common one. A client that branches on
-`stop_reason == "refusal"` misses the block and shows a cut-short answer
-as complete; a client that validates the stop reason against the
-Anthropic enum rejects the response (not checked against specific
-clients). Not covered by `anthropic-abnormal-stop-reasons.md` (#16), which
-is about Anthropic -> Chat and Responses.
+Realism: low. Safety blocks of the answer are rare with Gemini's default
+safety settings, and the v1 path is
+taken only by clients that call `/v1/messages` without `?beta=true`
+(`internal/protocolserver/anthropic_message.go:25`); Claude Code and the
+SDKs' `beta.messages` use the Beta path, which is right. The official
+Anthropic SDKs do not reject the unknown value (the Go SDK types
+`stop_reason` as a string, the Python and TypeScript SDKs do not validate
+response enums), so the effect is that a client that branches on
+`stop_reason == "refusal"` misses the block and treats the empty or
+cut-short answer as an ordinary one. Not covered by
+`anthropic-abnormal-stop-reasons.md` (#16), which is about Anthropic ->
+Chat and Responses.
+
+Related, not counted here: Gemini's other block reasons (`BLOCKLIST`,
+`PROHIBITED_CONTENT`, `SPII`, `IMAGE_SAFETY`, …) become `end_turn` on
+both the v1 and the Beta path (`:205-210`, `:299-304`).
 
 Status: **new** (not reported; not yet checked against the tracker for an
 existing issue).

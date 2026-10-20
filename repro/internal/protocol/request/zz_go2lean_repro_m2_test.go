@@ -33,7 +33,7 @@ func TestGo2LeanRepro_GeminiMaxTokensDoesNotWrap(t *testing.T) {
 				t.Fatal(err)
 			}
 		}
-		if v1.MaxTokens != n || beta.MaxTokens != n || chat.MaxTokens.Value != n {
+		if n <= math.MaxInt32 || v1.MaxTokens != n || beta.MaxTokens != n || chat.MaxTokens.Value != n {
 			t.Fatalf("fixture not parsed: %d %d %d", v1.MaxTokens, beta.MaxTokens, chat.MaxTokens.Value)
 		}
 		configs := map[string]*genai.GenerateContentConfig{}
@@ -41,8 +41,11 @@ func TestGo2LeanRepro_GeminiMaxTokensDoesNotWrap(t *testing.T) {
 		_, _, configs["Anthropic beta"] = ConvertAnthropicBetaToGoogleRequest(&beta, 4096)
 		_, _, configs["Chat"] = ConvertOpenAIToGoogleRequest(&chat, 4096)
 		for name, cfg := range configs {
+			// n does not fit in int32, so a correct converter clamps it (to
+			// the model limit or math.MaxInt32) or rejects the request; a
+			// non-positive value or exactly int32(n) means it wrapped.
 			got := int64(cfg.MaxOutputTokens)
-			if got <= 0 || got < min(n, math.MaxInt32) && got == int64(int32(n)) {
+			if got <= 0 || got == int64(int32(n)) {
 				t.Errorf("%s client: max_tokens %d becomes maxOutputTokens %d (wrapped to int32); Gemini cuts the answer short or rejects a non-positive limit",
 					name, n, got)
 			}

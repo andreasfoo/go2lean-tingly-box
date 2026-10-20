@@ -21,9 +21,11 @@ import (
 // answer for safety; the client speaks the Anthropic v1 Messages API.
 func TestGo2LeanRepro_GeminiSafetyIsRefusalForAnthropicV1(t *testing.T) {
 	var g genai.GenerateContentResponse
-	if err := json.Unmarshal([]byte(`{"candidates":[{"content":{"role":"model","parts":[{"text":"I can't help with that."}]},"finishReason":"SAFETY","index":0,
+	// A blocked candidate carries no content, only the finish reason and the
+	// rating that blocked it.
+	if err := json.Unmarshal([]byte(`{"candidates":[{"finishReason":"SAFETY","index":0,
 	 "safetyRatings":[{"category":"HARM_CATEGORY_DANGEROUS_CONTENT","probability":"HIGH","blocked":true}]}],
-	 "usageMetadata":{"promptTokenCount":12,"candidatesTokenCount":7,"totalTokenCount":19},"modelVersion":"gemini-2.5-flash"}`), &g); err != nil {
+	 "usageMetadata":{"promptTokenCount":12,"totalTokenCount":12},"modelVersion":"gemini-2.5-flash"}`), &g); err != nil {
 		t.Fatal(err)
 	}
 	if len(g.Candidates) != 1 || g.Candidates[0].FinishReason != genai.FinishReasonSafety {
