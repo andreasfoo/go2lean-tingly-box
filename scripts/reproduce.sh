@@ -50,6 +50,8 @@ declare -A finding=(
   [EnvOpenAIOrgNotSentUpstream]="env-credentials-upstream, OPENAI_ORG_ID (new)"
   [NullReasoningOpensNoThinkingBlock]="chat-anthropic-reasoning-null, stream (new)"
   [NonStreamThinkingIsPlainText]="chat-anthropic-reasoning-null, non-stream (new)"
+  [DoneOnlyArgumentsReachChatClient]="responses-done-only-arguments, Chat client (new)"
+  [DoneOnlyArgumentsReachAnthropicClient]="responses-done-only-arguments, Anthropic client (new)"
   [NonStreamUsageExcludesCachedInput]="usage-nonstream-cached-input (new)"
 )
 status=0
@@ -59,7 +61,7 @@ for t in "${!finding[@]}"; do
   elif grep -q -- "--- PASS: TestGo2LeanRepro_$t " <<<"$out"; then r=fixed
   else r=not-run; status=1
   fi
-  printf '%-36s  %-11s  %s\n' "$t" "$r" "${finding[$t]}"
+  printf '%-40s  %-11s  %s\n' "$t" "$r" "${finding[$t]}"
 done | sort -k3
 if grep -q -E '^(# |FAIL\s.*\[build failed\])' <<<"$out"; then
   echo; echo "build output:"; grep -E -A3 '^# |build failed' <<<"$out" | head -30
