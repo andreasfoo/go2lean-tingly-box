@@ -56,6 +56,15 @@ Evidence: `TestGo2LeanRepro_ChatToGeminiKeepsMaxCompletionTokens`,
 `TestGo2LeanRepro_ChatToGeminiKeepsUserImages`
 (`repro/internal/protocol/request/zz_go2lean_repro_blind_test.go`).
 
+## Further triggers
+
+Found while triaging the M2 agent's re-searched specs: the Chat -> Gemini
+converter (`request/any_to_google.go:60-82`) never reads `stop`, and drops
+`temperature: 0` and `top_p: 0` (it checks `Value > 0`), so a deterministic
+agent's temperature 0 becomes the model's default. A request with
+`"temperature":0,"stop":["END"]` gives `generationConfig`
+`{"maxOutputTokens":4096}`.
+
 ## General property
 
 For every Chat request: `maxOutputTokens` equals `max_completion_tokens`

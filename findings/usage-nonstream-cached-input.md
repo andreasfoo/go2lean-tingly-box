@@ -33,7 +33,12 @@ reasoning tokens are dropped on it (only three counts are copied).
 Same pattern, by reading only: the Gemini paths
 (`protocol_dispatch.go:272-280`, `stream/google_to_any.go:336,362,500,543`)
 store `promptTokenCount` as input next to `cachedContentTokenCount`;
-Gemini's `promptTokenCount` already includes the cached content.
+Gemini's `promptTokenCount` already includes the cached content. The Gemini -> Anthropic non-stream converters
+(`nonstream/google_to_any.go:176-186`, `:270-281`) do the same to the
+client-facing usage: `input_tokens = promptTokenCount` and
+`cache_read_input_tokens = cachedContentTokenCount`, so the cache is
+counted twice (confirmed by the M2 agent's spec
+`SpecHandleGoogleToAnthropicBetaUsageBasis`).
 `mcp_anthropic_v1_helper.go:182` and `toolengine/openai_chat_adapter.go:295`
 build usage the same way.
 
