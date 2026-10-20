@@ -94,6 +94,17 @@ declare -A finding=(
   [ParseAnthropicKeepsAllTextBlocks]="sse-parse-anthropic-last-text (new, test infrastructure)"
   [ResponsesToolChoiceNoneReachesAnthropic]="responses-anthropic-tool-choice-none (new, go2lean M2 agent)"
   [GeminiToolChoiceNoneStaysNone]="gemini-tool-choice-none (new, go2lean M2 agent)"
+  [BetaMetadataEmptyAccountNoPanic]="anthropic-metadata-empty-account-panic (new)"
+  [BetaBudgetThinkingKeepsToolTurnThinking]="anthropic-budget-thinking-stripped, beta (new)"
+  [V1BudgetThinkingKeepsToolTurnThinking]="anthropic-budget-thinking-stripped, v1 (new)"
+  [CodexNonStreamKeepsFunctionCall]="codex-nonstream-function-calls-dropped (new)"
+  [CountTokensIncludesToolResult]="count-tokens-ignores-tool-blocks (new)"
+  [GeminiSchemaExclusiveBoundDeterministic]="gemini-schema-exclusive-bounds, both keys (new)"
+  [GeminiSchemaNestedExclusiveBoundRemoved]="gemini-schema-exclusive-bounds, nested (new)"
+  [GeminiThinkingKeepsClientExtraBody]="gemini-thinking-extra-body-overwritten (new, latent)"
+  [RecordingAssemblerKeepsInputUsage]="recording-anthropic-stream-usage (new, minor)"
+  [ResponsesAssemblerToolCallArguments]="responses-assembler-tool-call-arguments (new, latent)"
+  [StreamCounterResetClearsUpstream]="stream-counter-reset-upstream (new, latent)"
 )
 status=0
 printf '\n%-40s  %-11s  %s\n' test result finding
