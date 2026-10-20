@@ -1,5 +1,7 @@
 # Finding 2: System messages dropped (tracked: #1921)
 
+Severity: **high** (see [the findings table](README.md)).
+
 A message with role `"system"` inside `messages` (the request's top-level
 `system` empty) is dropped:
 

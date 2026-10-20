@@ -1,5 +1,7 @@
 # Finding 33: Responses -> Anthropic: tool_choice "none" becomes auto (found by the go2lean M2 agent; new, not reported)
 
+Severity: **medium** (see [the findings table](README.md)).
+
 Path: Responses client -> Anthropic provider (request conversion; streaming
 or not).
 

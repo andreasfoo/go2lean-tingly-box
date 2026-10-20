@@ -1,5 +1,7 @@
 # Finding 29: Responses -> Anthropic: images in tool output dropped (new, not reported)
 
+Severity: **low** (see [the findings table](README.md)).
+
 Path: Responses client -> Anthropic provider (request conversion; streaming
 or not).
 

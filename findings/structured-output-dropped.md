@@ -1,5 +1,7 @@
 # Finding 22: Structured output formats dropped in every request direction (new, not reported)
 
+Severity: **high** (see [the findings table](README.md)).
+
 Path: every converted request path: Chat <-> Responses, Chat <->
 Anthropic, Responses <-> Anthropic (request conversion; streaming or not).
 

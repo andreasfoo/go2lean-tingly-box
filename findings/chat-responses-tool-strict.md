@@ -1,5 +1,7 @@
 # Finding 30: Tool `strict` flag lost between Chat and Responses (new, not reported)
 
+Severity: **low** (see [the findings table](README.md)).
+
 Path: Chat client -> Responses provider and Responses client -> Chat
 provider (request conversion; streaming or not).
 

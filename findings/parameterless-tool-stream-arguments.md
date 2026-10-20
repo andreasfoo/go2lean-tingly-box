@@ -1,5 +1,7 @@
 # Finding 24: Parameterless tool calls stream arguments `""` instead of `{}` (new, not reported)
 
+Severity: **medium** (see [the findings table](README.md)).
+
 Path: Chat client -> Anthropic provider and Responses client -> Anthropic
 provider, streaming.
 

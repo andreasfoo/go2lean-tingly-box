@@ -1,5 +1,7 @@
 # Finding 7: Cache reads counted twice in non-streaming Chat usage (new, not reported)
 
+Severity: **medium** (see [the findings table](README.md)).
+
 `ai.TokenUsage` defines `InputTokens` as the prompt *without* cache reads
 (`CacheReadTokens` is separate; the prompt total is their sum), and
 `usage.FromOpenAIChatCompletion` normalises OpenAI usage that way. The

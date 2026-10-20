@@ -1,5 +1,7 @@
 # Finding 4: reasoning_content empty without streaming (new, not reported)
 
+Severity: **medium** (see [the findings table](README.md)).
+
 Anthropic -> Chat, non-streaming: for a `thinking` block the converter
 fills `reasoning_content` from `block.Text` (empty for thinking blocks)
 instead of `block.Thinking` (`internal/protocol/nonstream/anthropic.go:45-46`).

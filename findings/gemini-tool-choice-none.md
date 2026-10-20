@@ -1,5 +1,7 @@
 # Finding 34: Gemini -> Chat and Gemini -> Anthropic: function calling mode NONE becomes auto (found by the go2lean M2 agent; new, not reported; latent)
 
+Severity: **low** (see [the findings table](README.md)).
+
 Path: Gemini request -> Chat provider and Gemini request -> Anthropic
 provider (request conversion).
 

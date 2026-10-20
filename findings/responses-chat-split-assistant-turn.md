@@ -1,5 +1,7 @@
 # Finding 27: Responses -> Chat: one assistant turn becomes two assistant messages (new, not reported)
 
+Severity: **low** (see [the findings table](README.md)).
+
 Path: Responses client -> Chat provider (request conversion; streaming or
 not).
 

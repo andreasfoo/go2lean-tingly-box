@@ -1,5 +1,7 @@
 # Finding 1: Tool-call ids truncated on one side only (tracked: #1924)
 
+Severity: **high** (see [the findings table](README.md)).
+
 `ConvertAnthropicBetaToOpenAIRequest` passes the `tool_use` id to the
 assistant's `tool_calls[].id` unchanged
 (`internal/protocol/request/anthropic_view.go` lines 94, 416 and 851 at

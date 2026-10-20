@@ -1,5 +1,7 @@
 # Finding 14: Chat tool call index taken from the Responses output index (new, not reported)
 
+Severity: **high** (see [the findings table](README.md)).
+
 Path: Chat client -> Responses provider, streaming.
 
 Where (tingly-box `b788a3b`):

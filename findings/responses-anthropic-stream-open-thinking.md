@@ -1,5 +1,7 @@
 # Finding 23: Responses -> Anthropic stream: an empty thinking block stays open across the answer (new, not reported)
 
+Severity: **high** (see [the findings table](README.md)).
+
 Path: Anthropic client -> Responses provider, streaming.
 
 Where (tingly-box `b788a3b`),

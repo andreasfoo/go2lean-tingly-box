@@ -1,5 +1,7 @@
 # Finding 26: Responses -> Anthropic without streaming: a refusal becomes `content: null` (new, not reported)
 
+Severity: **medium** (see [the findings table](README.md)).
+
 Path: Anthropic client -> Responses provider, not streaming.
 
 Where (tingly-box `b788a3b`), `internal/protocol/nonstream/openai_to_anthropic.go`

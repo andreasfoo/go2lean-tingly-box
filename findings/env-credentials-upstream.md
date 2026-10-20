@@ -1,5 +1,7 @@
 # Finding 6: Gateway environment credentials sent to every upstream (new, not reported)
 
+Severity: **critical** (see [the findings table](README.md)).
+
 Both SDK clients are built with the SDKs' environment defaults
 (`anthropic.NewClient` / `openai.NewClient` without
 `option.WithoutEnvironmentDefaults()`), so credentials and headers from the

@@ -1,5 +1,7 @@
 # Finding 13: Responses clients get no usage when streaming from a Chat provider (new, not reported)
 
+Severity: **high** (see [the findings table](README.md)).
+
 Path: Responses client -> Chat provider, streaming (`/tingly/openai/v1/responses`
 with `stream: true`, OpenAI-style provider in Chat mode).
 

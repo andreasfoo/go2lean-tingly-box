@@ -1,5 +1,7 @@
 # Finding 12: Recordings keep the client's credentials (new, not reported; minor)
 
+Severity: **medium** (see [the findings table](README.md)).
+
 `internal/recording/recorder.go:68` stores the inbound request as
 `Headers: headerToMap(c.Request.Header)` and `URL: c.Request.URL.String()`
 without redaction, and nothing in `internal/obs` or `internal/recording`

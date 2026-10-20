@@ -1,5 +1,7 @@
 # Finding 28: Responses -> Anthropic without streaming: reasoning summaries dropped (new, not reported)
 
+Severity: **low** (see [the findings table](README.md)).
+
 Path: Anthropic client -> Responses provider, not streaming.
 
 Where (tingly-box `b788a3b`):

@@ -1,5 +1,7 @@
 # Finding 19: Chat -> Responses requests drop max_completion_tokens, zero sampling values and parallel_tool_calls (new, not reported)
 
+Severity: **medium** (see [the findings table](README.md)).
+
 Path: Chat client -> OpenAI provider in Responses mode (request conversion;
 streaming or not).
 

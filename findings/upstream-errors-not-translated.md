@@ -1,5 +1,7 @@
 # Finding 20: Upstream errors are not translated to the client's protocol (new, not reported)
 
+Severity: **medium** (see [the findings table](README.md)).
+
 Path: every converted path whose upstream answers with an HTTP error before
 streaming (non-streaming requests, and streaming requests that fail before
 the first event).

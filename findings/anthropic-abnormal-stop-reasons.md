@@ -1,5 +1,7 @@
 # Finding 16: Anthropic `model_context_window_exceeded` and `refusal` reported as normal completions (new, not reported)
 
+Severity: **medium** (see [the findings table](README.md)).
+
 Path: Chat or Responses client -> Anthropic provider (non-streaming Chat and
 Responses, streaming Responses).
 

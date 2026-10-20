@@ -1,5 +1,7 @@
 # Finding 15: Responses developer messages become user messages on a Chat provider (new, not reported)
 
+Severity: **medium** (see [the findings table](README.md)).
+
 Path: Responses client -> Chat provider (request conversion; streaming or
 not).
 
