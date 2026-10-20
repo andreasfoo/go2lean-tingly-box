@@ -1,0 +1,1314 @@
+{
+  "package": "github.com/tingly-dev/tingly-box/internal/protocol/usage",
+  "frontend": "gossa",
+  "lean_module": "Go2Lean.Generated.gossa.github_com_tingly_dev_tingly_box_internal_protocol_usage",
+  "lean_file": "lean/Go2Lean/Generated/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage.lean",
+  "funcs": [
+    {
+      "name": "AnthropicAccumulator.Consume",
+      "go_sig": "func (a *github.com/tingly-dev/tingly-box/internal/protocol/usage.AnthropicAccumulator) Consume(evt *github.com/anthropics/anthropic-sdk-go.MessageStreamEventUnion)",
+      "id": 0,
+      "status": "partial",
+      "issues": [
+        "call strings.Clone: t5 is havoc (unmodeled-call)"
+      ],
+      "wrapped_by": "AnthropicAccumulator.Consume~NewAnthropicAccumulator",
+      "str_consts": [
+        "message_start",
+        "message.usage.input_tokens",
+        "usage.input_tokens",
+        "usage.output_tokens",
+        "message.usage.cache_read_input_tokens",
+        "usage.cache_read_input_tokens",
+        "usage.output_tokens_details.thinking_tokens",
+        "\"usage\"",
+        "message_delta"
+      ],
+      "cmp_strs": [
+        "message_start",
+        "message_delta"
+      ],
+      "calls": [
+        4
+      ],
+      "xcalls": [
+        {
+          "package": "github.com/anthropics/anthropic-sdk-go",
+          "id": 156
+        },
+        {
+          "package": "github.com/tidwall/gjson",
+          "id": 2
+        },
+        {
+          "package": "github.com/tidwall/gjson",
+          "id": 8
+        },
+        {
+          "package": "github.com/tidwall/gjson",
+          "id": 9
+        }
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 41,
+          "last": true
+        },
+        {
+          "block": 33,
+          "line": 0
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/AnthropicAccumulator.Consume.json"
+    },
+    {
+      "name": "AnthropicAccumulator.ConsumeBeta",
+      "go_sig": "func (a *github.com/tingly-dev/tingly-box/internal/protocol/usage.AnthropicAccumulator) ConsumeBeta(evt *github.com/anthropics/anthropic-sdk-go.BetaRawMessageStreamEventUnion)",
+      "id": 1,
+      "status": "complete",
+      "wrapped_by": "AnthropicAccumulator.ConsumeBeta~NewAnthropicAccumulator",
+      "consts": [
+        "0"
+      ],
+      "calls": [
+        4
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 0,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/AnthropicAccumulator.ConsumeBeta.json"
+    },
+    {
+      "name": "AnthropicAccumulator.HasUsage",
+      "go_sig": "func (a *github.com/tingly-dev/tingly-box/internal/protocol/usage.AnthropicAccumulator) HasUsage() bool",
+      "id": 2,
+      "status": "complete",
+      "wrapped_by": "AnthropicAccumulator.HasUsage~NewAnthropicAccumulator",
+      "exits": [
+        {
+          "block": 0,
+          "line": 183,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/AnthropicAccumulator.HasUsage.json"
+    },
+    {
+      "name": "AnthropicAccumulator.Result",
+      "go_sig": "func (a *github.com/tingly-dev/tingly-box/internal/protocol/usage.AnthropicAccumulator) Result() *github.com/tingly-dev/tingly-box/ai.TokenUsage",
+      "id": 3,
+      "status": "complete",
+      "wrapped_by": "AnthropicAccumulator.Result~NewAnthropicAccumulator",
+      "xcalls": [
+        {
+          "package": "github.com/tingly-dev/tingly-box/ai",
+          "id": 51
+        }
+      ],
+      "exits": [
+        {
+          "block": 3,
+          "line": 175
+        },
+        {
+          "block": 2,
+          "line": 178,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/AnthropicAccumulator.Result.json"
+    },
+    {
+      "name": "AnthropicAccumulator.consumeRaw",
+      "go_sig": "func (a *github.com/tingly-dev/tingly-box/internal/protocol/usage.AnthropicAccumulator) consumeRaw(msgStartInput int64, msgStartInputRaw int64, deltaInput int64, deltaInputRaw int64, deltaOutput int64, deltaOutputRaw int64, msgStartCacheRead int64, deltaCacheRead int64, msgStartCacheReadRaw int64, deltaCacheReadRaw int64, msgStartCacheCreation int64, deltaCacheCreation int64, deltaReasoning int64, deltaReasoningRaw int64)",
+      "id": 4,
+      "status": "complete",
+      "wrapped_by": "AnthropicAccumulator.consumeRaw~NewAnthropicAccumulator",
+      "consts": [
+        "0"
+      ],
+      "xcalls": [
+        {
+          "package": "github.com/tingly-dev/tingly-box/ai",
+          "id": 51
+        }
+      ],
+      "exits": [
+        {
+          "block": 27,
+          "line": 0,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/AnthropicAccumulator.consumeRaw.json"
+    },
+    {
+      "name": "ChatUsage",
+      "go_sig": "func(u *github.com/tingly-dev/tingly-box/ai.TokenUsage) github.com/openai/openai-go/v3.CompletionUsage",
+      "id": 5,
+      "status": "complete",
+      "consts": [
+        "0"
+      ],
+      "exits": [
+        {
+          "block": 6,
+          "line": 108,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/ChatUsage.json"
+    },
+    {
+      "name": "FromAnthropicBetaMessage",
+      "go_sig": "func(u github.com/anthropics/anthropic-sdk-go.BetaUsage) *github.com/tingly-dev/tingly-box/ai.TokenUsage",
+      "id": 6,
+      "status": "complete",
+      "xcalls": [
+        {
+          "package": "github.com/tingly-dev/tingly-box/ai",
+          "id": 9
+        }
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 80,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/FromAnthropicBetaMessage.json"
+    },
+    {
+      "name": "FromAnthropicMessage",
+      "go_sig": "func(u github.com/anthropics/anthropic-sdk-go.Usage) *github.com/tingly-dev/tingly-box/ai.TokenUsage",
+      "id": 7,
+      "status": "complete",
+      "xcalls": [
+        {
+          "package": "github.com/tingly-dev/tingly-box/ai",
+          "id": 9
+        }
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 68,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/FromAnthropicMessage.json"
+    },
+    {
+      "name": "FromOpenAIChatCompletion",
+      "go_sig": "func(u github.com/openai/openai-go/v3.CompletionUsage) *github.com/tingly-dev/tingly-box/ai.TokenUsage",
+      "id": 8,
+      "status": "complete",
+      "xcalls": [
+        {
+          "package": "github.com/tingly-dev/tingly-box/ai",
+          "id": 9
+        }
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 37,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/FromOpenAIChatCompletion.json"
+    },
+    {
+      "name": "FromOpenAIResponses",
+      "go_sig": "func(u github.com/openai/openai-go/v3/responses.ResponseUsage) *github.com/tingly-dev/tingly-box/ai.TokenUsage",
+      "id": 9,
+      "status": "complete",
+      "xcalls": [
+        {
+          "package": "github.com/tingly-dev/tingly-box/ai",
+          "id": 9
+        }
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 53,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/FromOpenAIResponses.json"
+    },
+    {
+      "name": "NewAnthropicAccumulator",
+      "go_sig": "func() *github.com/tingly-dev/tingly-box/internal/protocol/usage.AnthropicAccumulator",
+      "id": 10,
+      "status": "complete",
+      "xcalls": [
+        {
+          "package": "github.com/tingly-dev/tingly-box/ai",
+          "id": 51
+        }
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 27,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/NewAnthropicAccumulator.json"
+    },
+    {
+      "name": "SpecChatUsageTotals",
+      "go_sig": "func(u *github.com/tingly-dev/tingly-box/ai.TokenUsage, ret github.com/openai/openai-go/v3.CompletionUsage) bool",
+      "id": 11,
+      "status": "complete",
+      "spec_for": "ChatUsage",
+      "test_file": true,
+      "calls": [
+        22
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 76,
+          "const_true": true
+        },
+        {
+          "block": 5,
+          "line": 78,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/SpecChatUsageTotals.json"
+    },
+    {
+      "name": "SpecFromAnthropicBetaMessageFolds",
+      "go_sig": "func(u github.com/anthropics/anthropic-sdk-go.BetaUsage, ret *github.com/tingly-dev/tingly-box/ai.TokenUsage) bool",
+      "id": 12,
+      "status": "complete",
+      "spec_for": "FromAnthropicBetaMessage",
+      "test_file": true,
+      "exits": [
+        {
+          "block": 1,
+          "line": 57,
+          "const_true": true
+        },
+        {
+          "block": 4,
+          "line": 59,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/SpecFromAnthropicBetaMessageFolds.json"
+    },
+    {
+      "name": "SpecFromOpenAIChatCompletionPromptTotal",
+      "go_sig": "func(u github.com/openai/openai-go/v3.CompletionUsage, ret *github.com/tingly-dev/tingly-box/ai.TokenUsage) bool",
+      "id": 13,
+      "status": "complete",
+      "spec_for": "FromOpenAIChatCompletion",
+      "test_file": true,
+      "calls": [
+        21
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 27,
+          "const_true": true
+        },
+        {
+          "block": 5,
+          "line": 29,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/SpecFromOpenAIChatCompletionPromptTotal.json"
+    },
+    {
+      "name": "SpecFromOpenAIChatCompletionRoundTrip",
+      "go_sig": "func(u github.com/openai/openai-go/v3.CompletionUsage, ret *github.com/tingly-dev/tingly-box/ai.TokenUsage) bool",
+      "id": 14,
+      "status": "complete",
+      "spec_for": "FromOpenAIChatCompletion",
+      "test_file": true,
+      "calls": [
+        5,
+        21
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 41,
+          "const_true": true
+        },
+        {
+          "block": 5,
+          "line": 44,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/SpecFromOpenAIChatCompletionRoundTrip.json"
+    },
+    {
+      "name": "SpecToChatStreamUsageWireTotals",
+      "go_sig": "func(u *github.com/tingly-dev/tingly-box/ai.TokenUsage, ret *github.com/tingly-dev/tingly-box/internal/protocol/wire.ChatStreamUsage) bool",
+      "id": 15,
+      "status": "complete",
+      "spec_for": "ToChatStreamUsageWire",
+      "test_file": true,
+      "consts": [
+        "0"
+      ],
+      "calls": [
+        22
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 111,
+          "const_true": true
+        },
+        {
+          "block": 4,
+          "line": 114
+        },
+        {
+          "block": 6,
+          "line": 119
+        },
+        {
+          "block": 11,
+          "line": 126,
+          "last": true
+        },
+        {
+          "block": 14,
+          "line": 122
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/SpecToChatStreamUsageWireTotals.json"
+    },
+    {
+      "name": "SpecToChatUsageWireTotals",
+      "go_sig": "func(u *github.com/tingly-dev/tingly-box/ai.TokenUsage, ret github.com/tingly-dev/tingly-box/internal/protocol/wire.ChatCompletionUsageWire) bool",
+      "id": 16,
+      "status": "complete",
+      "spec_for": "ToChatUsageWire",
+      "test_file": true,
+      "consts": [
+        "0"
+      ],
+      "calls": [
+        22
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 91,
+          "const_true": true
+        },
+        {
+          "block": 4,
+          "line": 96
+        },
+        {
+          "block": 9,
+          "line": 103,
+          "last": true
+        },
+        {
+          "block": 12,
+          "line": 99
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/SpecToChatUsageWireTotals.json"
+    },
+    {
+      "name": "SpecToResponsesUsageWireTotals",
+      "go_sig": "func(u *github.com/tingly-dev/tingly-box/ai.TokenUsage, ret *github.com/tingly-dev/tingly-box/internal/protocol/wire.ResponsesUsageWire) bool",
+      "id": 17,
+      "status": "complete",
+      "spec_for": "ToResponsesUsageWire",
+      "test_file": true,
+      "calls": [
+        22
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 133,
+          "const_true": true
+        },
+        {
+          "block": 4,
+          "line": 136
+        },
+        {
+          "block": 7,
+          "line": 138,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/SpecToResponsesUsageWireTotals.json"
+    },
+    {
+      "name": "ToChatStreamUsageWire",
+      "go_sig": "func(u *github.com/tingly-dev/tingly-box/ai.TokenUsage) *github.com/tingly-dev/tingly-box/internal/protocol/wire.ChatStreamUsage",
+      "id": 18,
+      "status": "complete",
+      "consts": [
+        "0"
+      ],
+      "xcalls": [
+        {
+          "package": "github.com/tingly-dev/tingly-box/internal/protocol",
+          "id": 93
+        }
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 31
+        },
+        {
+          "block": 7,
+          "line": 48,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/ToChatStreamUsageWire.json"
+    },
+    {
+      "name": "ToChatUsageWire",
+      "go_sig": "func(u *github.com/tingly-dev/tingly-box/ai.TokenUsage) github.com/tingly-dev/tingly-box/internal/protocol/wire.ChatCompletionUsageWire",
+      "id": 19,
+      "status": "complete",
+      "consts": [
+        "0"
+      ],
+      "xcalls": [
+        {
+          "package": "github.com/tingly-dev/tingly-box/internal/protocol",
+          "id": 93
+        }
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 55
+        },
+        {
+          "block": 7,
+          "line": 74,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/ToChatUsageWire.json"
+    },
+    {
+      "name": "ToResponsesUsageWire",
+      "go_sig": "func(u *github.com/tingly-dev/tingly-box/ai.TokenUsage) *github.com/tingly-dev/tingly-box/internal/protocol/wire.ResponsesUsageWire",
+      "id": 20,
+      "status": "complete",
+      "xcalls": [
+        {
+          "package": "github.com/tingly-dev/tingly-box/internal/protocol",
+          "id": 93
+        }
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 81
+        },
+        {
+          "block": 3,
+          "line": 84,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/ToResponsesUsageWire.json"
+    },
+    {
+      "name": "nonNegativeChat",
+      "go_sig": "func(u github.com/openai/openai-go/v3.CompletionUsage) bool",
+      "id": 21,
+      "status": "complete",
+      "test_file": true,
+      "consts": [
+        "0"
+      ],
+      "exits": [
+        {
+          "block": 2,
+          "line": 16,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/nonNegativeChat.json"
+    },
+    {
+      "name": "nonNegativeUsage",
+      "go_sig": "func(u *github.com/tingly-dev/tingly-box/ai.TokenUsage) bool",
+      "id": 22,
+      "status": "complete",
+      "test_file": true,
+      "consts": [
+        "0"
+      ],
+      "exits": [
+        {
+          "block": 2,
+          "line": 67,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/nonNegativeUsage.json"
+    },
+    {
+      "name": "reproH3BetaEvent",
+      "go_sig": "func(t *testing.T, body string) *github.com/anthropics/anthropic-sdk-go.BetaRawMessageStreamEventUnion",
+      "id": 23,
+      "status": "rejected",
+      "issues": [
+        "test helper: parameter t has type *testing.T"
+      ]
+    },
+    {
+      "name": "AnthropicAccumulator.Consume~NewAnthropicAccumulator",
+      "go_sig": "func(evt *github.com/anthropics/anthropic-sdk-go.MessageStreamEventUnion) via NewAnthropicAccumulator",
+      "id": 24,
+      "status": "complete",
+      "calls": [
+        10,
+        0
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/AnthropicAccumulator.Consume~NewAnthropicAccumulator.json"
+    },
+    {
+      "name": "AnthropicAccumulator.ConsumeBeta~NewAnthropicAccumulator",
+      "go_sig": "func(evt *github.com/anthropics/anthropic-sdk-go.BetaRawMessageStreamEventUnion) via NewAnthropicAccumulator",
+      "id": 25,
+      "status": "complete",
+      "calls": [
+        10,
+        1
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/AnthropicAccumulator.ConsumeBeta~NewAnthropicAccumulator.json"
+    },
+    {
+      "name": "AnthropicAccumulator.HasUsage~NewAnthropicAccumulator",
+      "go_sig": "func() bool via NewAnthropicAccumulator",
+      "id": 26,
+      "status": "complete",
+      "calls": [
+        10,
+        2
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/AnthropicAccumulator.HasUsage~NewAnthropicAccumulator.json"
+    },
+    {
+      "name": "AnthropicAccumulator.Result~NewAnthropicAccumulator",
+      "go_sig": "func() *github.com/tingly-dev/tingly-box/ai.TokenUsage via NewAnthropicAccumulator",
+      "id": 27,
+      "status": "complete",
+      "calls": [
+        10,
+        3
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/AnthropicAccumulator.Result~NewAnthropicAccumulator.json"
+    },
+    {
+      "name": "AnthropicAccumulator.consumeRaw~NewAnthropicAccumulator",
+      "go_sig": "func(msgStartInput int64, msgStartInputRaw int64, deltaInput int64, deltaInputRaw int64, deltaOutput int64, deltaOutputRaw int64, msgStartCacheRead int64, deltaCacheRead int64, msgStartCacheReadRaw int64, deltaCacheReadRaw int64, msgStartCacheCreation int64, deltaCacheCreation int64, deltaReasoning int64, deltaReasoningRaw int64) via NewAnthropicAccumulator",
+      "id": 28,
+      "status": "complete",
+      "calls": [
+        10,
+        4
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_usage/AnthropicAccumulator.consumeRaw~NewAnthropicAccumulator.json"
+    }
+  ],
+  "havoc": [
+    {
+      "idx": 0,
+      "site": "Consume: call (github.com/anthropics/anthropic-sdk-go.MessageStreamEventUnion).RawJSON (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 1,
+      "site": "Consume: call strings.Clone",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 2,
+      "site": "Consume: call github.com/tidwall/gjson.Parse (callee stuck).Type",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 3,
+      "site": "Consume: call github.com/tidwall/gjson.Parse (callee stuck).Raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 4,
+      "site": "Consume: call github.com/tidwall/gjson.Parse (callee stuck).Str",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 5,
+      "site": "Consume: call github.com/tidwall/gjson.Parse (callee stuck).Index",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 6,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Get (callee stuck).Type",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 7,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Get (callee stuck).Raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 8,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Get (callee stuck).Str",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 9,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Get (callee stuck).Index",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 10,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Int (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 11,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Get (callee stuck).Type",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 12,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Get (callee stuck).Raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 13,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Get (callee stuck).Str",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 14,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Get (callee stuck).Index",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 15,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Int (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 16,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Get (callee stuck).Type",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 17,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Get (callee stuck).Raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 18,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Get (callee stuck).Str",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 19,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Get (callee stuck).Index",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 20,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Int (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 21,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Get (callee stuck).Type",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 22,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Get (callee stuck).Raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 23,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Get (callee stuck).Str",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 24,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Get (callee stuck).Index",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 25,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Int (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 26,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Get (callee stuck).Type",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 27,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Get (callee stuck).Raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 28,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Get (callee stuck).Str",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 29,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Get (callee stuck).Index",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 30,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Int (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 31,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Get (callee stuck).Type",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 32,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Get (callee stuck).Raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 33,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Get (callee stuck).Str",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 34,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Get (callee stuck).Index",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 35,
+      "site": "Consume: call (github.com/tidwall/gjson.Result).Int (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 36,
+      "site": "Consume: call (github.com/anthropics/anthropic-sdk-go.MessageStreamEventUnion).RawJSON (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 37,
+      "site": "Result: call github.com/tingly-dev/tingly-box/ai.ZeroTokenUsage (callee stuck).InputTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 38,
+      "site": "Result: call github.com/tingly-dev/tingly-box/ai.ZeroTokenUsage (callee stuck).OutputTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 39,
+      "site": "Result: call github.com/tingly-dev/tingly-box/ai.ZeroTokenUsage (callee stuck).CacheReadTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 40,
+      "site": "Result: call github.com/tingly-dev/tingly-box/ai.ZeroTokenUsage (callee stuck).CacheWriteTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 41,
+      "site": "Result: call github.com/tingly-dev/tingly-box/ai.ZeroTokenUsage (callee stuck).ReasoningTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 42,
+      "site": "Result: call github.com/tingly-dev/tingly-box/ai.ZeroTokenUsage (callee stuck).SystemTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 43,
+      "site": "consumeRaw: call github.com/tingly-dev/tingly-box/ai.ZeroTokenUsage (callee stuck).InputTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 44,
+      "site": "consumeRaw: call github.com/tingly-dev/tingly-box/ai.ZeroTokenUsage (callee stuck).OutputTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 45,
+      "site": "consumeRaw: call github.com/tingly-dev/tingly-box/ai.ZeroTokenUsage (callee stuck).CacheReadTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 46,
+      "site": "consumeRaw: call github.com/tingly-dev/tingly-box/ai.ZeroTokenUsage (callee stuck).CacheWriteTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 47,
+      "site": "consumeRaw: call github.com/tingly-dev/tingly-box/ai.ZeroTokenUsage (callee stuck).ReasoningTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 48,
+      "site": "consumeRaw: call github.com/tingly-dev/tingly-box/ai.ZeroTokenUsage (callee stuck).SystemTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 49,
+      "site": "FromAnthropicBetaMessage: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageFull (callee stuck).InputTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 50,
+      "site": "FromAnthropicBetaMessage: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageFull (callee stuck).OutputTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 51,
+      "site": "FromAnthropicBetaMessage: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageFull (callee stuck).CacheReadTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 52,
+      "site": "FromAnthropicBetaMessage: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageFull (callee stuck).CacheWriteTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 53,
+      "site": "FromAnthropicBetaMessage: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageFull (callee stuck).ReasoningTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 54,
+      "site": "FromAnthropicBetaMessage: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageFull (callee stuck).SystemTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 55,
+      "site": "FromAnthropicMessage: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageFull (callee stuck).InputTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 56,
+      "site": "FromAnthropicMessage: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageFull (callee stuck).OutputTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 57,
+      "site": "FromAnthropicMessage: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageFull (callee stuck).CacheReadTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 58,
+      "site": "FromAnthropicMessage: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageFull (callee stuck).CacheWriteTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 59,
+      "site": "FromAnthropicMessage: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageFull (callee stuck).ReasoningTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 60,
+      "site": "FromAnthropicMessage: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageFull (callee stuck).SystemTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 61,
+      "site": "FromOpenAIChatCompletion: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageFull (callee stuck).InputTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 62,
+      "site": "FromOpenAIChatCompletion: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageFull (callee stuck).OutputTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 63,
+      "site": "FromOpenAIChatCompletion: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageFull (callee stuck).CacheReadTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 64,
+      "site": "FromOpenAIChatCompletion: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageFull (callee stuck).CacheWriteTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 65,
+      "site": "FromOpenAIChatCompletion: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageFull (callee stuck).ReasoningTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 66,
+      "site": "FromOpenAIChatCompletion: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageFull (callee stuck).SystemTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 67,
+      "site": "FromOpenAIResponses: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageFull (callee stuck).InputTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 68,
+      "site": "FromOpenAIResponses: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageFull (callee stuck).OutputTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 69,
+      "site": "FromOpenAIResponses: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageFull (callee stuck).CacheReadTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 70,
+      "site": "FromOpenAIResponses: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageFull (callee stuck).CacheWriteTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 71,
+      "site": "FromOpenAIResponses: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageFull (callee stuck).ReasoningTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 72,
+      "site": "FromOpenAIResponses: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageFull (callee stuck).SystemTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 73,
+      "site": "NewAnthropicAccumulator: call github.com/tingly-dev/tingly-box/ai.ZeroTokenUsage (callee stuck).InputTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 74,
+      "site": "NewAnthropicAccumulator: call github.com/tingly-dev/tingly-box/ai.ZeroTokenUsage (callee stuck).OutputTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 75,
+      "site": "NewAnthropicAccumulator: call github.com/tingly-dev/tingly-box/ai.ZeroTokenUsage (callee stuck).CacheReadTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 76,
+      "site": "NewAnthropicAccumulator: call github.com/tingly-dev/tingly-box/ai.ZeroTokenUsage (callee stuck).CacheWriteTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 77,
+      "site": "NewAnthropicAccumulator: call github.com/tingly-dev/tingly-box/ai.ZeroTokenUsage (callee stuck).ReasoningTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 78,
+      "site": "NewAnthropicAccumulator: call github.com/tingly-dev/tingly-box/ai.ZeroTokenUsage (callee stuck).SystemTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 79,
+      "site": "SpecChatUsageTotals: call github.com/tingly-dev/tingly-box/internal/protocol/usage.nonNegativeUsage (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 80,
+      "site": "SpecFromOpenAIChatCompletionPromptTotal: call github.com/tingly-dev/tingly-box/internal/protocol/usage.nonNegativeChat (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 81,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).CompletionTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 82,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).PromptTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 83,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).TotalTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 84,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).CompletionTokensDetails.AcceptedPredictionTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 85,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).CompletionTokensDetails.AudioTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 86,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).CompletionTokensDetails.ReasoningTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 87,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).CompletionTokensDetails.RejectedPredictionTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 88,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).CompletionTokensDetails.TextTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 89,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).CompletionTokensDetails.JSON.AcceptedPredictionTokens.status",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 90,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).CompletionTokensDetails.JSON.AcceptedPredictionTokens.raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 91,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).CompletionTokensDetails.JSON.AudioTokens.status",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 92,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).CompletionTokensDetails.JSON.AudioTokens.raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 93,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).CompletionTokensDetails.JSON.ReasoningTokens.status",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 94,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).CompletionTokensDetails.JSON.ReasoningTokens.raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 95,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).CompletionTokensDetails.JSON.RejectedPredictionTokens.status",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 96,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).CompletionTokensDetails.JSON.RejectedPredictionTokens.raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 97,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).CompletionTokensDetails.JSON.TextTokens.status",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 98,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).CompletionTokensDetails.JSON.TextTokens.raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 99,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).CompletionTokensDetails.JSON.raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 100,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).PromptTokensDetails.AudioTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 101,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).PromptTokensDetails.CacheWriteTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 102,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).PromptTokensDetails.CachedTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 103,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).PromptTokensDetails.ImageTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 104,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).PromptTokensDetails.TextTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 105,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).PromptTokensDetails.JSON.AudioTokens.status",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 106,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).PromptTokensDetails.JSON.AudioTokens.raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 107,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).PromptTokensDetails.JSON.CacheWriteTokens.status",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 108,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).PromptTokensDetails.JSON.CacheWriteTokens.raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 109,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).PromptTokensDetails.JSON.CachedTokens.status",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 110,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).PromptTokensDetails.JSON.CachedTokens.raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 111,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).PromptTokensDetails.JSON.ImageTokens.status",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 112,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).PromptTokensDetails.JSON.ImageTokens.raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 113,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).PromptTokensDetails.JSON.TextTokens.status",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 114,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).PromptTokensDetails.JSON.TextTokens.raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 115,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).PromptTokensDetails.JSON.raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 116,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).JSON.CompletionTokens.status",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 117,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).JSON.CompletionTokens.raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 118,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).JSON.PromptTokens.status",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 119,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).JSON.PromptTokens.raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 120,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).JSON.TotalTokens.status",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 121,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).JSON.TotalTokens.raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 122,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).JSON.CompletionTokensDetails.status",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 123,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).JSON.CompletionTokensDetails.raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 124,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).JSON.PromptTokensDetails.status",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 125,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).JSON.PromptTokensDetails.raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 126,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.ChatUsage (callee stuck).JSON.raw",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 127,
+      "site": "SpecFromOpenAIChatCompletionRoundTrip: call github.com/tingly-dev/tingly-box/internal/protocol/usage.nonNegativeChat (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 128,
+      "site": "SpecToChatStreamUsageWireTotals: call github.com/tingly-dev/tingly-box/internal/protocol/usage.nonNegativeUsage (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 129,
+      "site": "SpecToChatUsageWireTotals: call github.com/tingly-dev/tingly-box/internal/protocol/usage.nonNegativeUsage (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 130,
+      "site": "SpecToResponsesUsageWireTotals: call github.com/tingly-dev/tingly-box/internal/protocol/usage.nonNegativeUsage (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 131,
+      "site": "ToChatStreamUsageWire: call (*github.com/tingly-dev/tingly-box/ai.TokenUsage).PromptTotalTokens (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 132,
+      "site": "ToChatUsageWire: call (*github.com/tingly-dev/tingly-box/ai.TokenUsage).PromptTotalTokens (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 133,
+      "site": "ToResponsesUsageWire: call (*github.com/tingly-dev/tingly-box/ai.TokenUsage).PromptTotalTokens (callee stuck)",
+      "reason": "callee-stuck"
+    }
+  ]
+}

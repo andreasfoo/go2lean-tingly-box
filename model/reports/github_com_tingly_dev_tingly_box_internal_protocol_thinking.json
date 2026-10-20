@@ -1,0 +1,317 @@
+{
+  "package": "github.com/tingly-dev/tingly-box/internal/protocol/thinking",
+  "frontend": "gossa",
+  "lean_module": "Go2Lean.Generated.gossa.github_com_tingly_dev_tingly_box_internal_protocol_thinking",
+  "lean_file": "lean/Go2Lean/Generated/gossa/github_com_tingly_dev_tingly_box_internal_protocol_thinking.lean",
+  "funcs": [
+    {
+      "name": "AnthropicEffort",
+      "go_sig": "func(level github.com/tingly-dev/tingly-box/internal/protocol/thinking.Level) string",
+      "id": 0,
+      "status": "complete",
+      "str_consts": [
+        "minimal",
+        "low",
+        "high",
+        "xhigh",
+        "max",
+        "medium"
+      ],
+      "cmp_strs": [
+        "minimal",
+        "low",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 75
+        },
+        {
+          "block": 2,
+          "line": 77
+        },
+        {
+          "block": 7,
+          "line": 79,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_thinking/AnthropicEffort.json"
+    },
+    {
+      "name": "DisableBetaForUnsignedToolTurn",
+      "go_sig": "func(req *github.com/anthropics/anthropic-sdk-go.BetaMessageNewParams)",
+      "id": 1,
+      "status": "complete",
+      "variants": [
+        "OfDisabled",
+        "OfEnabled"
+      ],
+      "calls": [
+        4
+      ],
+      "exits": [
+        {
+          "block": 2,
+          "line": 0,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_thinking/DisableBetaForUnsignedToolTurn.json"
+    },
+    {
+      "name": "EffortFromBudget",
+      "go_sig": "func(budget int64) github.com/tingly-dev/tingly-box/internal/protocol/thinking.Level",
+      "id": 2,
+      "status": "partial",
+      "issues": [
+        "lookup in map t0 the model knows nothing about is havoc",
+        "lookup in map t3 the model knows nothing about is havoc",
+        "lookup in map t6 the model knows nothing about is havoc",
+        "lookup in map t9 the model knows nothing about is havoc",
+        "lookup in map t12 the model knows nothing about is havoc"
+      ],
+      "consts": [
+        "1024",
+        "4096",
+        "10240",
+        "20480",
+        "24576",
+        "31999"
+      ],
+      "str_consts": [
+        "minimal",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "map_keys": [
+        "minimal",
+        "low",
+        "medium",
+        "high",
+        "xhigh",
+        "max"
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 54
+        },
+        {
+          "block": 2,
+          "line": 56
+        },
+        {
+          "block": 4,
+          "line": 58
+        },
+        {
+          "block": 6,
+          "line": 60
+        },
+        {
+          "block": 8,
+          "line": 62
+        },
+        {
+          "block": 10,
+          "line": 64,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_thinking/EffortFromBudget.json"
+    },
+    {
+      "name": "ReconcileBetaWithRequest",
+      "go_sig": "func(req *github.com/anthropics/anthropic-sdk-go.BetaMessageNewParams)",
+      "id": 3,
+      "status": "complete",
+      "variants": [
+        "OfEnabled",
+        "OfAny",
+        "OfAdaptive",
+        "OfDisabled",
+        "OfTool"
+      ],
+      "calls": [
+        1,
+        5
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 37
+        },
+        {
+          "block": 3,
+          "line": 41
+        },
+        {
+          "block": 6,
+          "line": 45,
+          "last": true
+        },
+        {
+          "block": 11,
+          "line": 0
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_thinking/ReconcileBetaWithRequest.json"
+    },
+    {
+      "name": "betaToolTurnWithoutThinking",
+      "go_sig": "func(messages []github.com/anthropics/anthropic-sdk-go.BetaMessageParam) bool",
+      "id": 4,
+      "status": "complete",
+      "consts": [
+        "1",
+        "0",
+        "18446744073709551615"
+      ],
+      "str_consts": [
+        "assistant"
+      ],
+      "cmp_strs": [
+        "assistant"
+      ],
+      "variants": [
+        "OfToolUse",
+        "OfRedactedThinking",
+        "OfThinking"
+      ],
+      "exits": [
+        {
+          "block": 3,
+          "line": 124,
+          "last": true
+        },
+        {
+          "block": 11,
+          "line": 122
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_thinking/betaToolTurnWithoutThinking.json"
+    },
+    {
+      "name": "thinkingSampling",
+      "go_sig": "func(temperature github.com/anthropics/anthropic-sdk-go/packages/param.Opt[float64], topK github.com/anthropics/anthropic-sdk-go/packages/param.Opt[int64], topP github.com/anthropics/anthropic-sdk-go/packages/param.Opt[float64]) (github.com/anthropics/anthropic-sdk-go/packages/param.Opt[float64], github.com/anthropics/anthropic-sdk-go/packages/param.Opt[int64], github.com/anthropics/anthropic-sdk-go/packages/param.Opt[float64])",
+      "id": 5,
+      "status": "partial",
+      "issues": [
+        "!= on float64: t7 is havoc (opaque-op)",
+        "\u003c on float64: t16 is havoc (opaque-op)"
+      ],
+      "xcalls": [
+        {
+          "package": "github.com/anthropics/anthropic-sdk-go/packages/param",
+          "id": 18
+        },
+        {
+          "package": "github.com/anthropics/anthropic-sdk-go/packages/param",
+          "id": 20
+        },
+        {
+          "package": "github.com/anthropics/anthropic-sdk-go/packages/param",
+          "id": 14
+        }
+      ],
+      "exits": [
+        {
+          "block": 7,
+          "line": 65,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_thinking/thinkingSampling.json"
+    }
+  ],
+  "havoc": [
+    {
+      "idx": 0,
+      "site": "DisableBetaForUnsignedToolTurn: call github.com/tingly-dev/tingly-box/internal/protocol/thinking.betaToolTurnWithoutThinking (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 1,
+      "site": "EffortFromBudget: map lookup",
+      "reason": "opaque-map"
+    },
+    {
+      "idx": 2,
+      "site": "EffortFromBudget: map lookup",
+      "reason": "opaque-map"
+    },
+    {
+      "idx": 3,
+      "site": "EffortFromBudget: map lookup",
+      "reason": "opaque-map"
+    },
+    {
+      "idx": 4,
+      "site": "EffortFromBudget: map lookup",
+      "reason": "opaque-map"
+    },
+    {
+      "idx": 5,
+      "site": "EffortFromBudget: map lookup",
+      "reason": "opaque-map"
+    },
+    {
+      "idx": 6,
+      "site": "ReconcileBetaWithRequest: call github.com/tingly-dev/tingly-box/internal/protocol/thinking.thinkingSampling (callee stuck) #0.status",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 7,
+      "site": "ReconcileBetaWithRequest: call github.com/tingly-dev/tingly-box/internal/protocol/thinking.thinkingSampling (callee stuck) #1.Value",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 8,
+      "site": "ReconcileBetaWithRequest: call github.com/tingly-dev/tingly-box/internal/protocol/thinking.thinkingSampling (callee stuck) #1.status",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 9,
+      "site": "ReconcileBetaWithRequest: call github.com/tingly-dev/tingly-box/internal/protocol/thinking.thinkingSampling (callee stuck) #2.status",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 10,
+      "site": "thinkingSampling: call (github.com/anthropics/anthropic-sdk-go/packages/param.Opt[float64]).Valid (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 11,
+      "site": "thinkingSampling: call (github.com/anthropics/anthropic-sdk-go/packages/param.Opt[int64]).Valid (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 12,
+      "site": "thinkingSampling: != on float64",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 13,
+      "site": "thinkingSampling: call (github.com/anthropics/anthropic-sdk-go/packages/param.Opt[float64]).Valid (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 14,
+      "site": "thinkingSampling: call github.com/anthropics/anthropic-sdk-go/packages/param.NewOpt[float64] (callee stuck).status",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 15,
+      "site": "thinkingSampling: \u003c on float64",
+      "reason": "opaque-op"
+    }
+  ],
+  "dependency": true
+}

@@ -1,0 +1,81 @@
+{
+  "package": "github.com/tingly-dev/tingly-box/internal/catalog",
+  "frontend": "gossa",
+  "lean_module": "Go2Lean.Generated.gossa.github_com_tingly_dev_tingly_box_internal_catalog",
+  "lean_file": "lean/Go2Lean/Generated/gossa/github_com_tingly_dev_tingly_box_internal_catalog.lean",
+  "funcs": [
+    {
+      "name": "ClaudeThinkingCaps.SupportsEffort",
+      "go_sig": "func (c github.com/tingly-dev/tingly-box/internal/catalog.ClaudeThinkingCaps) SupportsEffort() bool",
+      "id": 0,
+      "status": "partial",
+      "issues": [
+        "len of map[string]bool assumed below 16 (not modelled)"
+      ],
+      "consts": [
+        "0"
+      ],
+      "exits": [
+        {
+          "block": 3,
+          "line": 68,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_catalog/ClaudeThinkingCaps.SupportsEffort.json"
+    },
+    {
+      "name": "LookupClaudeThinkingCaps",
+      "go_sig": "func(model string) (github.com/tingly-dev/tingly-box/internal/catalog.ClaudeThinkingCaps, bool)",
+      "id": 1,
+      "status": "partial",
+      "issues": [
+        "load claudeCapsIndex: t2 is havoc (unmodeled-load)"
+      ],
+      "consts": [
+        "18446744073709551615",
+        "1"
+      ],
+      "str_consts": [
+        ""
+      ],
+      "cmp_strs": [
+        ""
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 144
+        },
+        {
+          "block": 5,
+          "line": 151,
+          "last": true
+        },
+        {
+          "block": 6,
+          "line": 148
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_catalog/LookupClaudeThinkingCaps.json"
+    }
+  ],
+  "havoc": [
+    {
+      "idx": 0,
+      "site": "SupportsEffort: len",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 1,
+      "site": "LookupClaudeThinkingCaps: call t2 (callee stuck) (assumed)",
+      "reason": "assumed"
+    },
+    {
+      "idx": 2,
+      "site": "LookupClaudeThinkingCaps: call t2 (callee stuck) (length)",
+      "reason": "callee-stuck"
+    }
+  ],
+  "dependency": true
+}

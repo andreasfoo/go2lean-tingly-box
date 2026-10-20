@@ -1,0 +1,2112 @@
+{
+  "package": "github.com/tingly-dev/tingly-box/ai",
+  "frontend": "gossa",
+  "lean_module": "Go2Lean.Generated.gossa.github_com_tingly_dev_tingly_box_ai",
+  "lean_file": "lean/Go2Lean/Generated/gossa/github_com_tingly_dev_tingly_box_ai.lean",
+  "funcs": [
+    {
+      "name": "AllowedAPIStyles",
+      "go_sig": "func(a github.com/tingly-dev/tingly-box/ai.AuthType) []string",
+      "id": 0,
+      "status": "complete",
+      "consts": [
+        "0",
+        "1"
+      ],
+      "str_consts": [
+        "aws_sigv4",
+        "anthropic",
+        "google",
+        "gcp_sa",
+        "openai",
+        "azure_key"
+      ],
+      "cmp_strs": [
+        "aws_sigv4",
+        "gcp_sa",
+        "azure_key"
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 158
+        },
+        {
+          "block": 2,
+          "line": 160
+        },
+        {
+          "block": 4,
+          "line": 162
+        },
+        {
+          "block": 6,
+          "line": 164,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/AllowedAPIStyles.json"
+    },
+    {
+      "name": "AuthType.IsMultiFieldCredential",
+      "go_sig": "func (a github.com/tingly-dev/tingly-box/ai.AuthType) IsMultiFieldCredential() bool",
+      "id": 1,
+      "status": "complete",
+      "str_consts": [
+        "aws_sigv4",
+        "azure_key",
+        "gcp_sa"
+      ],
+      "cmp_strs": [
+        "aws_sigv4",
+        "azure_key",
+        "gcp_sa"
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 31,
+          "const_true": true
+        },
+        {
+          "block": 4,
+          "line": 33,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/AuthType.IsMultiFieldCredential.json"
+    },
+    {
+      "name": "AuthType.IsValid",
+      "go_sig": "func (a github.com/tingly-dev/tingly-box/ai.AuthType) IsValid() bool",
+      "id": 2,
+      "status": "complete",
+      "str_consts": [
+        "api_key",
+        "oauth",
+        "vmodel",
+        "aws_sigv4",
+        "azure_key",
+        "gcp_sa"
+      ],
+      "cmp_strs": [
+        "api_key",
+        "oauth",
+        "vmodel",
+        "aws_sigv4",
+        "azure_key",
+        "gcp_sa"
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 42,
+          "const_true": true
+        },
+        {
+          "block": 7,
+          "line": 44,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/AuthType.IsValid.json"
+    },
+    {
+      "name": "CredentialBundle.Field",
+      "go_sig": "func (c *github.com/tingly-dev/tingly-box/ai.CredentialBundle) Field(key string) string",
+      "id": 3,
+      "status": "partial",
+      "issues": [
+        "lookup in map t2 the model knows nothing about is havoc"
+      ],
+      "str_consts": [
+        ""
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 80
+        },
+        {
+          "block": 5,
+          "line": 82,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/CredentialBundle.Field.json"
+    },
+    {
+      "name": "CredentialSchema",
+      "go_sig": "func(a github.com/tingly-dev/tingly-box/ai.AuthType) []github.com/tingly-dev/tingly-box/ai.CredentialFieldSpec",
+      "id": 4,
+      "status": "complete",
+      "consts": [
+        "0",
+        "1",
+        "2",
+        "3",
+        "4"
+      ],
+      "str_consts": [
+        "aws_sigv4",
+        "region",
+        "access_key_id",
+        "secret_access_key",
+        "session_token",
+        "bearer_token",
+        "project_id",
+        "location",
+        "service_account_json",
+        "gcp_sa",
+        "endpoint",
+        "api_version",
+        "api_key",
+        "azure_key"
+      ],
+      "cmp_strs": [
+        "aws_sigv4",
+        "gcp_sa",
+        "azure_key"
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 57
+        },
+        {
+          "block": 2,
+          "line": 65
+        },
+        {
+          "block": 4,
+          "line": 71
+        },
+        {
+          "block": 6,
+          "line": 77,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/CredentialSchema.json"
+    },
+    {
+      "name": "IsSecretCredentialField",
+      "go_sig": "func(a github.com/tingly-dev/tingly-box/ai.AuthType, key string) bool",
+      "id": 5,
+      "status": "complete",
+      "consts": [
+        "18446744073709551615",
+        "1"
+      ],
+      "calls": [
+        4
+      ],
+      "exits": [
+        {
+          "block": 3,
+          "line": 90,
+          "const_true": true,
+          "last": true
+        },
+        {
+          "block": 4,
+          "line": 87
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/IsSecretCredentialField.json"
+    },
+    {
+      "name": "IsWorkBuddyIssuer",
+      "go_sig": "func(issuer github.com/tingly-dev/tingly-box/ai.Issuer) bool",
+      "id": 6,
+      "status": "complete",
+      "calls": [
+        49
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 119,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/IsWorkBuddyIssuer.json"
+    },
+    {
+      "name": "IssuerSupportsDual",
+      "go_sig": "func(issuer github.com/tingly-dev/tingly-box/ai.Issuer) bool",
+      "id": 7,
+      "status": "complete",
+      "str_consts": [
+        "zcode",
+        "zcode_cn"
+      ],
+      "cmp_strs": [
+        "zcode",
+        "zcode_cn"
+      ],
+      "exits": [
+        {
+          "block": 2,
+          "line": 343,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/IssuerSupportsDual.json"
+    },
+    {
+      "name": "NewTokenUsage",
+      "go_sig": "func(inputTokens int, outputTokens int) *github.com/tingly-dev/tingly-box/ai.TokenUsage",
+      "id": 8,
+      "status": "complete",
+      "exits": [
+        {
+          "block": 0,
+          "line": 226,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/NewTokenUsage.json"
+    },
+    {
+      "name": "NewTokenUsageFull",
+      "go_sig": "func(inputTokens int, outputTokens int, cacheReadTokens int, cacheWriteTokens int, reasoningTokens int) *github.com/tingly-dev/tingly-box/ai.TokenUsage",
+      "id": 9,
+      "status": "complete",
+      "calls": [
+        11
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 254,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/NewTokenUsageFull.json"
+    },
+    {
+      "name": "NewTokenUsageWithCache",
+      "go_sig": "func(inputTokens int, outputTokens int, cacheTokens int) *github.com/tingly-dev/tingly-box/ai.TokenUsage",
+      "id": 10,
+      "status": "complete",
+      "consts": [
+        "0"
+      ],
+      "calls": [
+        11
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 234,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/NewTokenUsageWithCache.json"
+    },
+    {
+      "name": "NewTokenUsageWithCacheDetails",
+      "go_sig": "func(inputTokens int, outputTokens int, cacheReadTokens int, cacheWriteTokens int) *github.com/tingly-dev/tingly-box/ai.TokenUsage",
+      "id": 11,
+      "status": "complete",
+      "exits": [
+        {
+          "block": 0,
+          "line": 239,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/NewTokenUsageWithCacheDetails.json"
+    },
+    {
+      "name": "NormalizeCredential",
+      "go_sig": "func(fields map[string]string) map[string]string",
+      "id": 12,
+      "status": "partial",
+      "issues": [
+        "len of map[string]string assumed below 16 (not modelled)",
+        "range over map fields: in insertion order; a map the model knows nothing about has no entries",
+        "map update t1[t7] on a map the model knows nothing about ignored"
+      ],
+      "str_consts": [
+        ""
+      ],
+      "cmp_strs": [
+        ""
+      ],
+      "exits": [
+        {
+          "block": 3,
+          "line": 149,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/NormalizeCredential.json"
+    },
+    {
+      "name": "OAuthDetail.GetExtraFieldString",
+      "go_sig": "func (o *github.com/tingly-dev/tingly-box/ai.OAuthDetail) GetExtraFieldString(key string) string",
+      "id": 13,
+      "status": "partial",
+      "issues": [
+        "lookup in map t2 the model knows nothing about is havoc",
+        "type assertion t4 on an interface value the model did not build is havoc",
+        "nil comparison t9 on a value of unknown nil-ness is havoc"
+      ],
+      "str_consts": [
+        ""
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 164
+        },
+        {
+          "block": 9,
+          "line": 167,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/OAuthDetail.GetExtraFieldString.json"
+    },
+    {
+      "name": "OAuthDetail.GetIssuer",
+      "go_sig": "func (o *github.com/tingly-dev/tingly-box/ai.OAuthDetail) GetIssuer() github.com/tingly-dev/tingly-box/ai.Issuer",
+      "id": 14,
+      "status": "complete",
+      "str_consts": [
+        ""
+      ],
+      "cmp_strs": [
+        ""
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 174
+        },
+        {
+          "block": 3,
+          "line": 177
+        },
+        {
+          "block": 4,
+          "line": 180,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/OAuthDetail.GetIssuer.json"
+    },
+    {
+      "name": "OAuthDetail.IsExpired",
+      "go_sig": "func (o *github.com/tingly-dev/tingly-box/ai.OAuthDetail) IsExpired() bool",
+      "id": 15,
+      "status": "partial",
+      "issues": [
+        "call time.Parse: t3 is havoc (unmodeled-call)",
+        "call time.Now: t10 is havoc (unmodeled-call)",
+        "call (time.Time).Add: t11 is havoc (unmodeled-call)",
+        "call (time.Time).After: t12 is havoc (unmodeled-call)"
+      ],
+      "str_consts": [
+        ""
+      ],
+      "cmp_strs": [
+        ""
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 150
+        },
+        {
+          "block": 4,
+          "line": 155
+        },
+        {
+          "block": 5,
+          "line": 157,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/OAuthDetail.IsExpired.json"
+    },
+    {
+      "name": "OAuthDetail.MarshalJSON",
+      "go_sig": "func (o *github.com/tingly-dev/tingly-box/ai.OAuthDetail) MarshalJSON() ([]byte, error)",
+      "id": 16,
+      "status": "complete",
+      "str_consts": [
+        ""
+      ],
+      "uses_json": true,
+      "cmp_strs": [
+        ""
+      ],
+      "exits": [
+        {
+          "block": 2,
+          "line": 144,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/OAuthDetail.MarshalJSON.json"
+    },
+    {
+      "name": "OAuthDetail.UnmarshalJSON",
+      "go_sig": "func (o *github.com/tingly-dev/tingly-box/ai.OAuthDetail) UnmarshalJSON(data []byte) error",
+      "id": 17,
+      "status": "complete",
+      "str_consts": [
+        ""
+      ],
+      "map_keys": [
+        "access_token",
+        "issuer",
+        "user_id",
+        "refresh_token",
+        "expires_at",
+        "device_id",
+        "extra_fields",
+        "provider_type",
+        "alias"
+      ],
+      "uses_json": true,
+      "cmp_strs": [
+        ""
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 111
+        },
+        {
+          "block": 4,
+          "line": 121,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/OAuthDetail.UnmarshalJSON.json"
+    },
+    {
+      "name": "OpenAIEndpointModeForIssuer",
+      "go_sig": "func(issuer github.com/tingly-dev/tingly-box/ai.Issuer) github.com/tingly-dev/tingly-box/ai.OpenAIEndpointMode",
+      "id": 18,
+      "status": "complete",
+      "str_consts": [
+        "codex",
+        "responses",
+        "chat"
+      ],
+      "cmp_strs": [
+        "codex"
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 258
+        },
+        {
+          "block": 2,
+          "line": 260,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/OpenAIEndpointModeForIssuer.json"
+    },
+    {
+      "name": "Provider.GetAccessToken",
+      "go_sig": "func (p *github.com/tingly-dev/tingly-box/ai.Provider) GetAccessToken() string",
+      "id": 19,
+      "status": "complete",
+      "str_consts": [
+        "",
+        "oauth",
+        "EMPTY",
+        "vmodel",
+        "api_key"
+      ],
+      "cmp_strs": [
+        "oauth",
+        "vmodel",
+        "api_key",
+        ""
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 378
+        },
+        {
+          "block": 3,
+          "line": 391,
+          "last": true
+        },
+        {
+          "block": 5,
+          "line": 386
+        },
+        {
+          "block": 7,
+          "line": 383
+        },
+        {
+          "block": 8,
+          "line": 389
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/Provider.GetAccessToken.json"
+    },
+    {
+      "name": "Provider.HasDualURL",
+      "go_sig": "func (p *github.com/tingly-dev/tingly-box/ai.Provider) HasDualURL(clientStyle github.com/tingly-dev/tingly-box/ai.APIStyle) bool",
+      "id": 20,
+      "status": "complete",
+      "str_consts": [
+        "openai",
+        "",
+        "anthropic"
+      ],
+      "cmp_strs": [
+        "openai",
+        "",
+        "anthropic"
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 306
+        },
+        {
+          "block": 3,
+          "line": 310
+        },
+        {
+          "block": 4,
+          "line": 312
+        },
+        {
+          "block": 6,
+          "line": 314,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/Provider.HasDualURL.json"
+    },
+    {
+      "name": "Provider.IsAPIKey",
+      "go_sig": "func (p *github.com/tingly-dev/tingly-box/ai.Provider) IsAPIKey() bool",
+      "id": 21,
+      "status": "complete",
+      "str_consts": [
+        "api_key",
+        ""
+      ],
+      "cmp_strs": [
+        "api_key",
+        ""
+      ],
+      "exits": [
+        {
+          "block": 2,
+          "line": 403,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/Provider.IsAPIKey.json"
+    },
+    {
+      "name": "Provider.IsBuiltin",
+      "go_sig": "func (p *github.com/tingly-dev/tingly-box/ai.Provider) IsBuiltin() bool",
+      "id": 22,
+      "status": "complete",
+      "str_consts": [
+        "builtin"
+      ],
+      "cmp_strs": [
+        "builtin"
+      ],
+      "exits": [
+        {
+          "block": 2,
+          "line": 274,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/Provider.IsBuiltin.json"
+    },
+    {
+      "name": "Provider.IsClaudeCodeProvider",
+      "go_sig": "func (p *github.com/tingly-dev/tingly-box/ai.Provider) IsClaudeCodeProvider() bool",
+      "id": 23,
+      "status": "complete",
+      "str_consts": [
+        "oauth",
+        "claude_code"
+      ],
+      "cmp_strs": [
+        "oauth",
+        "claude_code"
+      ],
+      "calls": [
+        14
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 457
+        },
+        {
+          "block": 6,
+          "line": 460
+        },
+        {
+          "block": 4,
+          "line": 462,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/Provider.IsClaudeCodeProvider.json"
+    },
+    {
+      "name": "Provider.IsCodexProvider",
+      "go_sig": "func (p *github.com/tingly-dev/tingly-box/ai.Provider) IsCodexProvider() bool",
+      "id": 24,
+      "status": "complete",
+      "str_consts": [
+        "oauth",
+        "codex",
+        "https://chatgpt.com/backend-api"
+      ],
+      "cmp_strs": [
+        "oauth",
+        "codex",
+        "https://chatgpt.com/backend-api"
+      ],
+      "calls": [
+        14
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 468
+        },
+        {
+          "block": 8,
+          "line": 471
+        },
+        {
+          "block": 6,
+          "line": 474,
+          "const_true": true
+        },
+        {
+          "block": 7,
+          "line": 476,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/Provider.IsCodexProvider.json"
+    },
+    {
+      "name": "Provider.IsDual",
+      "go_sig": "func (p *github.com/tingly-dev/tingly-box/ai.Provider) IsDual() bool",
+      "id": 25,
+      "status": "complete",
+      "str_consts": [
+        ""
+      ],
+      "cmp_strs": [
+        ""
+      ],
+      "calls": [
+        34
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 322
+        },
+        {
+          "block": 5,
+          "line": 324,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/Provider.IsDual.json"
+    },
+    {
+      "name": "Provider.IsMultiFieldCredential",
+      "go_sig": "func (p *github.com/tingly-dev/tingly-box/ai.Provider) IsMultiFieldCredential() bool",
+      "id": 26,
+      "status": "complete",
+      "calls": [
+        1
+      ],
+      "exits": [
+        {
+          "block": 2,
+          "line": 421,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/Provider.IsMultiFieldCredential.json"
+    },
+    {
+      "name": "Provider.IsOAuth",
+      "go_sig": "func (p *github.com/tingly-dev/tingly-box/ai.Provider) IsOAuth() bool",
+      "id": 27,
+      "status": "complete",
+      "str_consts": [
+        "oauth"
+      ],
+      "cmp_strs": [
+        "oauth"
+      ],
+      "exits": [
+        {
+          "block": 2,
+          "line": 396,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/Provider.IsOAuth.json"
+    },
+    {
+      "name": "Provider.IsOAuthExpired",
+      "go_sig": "func (p *github.com/tingly-dev/tingly-box/ai.Provider) IsOAuthExpired() bool",
+      "id": 28,
+      "status": "complete",
+      "str_consts": [
+        "oauth"
+      ],
+      "cmp_strs": [
+        "oauth"
+      ],
+      "calls": [
+        15
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 427
+        },
+        {
+          "block": 6,
+          "line": 430
+        },
+        {
+          "block": 4,
+          "line": 432,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/Provider.IsOAuthExpired.json"
+    },
+    {
+      "name": "Provider.IsOAuthToken",
+      "go_sig": "func (p *github.com/tingly-dev/tingly-box/ai.Provider) IsOAuthToken() bool",
+      "id": 29,
+      "status": "complete",
+      "consts": [
+        "10"
+      ],
+      "str_consts": [
+        "",
+        "sk-ant-oat"
+      ],
+      "cmp_strs": [
+        "",
+        "sk-ant-oat"
+      ],
+      "calls": [
+        19
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 440
+        },
+        {
+          "block": 3,
+          "line": 444
+        },
+        {
+          "block": 5,
+          "line": 449
+        },
+        {
+          "block": 6,
+          "line": 451,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/Provider.IsOAuthToken.json"
+    },
+    {
+      "name": "Provider.IsVirtual",
+      "go_sig": "func (p *github.com/tingly-dev/tingly-box/ai.Provider) IsVirtual() bool",
+      "id": 30,
+      "status": "complete",
+      "str_consts": [
+        "vmodel"
+      ],
+      "cmp_strs": [
+        "vmodel"
+      ],
+      "exits": [
+        {
+          "block": 2,
+          "line": 268,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/Provider.IsVirtual.json"
+    },
+    {
+      "name": "Provider.OAuthIssuer",
+      "go_sig": "func (p *github.com/tingly-dev/tingly-box/ai.Provider) OAuthIssuer() github.com/tingly-dev/tingly-box/ai.Issuer",
+      "id": 31,
+      "status": "complete",
+      "str_consts": [
+        "",
+        "oauth"
+      ],
+      "cmp_strs": [
+        "oauth"
+      ],
+      "calls": [
+        14
+      ],
+      "exits": [
+        {
+          "block": 5,
+          "line": 412
+        },
+        {
+          "block": 2,
+          "line": 414,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/Provider.OAuthIssuer.json"
+    },
+    {
+      "name": "Provider.ResolveEndpoint",
+      "go_sig": "func (p *github.com/tingly-dev/tingly-box/ai.Provider) ResolveEndpoint(clientStyle github.com/tingly-dev/tingly-box/ai.APIStyle) (string, github.com/tingly-dev/tingly-box/ai.APIStyle)",
+      "id": 32,
+      "status": "complete",
+      "str_consts": [
+        "",
+        "openai",
+        "anthropic"
+      ],
+      "cmp_strs": [
+        "openai",
+        "",
+        "anthropic"
+      ],
+      "calls": [
+        34
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 353
+        },
+        {
+          "block": 4,
+          "line": 367,
+          "last": true
+        },
+        {
+          "block": 8,
+          "line": 359
+        },
+        {
+          "block": 9,
+          "line": 363
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/Provider.ResolveEndpoint.json"
+    },
+    {
+      "name": "Provider.ResolveStyle",
+      "go_sig": "func (p *github.com/tingly-dev/tingly-box/ai.Provider) ResolveStyle(clientStyle github.com/tingly-dev/tingly-box/ai.APIStyle) *github.com/tingly-dev/tingly-box/ai.Provider",
+      "id": 33,
+      "status": "complete",
+      "calls": [
+        32
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 290
+        },
+        {
+          "block": 3,
+          "line": 294
+        },
+        {
+          "block": 4,
+          "line": 299,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/Provider.ResolveStyle.json"
+    },
+    {
+      "name": "Provider.dualEligible",
+      "go_sig": "func (p *github.com/tingly-dev/tingly-box/ai.Provider) dualEligible() bool",
+      "id": 34,
+      "status": "complete",
+      "str_consts": [
+        "oauth"
+      ],
+      "cmp_strs": [
+        "oauth"
+      ],
+      "calls": [
+        31,
+        7
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 333,
+          "const_true": true
+        },
+        {
+          "block": 5,
+          "line": 335,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/Provider.dualEligible.json"
+    },
+    {
+      "name": "TokenUsage.HasCacheUsage",
+      "go_sig": "func (u *github.com/tingly-dev/tingly-box/ai.TokenUsage) HasCacheUsage() bool",
+      "id": 35,
+      "status": "complete",
+      "wrapped_by": "TokenUsage.HasCacheUsage~NewTokenUsage",
+      "consts": [
+        "0"
+      ],
+      "exits": [
+        {
+          "block": 0,
+          "line": 108,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/TokenUsage.HasCacheUsage.json"
+    },
+    {
+      "name": "TokenUsage.HasUsage",
+      "go_sig": "func (u *github.com/tingly-dev/tingly-box/ai.TokenUsage) HasUsage() bool",
+      "id": 36,
+      "status": "complete",
+      "wrapped_by": "TokenUsage.HasUsage~NewTokenUsage",
+      "consts": [
+        "0"
+      ],
+      "exits": [
+        {
+          "block": 2,
+          "line": 102,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/TokenUsage.HasUsage.json"
+    },
+    {
+      "name": "TokenUsage.PromptTotalTokens",
+      "go_sig": "func (u *github.com/tingly-dev/tingly-box/ai.TokenUsage) PromptTotalTokens() int",
+      "id": 37,
+      "status": "complete",
+      "wrapped_by": "TokenUsage.PromptTotalTokens~NewTokenUsage",
+      "exits": [
+        {
+          "block": 0,
+          "line": 165,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/TokenUsage.PromptTotalTokens.json"
+    },
+    {
+      "name": "TokenUsage.ToAnthropicMessageDeltaUsageMap",
+      "go_sig": "func (u *github.com/tingly-dev/tingly-box/ai.TokenUsage) ToAnthropicMessageDeltaUsageMap() map[string]interface{}",
+      "id": 38,
+      "status": "complete",
+      "wrapped_by": "TokenUsage.ToAnthropicMessageDeltaUsageMap~NewTokenUsage",
+      "calls": [
+        39
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 158,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/TokenUsage.ToAnthropicMessageDeltaUsageMap.json"
+    },
+    {
+      "name": "TokenUsage.ToAnthropicUsageMap",
+      "go_sig": "func (u *github.com/tingly-dev/tingly-box/ai.TokenUsage) ToAnthropicUsageMap() map[string]interface{}",
+      "id": 39,
+      "status": "partial",
+      "issues": [
+        "map update t0[\"input_tokens\":string] on a map the model knows nothing about ignored",
+        "map update t0[\"output_tokens\":string] on a map the model knows nothing about ignored",
+        "map update t0[\"cache_read_input_...\":string] on a map the model knows nothing about ignored",
+        "map update t0[\"cache_creation_in...\":string] on a map the model knows nothing about ignored",
+        "map update t21[\"thinking_tokens\":string] on a map the model knows nothing about ignored",
+        "map update t0[\"output_tokens_det...\":string] on a map the model knows nothing about ignored"
+      ],
+      "wrapped_by": "TokenUsage.ToAnthropicUsageMap~NewTokenUsage",
+      "consts": [
+        "0"
+      ],
+      "str_consts": [
+        "input_tokens",
+        "output_tokens",
+        "cache_read_input_tokens",
+        "cache_creation_input_tokens",
+        "thinking_tokens",
+        "output_tokens_details"
+      ],
+      "map_keys": [
+        "input_tokens",
+        "output_tokens",
+        "cache_read_input_tokens",
+        "cache_creation_input_tokens",
+        "thinking_tokens",
+        "output_tokens_details"
+      ],
+      "calls": [
+        43
+      ],
+      "exits": [
+        {
+          "block": 6,
+          "line": 135,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/TokenUsage.ToAnthropicUsageMap.json"
+    },
+    {
+      "name": "TokenUsage.ToOpenAIChatUsageMap",
+      "go_sig": "func (u *github.com/tingly-dev/tingly-box/ai.TokenUsage) ToOpenAIChatUsageMap() map[string]interface{}",
+      "id": 40,
+      "status": "partial",
+      "issues": [
+        "map update t1[\"prompt_tokens\":string] on a map the model knows nothing about ignored",
+        "map update t1[\"completion_tokens\":string] on a map the model knows nothing about ignored",
+        "map update t1[\"total_tokens\":string] on a map the model knows nothing about ignored",
+        "nil comparison t11 on a value of unknown nil-ness is havoc",
+        "map update t1[\"prompt_tokens_det...\":string] on a map the model knows nothing about ignored",
+        "map update t16[\"reasoning_tokens\":string] on a map the model knows nothing about ignored",
+        "map update t1[\"completion_tokens...\":string] on a map the model knows nothing about ignored"
+      ],
+      "wrapped_by": "TokenUsage.ToOpenAIChatUsageMap~NewTokenUsage",
+      "consts": [
+        "0"
+      ],
+      "str_consts": [
+        "prompt_tokens",
+        "completion_tokens",
+        "total_tokens",
+        "prompt_tokens_details",
+        "reasoning_tokens",
+        "completion_tokens_details"
+      ],
+      "map_keys": [
+        "prompt_tokens",
+        "completion_tokens",
+        "total_tokens",
+        "prompt_tokens_details",
+        "reasoning_tokens",
+        "completion_tokens_details"
+      ],
+      "calls": [
+        37,
+        44
+      ],
+      "exits": [
+        {
+          "block": 4,
+          "line": 201,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/TokenUsage.ToOpenAIChatUsageMap.json"
+    },
+    {
+      "name": "TokenUsage.ToOpenAIResponsesUsageMap",
+      "go_sig": "func (u *github.com/tingly-dev/tingly-box/ai.TokenUsage) ToOpenAIResponsesUsageMap() map[string]interface{}",
+      "id": 41,
+      "status": "partial",
+      "issues": [
+        "map update t1[\"input_tokens\":string] on a map the model knows nothing about ignored",
+        "map update t1[\"output_tokens\":string] on a map the model knows nothing about ignored",
+        "map update t1[\"total_tokens\":string] on a map the model knows nothing about ignored",
+        "nil comparison t11 on a value of unknown nil-ness is havoc",
+        "map update t1[\"input_tokens_details\":string] on a map the model knows nothing about ignored",
+        "map update t16[\"reasoning_tokens\":string] on a map the model knows nothing about ignored",
+        "map update t1[\"output_tokens_det...\":string] on a map the model knows nothing about ignored"
+      ],
+      "wrapped_by": "TokenUsage.ToOpenAIResponsesUsageMap~NewTokenUsage",
+      "consts": [
+        "0"
+      ],
+      "str_consts": [
+        "input_tokens",
+        "output_tokens",
+        "total_tokens",
+        "input_tokens_details",
+        "reasoning_tokens",
+        "output_tokens_details"
+      ],
+      "map_keys": [
+        "input_tokens",
+        "output_tokens",
+        "total_tokens",
+        "input_tokens_details",
+        "reasoning_tokens",
+        "output_tokens_details"
+      ],
+      "calls": [
+        37,
+        44
+      ],
+      "exits": [
+        {
+          "block": 4,
+          "line": 221,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/TokenUsage.ToOpenAIResponsesUsageMap.json"
+    },
+    {
+      "name": "TokenUsage.TotalTokens",
+      "go_sig": "func (u *github.com/tingly-dev/tingly-box/ai.TokenUsage) TotalTokens() int",
+      "id": 42,
+      "status": "complete",
+      "wrapped_by": "TokenUsage.TotalTokens~NewTokenUsage",
+      "exits": [
+        {
+          "block": 0,
+          "line": 97,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/TokenUsage.TotalTokens.json"
+    },
+    {
+      "name": "TokenUsage.UncachedInputTokens",
+      "go_sig": "func (u *github.com/tingly-dev/tingly-box/ai.TokenUsage) UncachedInputTokens() int",
+      "id": 43,
+      "status": "complete",
+      "wrapped_by": "TokenUsage.UncachedInputTokens~NewTokenUsage",
+      "consts": [
+        "0"
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 144
+        },
+        {
+          "block": 3,
+          "line": 147
+        },
+        {
+          "block": 4,
+          "line": 149,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/TokenUsage.UncachedInputTokens.json"
+    },
+    {
+      "name": "TokenUsage.promptCacheDetails",
+      "go_sig": "func (u *github.com/tingly-dev/tingly-box/ai.TokenUsage) promptCacheDetails() map[string]interface{}",
+      "id": 44,
+      "status": "partial",
+      "issues": [
+        "map update t3[\"cached_tokens\":string] on a map the model knows nothing about ignored",
+        "map update t3[\"cache_write_tokens\":string] on a map the model knows nothing about ignored"
+      ],
+      "wrapped_by": "TokenUsage.promptCacheDetails~NewTokenUsage",
+      "consts": [
+        "0"
+      ],
+      "str_consts": [
+        "cached_tokens",
+        "cache_write_tokens"
+      ],
+      "map_keys": [
+        "cached_tokens",
+        "cache_write_tokens"
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 175
+        },
+        {
+          "block": 5,
+          "line": 181,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/TokenUsage.promptCacheDetails.json"
+    },
+    {
+      "name": "ValidateCredential",
+      "go_sig": "func(a github.com/tingly-dev/tingly-box/ai.AuthType, fields map[string]string) error",
+      "id": 45,
+      "status": "partial",
+      "issues": [
+        "call encoding/json.Valid: t57 is havoc (unmodeled-call)",
+        "ValidateCredential: call net/url.Parse #0: assumed a pointer to a fresh net/url.URL with havoc fields (not modelled)",
+        "call net/url.Parse: t59 is havoc (unmodeled-call)"
+      ],
+      "consts": [
+        "18446744073709551615",
+        "0",
+        "1",
+        "2",
+        "3"
+      ],
+      "str_consts": [
+        "aws_sigv4",
+        "region",
+        "",
+        "%s: %q is required",
+        "access_key_id",
+        "secret_access_key",
+        "bearer_token",
+        "%s: provide either %q+%q or %q",
+        "gcp_sa",
+        "service_account_json",
+        "endpoint",
+        "azure_key",
+        "%s: %q is not valid JSON",
+        "%s: %q must be a full URL like https://\u003cresource\u003e.openai.azure.com",
+        "https",
+        "http"
+      ],
+      "cmp_strs": [
+        "aws_sigv4",
+        "",
+        "gcp_sa",
+        "azure_key",
+        "https",
+        "http"
+      ],
+      "calls": [
+        1,
+        54,
+        4
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 98
+        },
+        {
+          "block": 5,
+          "line": 105
+        },
+        {
+          "block": 9,
+          "line": 110
+        },
+        {
+          "block": 10,
+          "line": 113
+        },
+        {
+          "block": 15,
+          "line": 117
+        },
+        {
+          "block": 17,
+          "line": 133,
+          "last": true
+        },
+        {
+          "block": 21,
+          "line": 125
+        },
+        {
+          "block": 22,
+          "line": 130
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/ValidateCredential.json"
+    },
+    {
+      "name": "ValidateCredentialAPIStyle",
+      "go_sig": "func(a github.com/tingly-dev/tingly-box/ai.AuthType, apiStyle string) error",
+      "id": 46,
+      "status": "complete",
+      "consts": [
+        "0",
+        "1",
+        "2"
+      ],
+      "str_consts": [
+        " or ",
+        "%s providers require api_style %s, got %q"
+      ],
+      "calls": [
+        0
+      ],
+      "xcalls": [
+        {
+          "package": "slices",
+          "id": 3
+        }
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 175
+        },
+        {
+          "block": 3,
+          "line": 178
+        },
+        {
+          "block": 4,
+          "line": 180,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/ValidateCredentialAPIStyle.json"
+    },
+    {
+      "name": "WorkBuddySite.APIBase",
+      "go_sig": "func (s github.com/tingly-dev/tingly-box/ai.WorkBuddySite) APIBase() string",
+      "id": 47,
+      "status": "complete",
+      "str_consts": [
+        "/v2"
+      ],
+      "exits": [
+        {
+          "block": 0,
+          "line": 53,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/WorkBuddySite.APIBase.json"
+    },
+    {
+      "name": "WorkBuddySite.ClientHeaders",
+      "go_sig": "func (s github.com/tingly-dev/tingly-box/ai.WorkBuddySite) ClientHeaders() map[string]string",
+      "id": 48,
+      "status": "partial",
+      "issues": [
+        "map update t1[\"User-Agent\":string] on a map the model knows nothing about ignored",
+        "map update t1[\"X-Domain\":string] on a map the model knows nothing about ignored",
+        "map update t1[\"X-Product\":string] on a map the model knows nothing about ignored",
+        "map update t1[\"X-IDE-Type\":string] on a map the model knows nothing about ignored",
+        "map update t1[\"X-IDE-Name\":string] on a map the model knows nothing about ignored",
+        "map update t1[\"X-IDE-Version\":string] on a map the model knows nothing about ignored",
+        "map update t1[\"X-Requested-With\":string] on a map the model knows nothing about ignored",
+        "map update t1[\"X-Agent-Intent\":string] on a map the model knows nothing about ignored",
+        "map update t1[\"X-Agent-Purpose\":string] on a map the model knows nothing about ignored",
+        "map update t1[\"X-Agent-Type\":string] on a map the model knows nothing about ignored"
+      ],
+      "str_consts": [
+        "User-Agent",
+        "WorkBuddy/5.5.6",
+        "X-Domain",
+        "X-Product",
+        "SaaS",
+        "X-IDE-Type",
+        "WorkBuddy",
+        "X-IDE-Name",
+        "X-IDE-Version",
+        "5.5.6",
+        "X-Requested-With",
+        "XMLHttpRequest",
+        "X-Agent-Intent",
+        "craft",
+        "X-Agent-Purpose",
+        "conversation",
+        "",
+        "X-Agent-Type"
+      ],
+      "map_keys": [
+        "User-Agent",
+        "X-Domain",
+        "X-Product",
+        "X-IDE-Type",
+        "X-IDE-Name",
+        "X-IDE-Version",
+        "X-Requested-With",
+        "X-Agent-Intent",
+        "X-Agent-Purpose",
+        "X-Agent-Type"
+      ],
+      "cmp_strs": [
+        ""
+      ],
+      "exits": [
+        {
+          "block": 2,
+          "line": 91,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/WorkBuddySite.ClientHeaders.json"
+    },
+    {
+      "name": "WorkBuddySiteFor",
+      "go_sig": "func(issuer github.com/tingly-dev/tingly-box/ai.Issuer) (site github.com/tingly-dev/tingly-box/ai.WorkBuddySite, ok bool)",
+      "id": 49,
+      "status": "complete",
+      "str_consts": [
+        "workbuddy",
+        "https://www.workbuddy.ai",
+        "www.workbuddy.ai",
+        "workbuddy-ai",
+        "main",
+        "https://copilot.tencent.com",
+        "copilot.tencent.com",
+        "workbuddy_cn"
+      ],
+      "cmp_strs": [
+        "workbuddy",
+        "workbuddy_cn"
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 99
+        },
+        {
+          "block": 2,
+          "line": 106
+        },
+        {
+          "block": 4,
+          "line": 112,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/WorkBuddySiteFor.json"
+    },
+    {
+      "name": "ZCodeEndpoints",
+      "go_sig": "func(issuer github.com/tingly-dev/tingly-box/ai.Issuer) (anthropicBase string, openaiBase string)",
+      "id": 50,
+      "status": "complete",
+      "str_consts": [
+        "zcode",
+        "https://api.z.ai/api/anthropic",
+        "https://api.z.ai/api/coding/paas/v4",
+        "https://open.bigmodel.cn/api/anthropic",
+        "https://open.bigmodel.cn/api/coding/paas/v4",
+        "zcode_cn",
+        ""
+      ],
+      "cmp_strs": [
+        "zcode",
+        "zcode_cn"
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 23
+        },
+        {
+          "block": 2,
+          "line": 25
+        },
+        {
+          "block": 4,
+          "line": 27,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/ZCodeEndpoints.json"
+    },
+    {
+      "name": "ZeroTokenUsage",
+      "go_sig": "func() *github.com/tingly-dev/tingly-box/ai.TokenUsage",
+      "id": 51,
+      "status": "complete",
+      "exits": [
+        {
+          "block": 0,
+          "line": 259,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/ZeroTokenUsage.json"
+    },
+    {
+      "name": "contains",
+      "go_sig": "func(s string, substr string) bool",
+      "id": 52,
+      "status": "complete",
+      "test_file": true,
+      "calls": [
+        53
+      ],
+      "exits": [
+        {
+          "block": 2,
+          "line": 751,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/contains.json"
+    },
+    {
+      "name": "findSubstring",
+      "go_sig": "func(s string, substr string) bool",
+      "id": 53,
+      "status": "complete",
+      "test_file": true,
+      "consts": [
+        "0",
+        "1"
+      ],
+      "exits": [
+        {
+          "block": 3,
+          "line": 762,
+          "last": true
+        },
+        {
+          "block": 4,
+          "line": 759,
+          "const_true": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/findSubstring.json"
+    },
+    {
+      "name": "ValidateCredential$1",
+      "go_sig": "func(k string) string",
+      "id": 54,
+      "status": "partial",
+      "issues": [
+        "lookup in map t0 the model knows nothing about is havoc"
+      ],
+      "closure": true,
+      "exits": [
+        {
+          "block": 3,
+          "line": 100,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/ValidateCredential$1.json"
+    },
+    {
+      "name": "TokenUsage.HasCacheUsage~NewTokenUsage",
+      "go_sig": "func() bool via NewTokenUsage",
+      "id": 55,
+      "status": "complete",
+      "calls": [
+        8,
+        35
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/TokenUsage.HasCacheUsage~NewTokenUsage.json"
+    },
+    {
+      "name": "TokenUsage.HasUsage~NewTokenUsage",
+      "go_sig": "func() bool via NewTokenUsage",
+      "id": 56,
+      "status": "complete",
+      "calls": [
+        8,
+        36
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/TokenUsage.HasUsage~NewTokenUsage.json"
+    },
+    {
+      "name": "TokenUsage.PromptTotalTokens~NewTokenUsage",
+      "go_sig": "func() int via NewTokenUsage",
+      "id": 57,
+      "status": "complete",
+      "calls": [
+        8,
+        37
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/TokenUsage.PromptTotalTokens~NewTokenUsage.json"
+    },
+    {
+      "name": "TokenUsage.ToAnthropicMessageDeltaUsageMap~NewTokenUsage",
+      "go_sig": "func() map[string]interface{} via NewTokenUsage",
+      "id": 58,
+      "status": "complete",
+      "calls": [
+        8,
+        38
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/TokenUsage.ToAnthropicMessageDeltaUsageMap~NewTokenUsage.json"
+    },
+    {
+      "name": "TokenUsage.ToAnthropicUsageMap~NewTokenUsage",
+      "go_sig": "func() map[string]interface{} via NewTokenUsage",
+      "id": 59,
+      "status": "complete",
+      "calls": [
+        8,
+        39
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/TokenUsage.ToAnthropicUsageMap~NewTokenUsage.json"
+    },
+    {
+      "name": "TokenUsage.ToOpenAIChatUsageMap~NewTokenUsage",
+      "go_sig": "func() map[string]interface{} via NewTokenUsage",
+      "id": 60,
+      "status": "complete",
+      "calls": [
+        8,
+        40
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/TokenUsage.ToOpenAIChatUsageMap~NewTokenUsage.json"
+    },
+    {
+      "name": "TokenUsage.ToOpenAIResponsesUsageMap~NewTokenUsage",
+      "go_sig": "func() map[string]interface{} via NewTokenUsage",
+      "id": 61,
+      "status": "complete",
+      "calls": [
+        8,
+        41
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/TokenUsage.ToOpenAIResponsesUsageMap~NewTokenUsage.json"
+    },
+    {
+      "name": "TokenUsage.TotalTokens~NewTokenUsage",
+      "go_sig": "func() int via NewTokenUsage",
+      "id": 62,
+      "status": "complete",
+      "calls": [
+        8,
+        42
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/TokenUsage.TotalTokens~NewTokenUsage.json"
+    },
+    {
+      "name": "TokenUsage.UncachedInputTokens~NewTokenUsage",
+      "go_sig": "func() int via NewTokenUsage",
+      "id": 63,
+      "status": "complete",
+      "calls": [
+        8,
+        43
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/TokenUsage.UncachedInputTokens~NewTokenUsage.json"
+    },
+    {
+      "name": "TokenUsage.promptCacheDetails~NewTokenUsage",
+      "go_sig": "func() map[string]interface{} via NewTokenUsage",
+      "id": 64,
+      "status": "complete",
+      "calls": [
+        8,
+        44
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_ai/TokenUsage.promptCacheDetails~NewTokenUsage.json"
+    }
+  ],
+  "havoc": [
+    {
+      "idx": 0,
+      "site": "Field: map lookup",
+      "reason": "opaque-map"
+    },
+    {
+      "idx": 1,
+      "site": "IsSecretCredentialField: call github.com/tingly-dev/tingly-box/ai.CredentialSchema (callee stuck) (assumed)",
+      "reason": "assumed"
+    },
+    {
+      "idx": 2,
+      "site": "IsSecretCredentialField: call github.com/tingly-dev/tingly-box/ai.CredentialSchema (callee stuck) (length)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 3,
+      "site": "IsWorkBuddyIssuer: call github.com/tingly-dev/tingly-box/ai.WorkBuddySiteFor (callee stuck) #0.Origin",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 4,
+      "site": "IsWorkBuddyIssuer: call github.com/tingly-dev/tingly-box/ai.WorkBuddySiteFor (callee stuck) #0.Domain",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 5,
+      "site": "IsWorkBuddyIssuer: call github.com/tingly-dev/tingly-box/ai.WorkBuddySiteFor (callee stuck) #0.Platform",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 6,
+      "site": "IsWorkBuddyIssuer: call github.com/tingly-dev/tingly-box/ai.WorkBuddySiteFor (callee stuck) #0.AgentType",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 7,
+      "site": "IsWorkBuddyIssuer: call github.com/tingly-dev/tingly-box/ai.WorkBuddySiteFor (callee stuck) #1",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 8,
+      "site": "NewTokenUsageFull: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageWithCacheDetails (callee stuck).InputTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 9,
+      "site": "NewTokenUsageFull: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageWithCacheDetails (callee stuck).OutputTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 10,
+      "site": "NewTokenUsageFull: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageWithCacheDetails (callee stuck).CacheReadTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 11,
+      "site": "NewTokenUsageFull: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageWithCacheDetails (callee stuck).CacheWriteTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 12,
+      "site": "NewTokenUsageFull: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageWithCacheDetails (callee stuck).ReasoningTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 13,
+      "site": "NewTokenUsageFull: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageWithCacheDetails (callee stuck).SystemTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 14,
+      "site": "NewTokenUsageWithCache: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageWithCacheDetails (callee stuck).InputTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 15,
+      "site": "NewTokenUsageWithCache: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageWithCacheDetails (callee stuck).OutputTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 16,
+      "site": "NewTokenUsageWithCache: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageWithCacheDetails (callee stuck).CacheReadTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 17,
+      "site": "NewTokenUsageWithCache: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageWithCacheDetails (callee stuck).CacheWriteTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 18,
+      "site": "NewTokenUsageWithCache: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageWithCacheDetails (callee stuck).ReasoningTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 19,
+      "site": "NewTokenUsageWithCache: call github.com/tingly-dev/tingly-box/ai.NewTokenUsageWithCacheDetails (callee stuck).SystemTokens",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 20,
+      "site": "NormalizeCredential: len",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 21,
+      "site": "GetExtraFieldString: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 22,
+      "site": "GetExtraFieldString: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 23,
+      "site": "GetExtraFieldString: nil comparison",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 24,
+      "site": "IsExpired: call time.Parse #0.wall",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 25,
+      "site": "IsExpired: call time.Parse #0.ext",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 26,
+      "site": "IsExpired: call time.Parse #1",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 27,
+      "site": "IsExpired: call time.Now.wall",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 28,
+      "site": "IsExpired: call time.Now.ext",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 29,
+      "site": "IsExpired: call (time.Time).Add.wall",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 30,
+      "site": "IsExpired: call (time.Time).Add.ext",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 31,
+      "site": "IsExpired: call (time.Time).After",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 32,
+      "site": "IsClaudeCodeProvider: call (*github.com/tingly-dev/tingly-box/ai.OAuthDetail).GetIssuer (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 33,
+      "site": "IsCodexProvider: call (*github.com/tingly-dev/tingly-box/ai.OAuthDetail).GetIssuer (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 34,
+      "site": "IsDual: call (*github.com/tingly-dev/tingly-box/ai.Provider).dualEligible (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 35,
+      "site": "IsMultiFieldCredential: call (github.com/tingly-dev/tingly-box/ai.AuthType).IsMultiFieldCredential (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 36,
+      "site": "IsOAuthExpired: call (*github.com/tingly-dev/tingly-box/ai.OAuthDetail).IsExpired (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 37,
+      "site": "IsOAuthToken: call (*github.com/tingly-dev/tingly-box/ai.Provider).GetAccessToken (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 38,
+      "site": "OAuthIssuer: call (*github.com/tingly-dev/tingly-box/ai.OAuthDetail).GetIssuer (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 39,
+      "site": "ResolveEndpoint: call (*github.com/tingly-dev/tingly-box/ai.Provider).dualEligible (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 40,
+      "site": "ResolveStyle: call (*github.com/tingly-dev/tingly-box/ai.Provider).ResolveEndpoint (callee stuck) #0",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 41,
+      "site": "ResolveStyle: call (*github.com/tingly-dev/tingly-box/ai.Provider).ResolveEndpoint (callee stuck) #1",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 42,
+      "site": "dualEligible: call (*github.com/tingly-dev/tingly-box/ai.Provider).OAuthIssuer (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 43,
+      "site": "dualEligible: call github.com/tingly-dev/tingly-box/ai.IssuerSupportsDual (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 44,
+      "site": "ToAnthropicUsageMap: call (*github.com/tingly-dev/tingly-box/ai.TokenUsage).UncachedInputTokens (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 45,
+      "site": "ToOpenAIChatUsageMap: call (*github.com/tingly-dev/tingly-box/ai.TokenUsage).PromptTotalTokens (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 46,
+      "site": "ToOpenAIChatUsageMap: nil comparison",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 47,
+      "site": "ToOpenAIResponsesUsageMap: call (*github.com/tingly-dev/tingly-box/ai.TokenUsage).PromptTotalTokens (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 48,
+      "site": "ToOpenAIResponsesUsageMap: nil comparison",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 49,
+      "site": "ValidateCredential: call (github.com/tingly-dev/tingly-box/ai.AuthType).IsMultiFieldCredential (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 50,
+      "site": "ValidateCredential: call github.com/tingly-dev/tingly-box/ai.ValidateCredential$1 (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 51,
+      "site": "ValidateCredential: call github.com/tingly-dev/tingly-box/ai.CredentialSchema (callee stuck) (assumed)",
+      "reason": "assumed"
+    },
+    {
+      "idx": 52,
+      "site": "ValidateCredential: call github.com/tingly-dev/tingly-box/ai.CredentialSchema (callee stuck) (length)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 53,
+      "site": "ValidateCredential: call github.com/tingly-dev/tingly-box/ai.ValidateCredential$1 (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 54,
+      "site": "ValidateCredential: call github.com/tingly-dev/tingly-box/ai.ValidateCredential$1 (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 55,
+      "site": "ValidateCredential: call github.com/tingly-dev/tingly-box/ai.ValidateCredential$1 (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 56,
+      "site": "ValidateCredential: call github.com/tingly-dev/tingly-box/ai.ValidateCredential$1 (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 57,
+      "site": "ValidateCredential: call github.com/tingly-dev/tingly-box/ai.ValidateCredential$1 (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 58,
+      "site": "ValidateCredential: call encoding/json.Valid",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 59,
+      "site": "ValidateCredential: call github.com/tingly-dev/tingly-box/ai.ValidateCredential$1 (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 60,
+      "site": "ValidateCredential: call net/url.Parse #0.Scheme",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 61,
+      "site": "ValidateCredential: call net/url.Parse #0.Opaque",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 62,
+      "site": "ValidateCredential: call net/url.Parse #0.Host",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 63,
+      "site": "ValidateCredential: call net/url.Parse #0.Path",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 64,
+      "site": "ValidateCredential: call net/url.Parse #0.Fragment",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 65,
+      "site": "ValidateCredential: call net/url.Parse #0.RawQuery",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 66,
+      "site": "ValidateCredential: call net/url.Parse #0.RawPath",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 67,
+      "site": "ValidateCredential: call net/url.Parse #0.RawFragment",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 68,
+      "site": "ValidateCredential: call net/url.Parse #0.ForceQuery",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 69,
+      "site": "ValidateCredential: call net/url.Parse #0.OmitHost",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 70,
+      "site": "ValidateCredential: call net/url.Parse #1",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 71,
+      "site": "ValidateCredentialAPIStyle: call github.com/tingly-dev/tingly-box/ai.AllowedAPIStyles (callee stuck) (assumed)",
+      "reason": "assumed"
+    },
+    {
+      "idx": 72,
+      "site": "ValidateCredentialAPIStyle: call github.com/tingly-dev/tingly-box/ai.AllowedAPIStyles (callee stuck) (length)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 73,
+      "site": "ValidateCredentialAPIStyle: call slices.Contains[[]string, string] (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 74,
+      "site": "contains: call github.com/tingly-dev/tingly-box/ai.findSubstring (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 75,
+      "site": "ValidateCredential$1: map lookup",
+      "reason": "opaque-map"
+    }
+  ]
+}

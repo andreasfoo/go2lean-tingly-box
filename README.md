@@ -12,6 +12,14 @@ confirms is a finding. This repository holds the tingly-box side: the
 properties, the findings with a plain Go reproduction each, and the
 record of every run.
 
+## Versions
+
+| | |
+|---|---|
+| tingly-box | **`b788a3b`** (main of 2026-10-20): every finding, spec, repro test and the model refer to it; findings 1-5 were first found on `5f83f04` |
+| go2lean | the model, coverage table and benchmark: `0a2eeab`; each run's own commit is in [benchmark.md](benchmark.md) and the findings pages |
+| Lean model | [`model/`](model): the generated Lean modules and per-package reports |
+
 ## Findings
 
 **60 bugs**, each confirmed by a failing `go test` on tingly-box `b788a3b` (except two found by reading, marked in the table): 1 critical, 15 high, 22 medium, 22 low (6 of them latent: in code no gateway path calls). 3 were already tracked upstream ([#1921](https://github.com/tingly-dev/tingly-box/issues/1921), [#1923](https://github.com/tingly-dev/tingly-box/issues/1923), [#1924](https://github.com/tingly-dev/tingly-box/issues/1924)); the rest are new.
@@ -85,7 +93,10 @@ Each row links to its page (root cause with file:line, trigger, observed and exp
 
 ## Coverage: what go2lean translated into Lean
 
-Every function of the compiled packages, by what the frontend made of it (`scripts/coverage.py <workspace> <go2lean commit>` prints this from a run's model reports). *complete*: translated, every call modelled. *partial*: translated, some calls or values are havoc (unmodelled; a counterexample that reads one is still checked by `go test`). *rejected*: not translated, with the reason; a call to it is havoc. Functions in `_test.go` files and closures are left out.
+The generated Lean itself is in [`model/lean/`](model/lean) (one module per
+Go package, see [model/README.md](model/README.md)).
+
+Every function of the compiled packages, by what the frontend made of it (`scripts/coverage.py model/reports 0a2eeab` prints this from the reports in [`model/reports/`](model/reports)). *complete*: translated, every call modelled. *partial*: translated, some calls or values are havoc (unmodelled; a counterexample that reads one is still checked by `go test`). *rejected*: not translated, with the reason; a call to it is havoc. Functions in `_test.go` files and closures are left out.
 
 Model of go2lean `0a2eeab` (`compile -deps` of the protocol packages; the
 other tingly-box packages are compiled as far as those call into them).
@@ -94,21 +105,21 @@ other tingly-box packages are compiled as far as those call into them).
 |---|---|---|---|---|---|
 | `ai` | 62 | 52 | 10 | 0 | 100% |
 | `internal/catalog` | 2 | 0 | 2 | 0 | 100% |
-| `internal/protocol` | 135 | 103 | 22 | 10 | 93% |
+| `internal/protocol` | 133 | 103 | 22 | 8 | 94% |
 | `internal/protocol/assembler` | 120 | 99 | 21 | 0 | 100% |
 | `internal/protocol/ids` | 6 | 6 | 0 | 0 | 100% |
 | `internal/protocol/metaid` | 7 | 4 | 3 | 0 | 100% |
-| `internal/protocol/nonstream` | 41 | 28 | 12 | 1 | 98% |
-| `internal/protocol/ops` | 94 | 51 | 40 | 3 | 97% |
-| `internal/protocol/request` | 194 | 145 | 30 | 19 | 90% |
+| `internal/protocol/nonstream` | 40 | 28 | 12 | 0 | 100% |
+| `internal/protocol/ops` | 91 | 51 | 40 | 0 | 100% |
+| `internal/protocol/request` | 175 | 145 | 30 | 0 | 100% |
 | `internal/protocol/sse` | 14 | 2 | 12 | 0 | 100% |
-| `internal/protocol/stream` | 201 | 116 | 67 | 18 | 91% |
+| `internal/protocol/stream` | 184 | 116 | 67 | 1 | 99% |
 | `internal/protocol/thinking` | 6 | 4 | 2 | 0 | 100% |
 | `internal/protocol/token` | 11 | 5 | 6 | 0 | 100% |
 | `internal/protocol/usage` | 19 | 18 | 1 | 0 | 100% |
 | `internal/protocol/wire` | 21 | 20 | 1 | 0 | 100% |
 | `internal/typ` | 1 | 1 | 0 | 0 | 100% |
-| **all** | **934** | **654** | **229** | **51** | **95%** |
+| **all** | **892** | **654** | **229** | **9** | **99%** |
 
 <details><summary><code>ai</code>: 62 functions</summary>
 
@@ -188,7 +199,7 @@ other tingly-box packages are compiled as far as those call into them).
 
 </details>
 
-<details><summary><code>internal/protocol</code>: 135 functions</summary>
+<details><summary><code>internal/protocol</code>: 133 functions</summary>
 
 | function | status | note |
 |---|---|---|
@@ -200,8 +211,6 @@ other tingly-box packages are compiled as far as those call into them).
 | `ResponseInputItemUnionParam.GetType` | rejected | block 1 (if.then): changetype *string <- *EasyInputMessageType (t4): conversion *github.com/openai/openai-go/v3/responses.EasyInputMessag... |
 | `ResponseNewParams.MarshalJSON` | rejected | block 0 (entry): changetype *shadow <- *ResponseNewParams (t0): conversion *github.com/openai/openai-go/v3/responses.ResponseNewParams ->... |
 | `RunLoop` | rejected | type assertion t2 on an interface value the model did not build is havoc |
-| `newAnthropicError` | rejected | test helper: parameter t has type *testing.T |
-| `newOpenAIError` | rejected | test helper: parameter t has type *testing.T |
 | `AnthropicBetaMessagesRequest.MarshalJSON` | partial | 1 unmodelled site: map update t3["stream":string] on a map the model knows nothing about ignored |
 | `AnthropicMessagesRequest.MarshalJSON` | partial | 1 unmodelled site: map update t3["stream":string] on a map the model knows nothing about ignored |
 | `ChatModerationFromResponses` | partial | 2 unmodelled sites: map update t5["input":string] on a map the model knows nothing about ignored |
@@ -484,11 +493,10 @@ other tingly-box packages are compiled as far as those call into them).
 
 </details>
 
-<details><summary><code>internal/protocol/nonstream</code>: 41 functions</summary>
+<details><summary><code>internal/protocol/nonstream</code>: 40 functions</summary>
 
 | function | status | note |
 |---|---|---|
-| `asJSONMapSlice` | rejected | test helper: parameter t has type *testing.T |
 | `ConvertAnthropicBetaToOpenAIChat` | partial | 2 unmodelled sites: call time.Now: t74 is havoc (unmodeled-call) |
 | `ConvertAnthropicBetaToResponsesWire` | partial | 2 unmodelled sites: call time.Now: t77 is havoc (unmodeled-call) |
 | `ConvertChatToResponsesWire` | partial | 2 unmodelled sites: call time.Now: t70 is havoc (unmodeled-call) |
@@ -532,13 +540,10 @@ other tingly-box packages are compiled as far as those call into them).
 
 </details>
 
-<details><summary><code>internal/protocol/ops</code>: 94 functions</summary>
+<details><summary><code>internal/protocol/ops</code>: 91 functions</summary>
 
 | function | status | note |
 |---|---|---|
-| `assistantToolCallMessage` | rejected | test helper: parameter t has type *testing.T |
-| `marshalMessage` | rejected | test helper: parameter t has type *testing.T |
-| `marshalParams` | rejected | test helper: parameter t has type *testing.T |
 | `ApplyAnthropicBetaModelTransform` | partial | 1 unmodelled site: lookup in map t15 the model knows nothing about is havoc |
 | `ApplyAnthropicV1ModelTransform` | partial | 1 unmodelled site: lookup in map t15 the model knows nothing about is havoc |
 | `ApplyCodexResponsesTransform` | partial | 2 unmodelled sites: type assertion t0 on an interface value the model did not build is havoc |
@@ -633,29 +638,10 @@ other tingly-box packages are compiled as far as those call into them).
 
 </details>
 
-<details><summary><code>internal/protocol/request</code>: 194 functions</summary>
+<details><summary><code>internal/protocol/request</code>: 175 functions</summary>
 
 | function | status | note |
 |---|---|---|
-| `assertOpenAIToolMessageHasImage` | rejected | test helper: parameter t has type *testing.T |
-| `assertResponsesFunctionCallOutputHasImage` | rejected | test helper: parameter t has type *testing.T |
-| `assertStableMarshal` | rejected | test helper: parameter t has type *testing.T |
-| `canonicalWire` | rejected | test helper: parameter t has type *testing.T |
-| `chatToolImageRequest` | rejected | test helper: parameter t has type *testing.T |
-| `decodeJSONObject` | rejected | test helper: parameter t has type *testing.T |
-| `getMessageContent` | rejected | test helper: parameter t has type *testing.T |
-| `getMessageRole` | rejected | test helper: parameter t has type *testing.T |
-| `getToolCallID` | rejected | test helper: parameter t has type *testing.T |
-| `getToolCalls` | rejected | test helper: parameter t has type *testing.T |
-| `marshalWithoutCacheFields` | rejected | test helper: parameter t has type *testing.T |
-| `mustMarshalJSON` | rejected | test helper: parameter t has type *testing.T |
-| `parseCodexInput` | rejected | test helper: parameter t has type *testing.T |
-| `repairKinds` | rejected | test helper: parameter t has type *testing.T |
-| `repairOutputText` | rejected | test helper: parameter t has type *testing.T |
-| `repairUserText` | rejected | test helper: parameter t has type *testing.T |
-| `requireAnthropicFamilyBoundaries` | rejected | test helper: parameter t has type *testing.T |
-| `requireResponsesTextBreakpoint` | rejected | test helper: parameter t has type *testing.T |
-| `userMessageContentParts` | rejected | test helper: parameter t has type *testing.T |
 | `CleanupOpenaiFields` | partial | 1 unmodelled site: nil comparison t26 on a value of unknown nil-ness is havoc |
 | `ConvertAnthropicBetaToolsToResponses` | partial | 5 unmodelled sites: map update t15["type":string] on a map the model knows nothing about ignored |
 | `ConvertAnthropicV1ToResponsesRequest` | partial | 2 unmodelled sites: > on float64: t69 is havoc (opaque-op) |
@@ -855,28 +841,11 @@ other tingly-box packages are compiled as far as those call into them).
 
 </details>
 
-<details><summary><code>internal/protocol/stream</code>: 201 functions</summary>
+<details><summary><code>internal/protocol/stream</code>: 184 functions</summary>
 
 | function | status | note |
 |---|---|---|
 | `HandleOpenAIResponsesStreamToAnthropic` | rejected | deferred call invoke stream.Close() ignored (effects not modelled) |
-| `anthropicBetaEvents` | rejected | test helper: parameter t has type *testing.T |
-| `buildAnthropicContentBlockDeltaJSON` | rejected | test helper: parameter t has type *testing.T |
-| `buildAnthropicMessageDeltaJSON` | rejected | test helper: parameter t has type *testing.T |
-| `buildAnthropicMessageStartJSON` | rejected | test helper: parameter t has type *testing.T |
-| `buildAnthropicOutputOnlyDeltaJSON` | rejected | test helper: parameter t has type *testing.T |
-| `buildChatChunkJSON` | rejected | test helper: parameter t has type *testing.T |
-| `buildChatContentChunkJSON` | rejected | test helper: parameter t has type *testing.T |
-| `buildChatFinishChunkJSON` | rejected | test helper: parameter t has type *testing.T |
-| `buildChatRoleOnlyChunkJSON` | rejected | test helper: parameter t has type *testing.T |
-| `buildResponsesCompletedJSON` | rejected | test helper: parameter t has type *testing.T |
-| `chunkSSE` | rejected | test helper: parameter t has type *testing.T |
-| `eventDataAsMap` | rejected | test helper: parameter t has type *testing.T |
-| `lastOpenAIChunkUsage` | rejected | test helper: parameter t has type *testing.T |
-| `marshalJSONForTest` | rejected | test helper: parameter t has type *testing.T |
-| `openAIChatChunks` | rejected | test helper: parameter t has type *testing.T |
-| `parseResponsesSSEEvents` | rejected | test helper: parameter t has type *testing.T |
-| `seqOf` | rejected | test helper: parameter t has type *testing.T |
 | `AnthropicSingleBetaMessage` | partial | 4 unmodelled sites: type assertion t5 on an interface value the model did not build is havoc |
 | `AnthropicSingleMessage` | partial | 4 unmodelled sites: type assertion t5 on an interface value the model did not build is havoc |
 | `AnthropicToOpenAIStreamWithMCPHooks` | partial | 19 unmodelled sites: call (*net/http.Request).Context: t9 is havoc (unmodeled-call) |

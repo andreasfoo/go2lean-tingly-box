@@ -1,0 +1,362 @@
+{
+  "package": "github.com/tingly-dev/tingly-box/internal/protocol/metaid",
+  "frontend": "gossa",
+  "lean_module": "Go2Lean.Generated.gossa.github_com_tingly_dev_tingly_box_internal_protocol_metaid",
+  "lean_file": "lean/Go2Lean/Generated/gossa/github_com_tingly_dev_tingly_box_internal_protocol_metaid.lean",
+  "funcs": [
+    {
+      "name": "BuildMetadataUserID",
+      "go_sig": "func(extra map[string]any) *github.com/tingly-dev/tingly-box/internal/protocol/metaid.MetadataUserID",
+      "id": 0,
+      "status": "partial",
+      "issues": [
+        "deferred call github.com/tingly-dev/tingly-box/internal/protocol/metaid.BuildMetadataUserID$1() ignored (effects not modelled)"
+      ],
+      "calls": [
+        2,
+        4
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 0
+        },
+        {
+          "block": 2,
+          "line": 149
+        },
+        {
+          "block": 3,
+          "line": 152,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_metaid/BuildMetadataUserID.json"
+    },
+    {
+      "name": "FormatMetadataUserID",
+      "go_sig": "func(m *github.com/tingly-dev/tingly-box/internal/protocol/metaid.MetadataUserID) string",
+      "id": 1,
+      "status": "complete",
+      "str_consts": [
+        ""
+      ],
+      "calls": [
+        3
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 179
+        },
+        {
+          "block": 3,
+          "line": 181,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_metaid/FormatMetadataUserID.json"
+    },
+    {
+      "name": "MetadataUserID.Fix",
+      "go_sig": "func (m *github.com/tingly-dev/tingly-box/internal/protocol/metaid.MetadataUserID) Fix(extras map[string]any)",
+      "id": 2,
+      "status": "partial",
+      "issues": [
+        "nil comparison t0 on a value of unknown nil-ness is havoc",
+        "lookup in map extras the model knows nothing about is havoc",
+        "type assertion t7 on an interface value the model did not build is havoc",
+        "nil comparison t10 on a value of unknown nil-ness is havoc",
+        "lookup in map extras the model knows nothing about is havoc",
+        "type assertion t17 on an interface value the model did not build is havoc"
+      ],
+      "str_consts": [
+        "device",
+        "",
+        "missing device id",
+        "user_id",
+        "missing account uuid"
+      ],
+      "map_keys": [
+        "device",
+        "user_id"
+      ],
+      "cmp_strs": [
+        ""
+      ],
+      "xcalls": [
+        {
+          "package": "github.com/google/uuid",
+          "id": 0
+        }
+      ],
+      "exits": [
+        {
+          "block": 12,
+          "line": 0,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_metaid/MetadataUserID.Fix.json"
+    },
+    {
+      "name": "MetadataUserID.Format",
+      "go_sig": "func (m *github.com/tingly-dev/tingly-box/internal/protocol/metaid.MetadataUserID) Format() string",
+      "id": 3,
+      "status": "complete",
+      "consts": [
+        "0"
+      ],
+      "uses_json": true,
+      "exits": [
+        {
+          "block": 2,
+          "line": 72,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_metaid/MetadataUserID.Format.json"
+    },
+    {
+      "name": "MetadataUserID.IsEmpty",
+      "go_sig": "func (m *github.com/tingly-dev/tingly-box/internal/protocol/metaid.MetadataUserID) IsEmpty() bool",
+      "id": 4,
+      "status": "complete",
+      "str_consts": [
+        ""
+      ],
+      "cmp_strs": [
+        ""
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 124,
+          "const_true": true
+        },
+        {
+          "block": 4,
+          "line": 126,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_metaid/MetadataUserID.IsEmpty.json"
+    },
+    {
+      "name": "MetadataUserID.IsValid",
+      "go_sig": "func (m *github.com/tingly-dev/tingly-box/internal/protocol/metaid.MetadataUserID) IsValid() bool",
+      "id": 5,
+      "status": "complete",
+      "str_consts": [
+        ""
+      ],
+      "cmp_strs": [
+        ""
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 116
+        },
+        {
+          "block": 4,
+          "line": 118,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_metaid/MetadataUserID.IsValid.json"
+    },
+    {
+      "name": "ParseMetadataUserID",
+      "go_sig": "func(raw string) *github.com/tingly-dev/tingly-box/internal/protocol/metaid.MetadataUserID",
+      "id": 6,
+      "status": "partial",
+      "issues": [
+        "ParseMetadataUserID: load legacyUserIDRegex: assumed a pointer to a fresh regexp.Regexp with havoc fields (not modelled)",
+        "load legacyUserIDRegex: t6 is havoc (unmodeled-load)",
+        "ParseMetadataUserID: call (*regexp.Regexp).FindStringSubmatch: assumed a slice of 0..3 zero values of string (not modelled)",
+        "call (*regexp.Regexp).FindStringSubmatch: t7 is havoc (unmodeled-call)"
+      ],
+      "consts": [
+        "4",
+        "1",
+        "2",
+        "3"
+      ],
+      "str_consts": [
+        ""
+      ],
+      "map_keys": [
+        "device_id",
+        "account_uuid",
+        "session_id"
+      ],
+      "uses_json": true,
+      "cmp_strs": [
+        ""
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 40
+        },
+        {
+          "block": 3,
+          "line": 46
+        },
+        {
+          "block": 5,
+          "line": 52
+        },
+        {
+          "block": 6,
+          "line": 59,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_metaid/ParseMetadataUserID.json"
+    },
+    {
+      "name": "BuildMetadataUserID$1",
+      "go_sig": "func()",
+      "id": 7,
+      "status": "partial",
+      "issues": [
+        "builtin recover: t0 is havoc (unmodeled-call)",
+        "nil comparison t1 on a value of unknown nil-ness is havoc"
+      ],
+      "closure": true,
+      "exits": [
+        {
+          "block": 3,
+          "line": 0,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_metaid/BuildMetadataUserID$1.json"
+    }
+  ],
+  "havoc": [
+    {
+      "idx": 0,
+      "site": "BuildMetadataUserID: call (*github.com/tingly-dev/tingly-box/internal/protocol/metaid.MetadataUserID).IsEmpty (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 1,
+      "site": "FormatMetadataUserID: call (*github.com/tingly-dev/tingly-box/internal/protocol/metaid.MetadataUserID).Format (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 2,
+      "site": "Fix: nil comparison",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 3,
+      "site": "Fix: map lookup #1",
+      "reason": "opaque-map"
+    },
+    {
+      "idx": 4,
+      "site": "Fix: type assertion",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 5,
+      "site": "Fix: nil comparison",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 6,
+      "site": "Fix: map lookup #1",
+      "reason": "opaque-map"
+    },
+    {
+      "idx": 7,
+      "site": "Fix: type assertion",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 8,
+      "site": "Fix: call (github.com/google/uuid.UUID).String (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 9,
+      "site": "ParseMetadataUserID: load legacyUserIDRegex.expr",
+      "reason": "unmodeled-load"
+    },
+    {
+      "idx": 10,
+      "site": "ParseMetadataUserID: load legacyUserIDRegex.numSubexp",
+      "reason": "unmodeled-load"
+    },
+    {
+      "idx": 11,
+      "site": "ParseMetadataUserID: load legacyUserIDRegex.maxBitStateLen",
+      "reason": "unmodeled-load"
+    },
+    {
+      "idx": 12,
+      "site": "ParseMetadataUserID: load legacyUserIDRegex.prefix",
+      "reason": "unmodeled-load"
+    },
+    {
+      "idx": 13,
+      "site": "ParseMetadataUserID: load legacyUserIDRegex.prefixRune",
+      "reason": "unmodeled-load"
+    },
+    {
+      "idx": 14,
+      "site": "ParseMetadataUserID: load legacyUserIDRegex.prefixEnd",
+      "reason": "unmodeled-load"
+    },
+    {
+      "idx": 15,
+      "site": "ParseMetadataUserID: load legacyUserIDRegex.mpool",
+      "reason": "unmodeled-load"
+    },
+    {
+      "idx": 16,
+      "site": "ParseMetadataUserID: load legacyUserIDRegex.matchcap",
+      "reason": "unmodeled-load"
+    },
+    {
+      "idx": 17,
+      "site": "ParseMetadataUserID: load legacyUserIDRegex.prefixComplete",
+      "reason": "unmodeled-load"
+    },
+    {
+      "idx": 18,
+      "site": "ParseMetadataUserID: load legacyUserIDRegex.cond",
+      "reason": "unmodeled-load"
+    },
+    {
+      "idx": 19,
+      "site": "ParseMetadataUserID: load legacyUserIDRegex.minInputLen",
+      "reason": "unmodeled-load"
+    },
+    {
+      "idx": 20,
+      "site": "ParseMetadataUserID: load legacyUserIDRegex.longest",
+      "reason": "unmodeled-load"
+    },
+    {
+      "idx": 21,
+      "site": "ParseMetadataUserID: call (*regexp.Regexp).FindStringSubmatch (assumed)",
+      "reason": "assumed"
+    },
+    {
+      "idx": 22,
+      "site": "ParseMetadataUserID: call (*regexp.Regexp).FindStringSubmatch (length)",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 23,
+      "site": "BuildMetadataUserID$1: nil comparison",
+      "reason": "opaque-op"
+    }
+  ],
+  "dependency": true
+}

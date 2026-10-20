@@ -1,9 +1,10 @@
 #!/usr/bin/env python3
 """Function-level model coverage of a go2lean workspace, as Markdown.
 
-usage: scripts/coverage.py <workspace> <go2lean commit>
+usage: scripts/coverage.py <workspace or model/reports> <go2lean commit>
 
-Reads the model reports (models/gossa/*/report.json) of the tingly-box
+Reads the model reports (a workspace's models/gossa/*/report.json, or the
+copies in model/reports/*.json) of the tingly-box
 packages and prints, per package, how many functions go2lean translated
 into Lean IR, then every function with its status:
 
@@ -14,8 +15,8 @@ into Lean IR, then every function with its status:
   rejected  not translated (the reason is listed); callers treat a call to
             it as havoc
 
-Functions declared in _test.go files (specs, helpers) and closures (counted
-with the function that holds them) are left out.
+Functions declared in _test.go files (specs, test helpers) and closures
+(counted with the function that holds them) are left out.
 """
 import glob
 import json
@@ -27,16 +28,19 @@ PREFIX = "github.com/tingly-dev/tingly-box/"
 
 ws, rev = sys.argv[1], sys.argv[2]
 pkgs = {}
-for f in sorted(glob.glob(os.path.join(ws, "models/gossa/*/report.json"))):
+files = glob.glob(os.path.join(ws, "models/gossa/*/report.json")) or glob.glob(os.path.join(ws, "*.json"))
+for f in sorted(files):
     r = json.load(open(f))
     if not r["package"].startswith(PREFIX):
         continue
     rows = []
     for fn in r["funcs"]:
+        issues = fn.get("issues") or []
         if fn.get("test_file") or fn.get("closure") or "$" in fn["name"]:
             continue
+        if any(i.startswith("test helper:") for i in issues):
+            continue  # a helper of a _test.go file (takes *testing.T)
         note = ""
-        issues = fn.get("issues") or []
         if fn["status"] == "rejected":
             note = issues[0] if issues else ""
         elif fn["status"] == "partial":

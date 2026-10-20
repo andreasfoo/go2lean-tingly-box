@@ -1,0 +1,2247 @@
+{
+  "package": "github.com/tingly-dev/tingly-box/internal/protocol/sse",
+  "frontend": "gossa",
+  "lean_module": "Go2Lean.Generated.gossa.github_com_tingly_dev_tingly_box_internal_protocol_sse",
+  "lean_file": "lean/Go2Lean/Generated/gossa/github_com_tingly_dev_tingly_box_internal_protocol_sse.lean",
+  "funcs": [
+    {
+      "name": "AssembleAnthropicStream",
+      "go_sig": "func(events []string) *github.com/tingly-dev/tingly-box/internal/protocol/sse.ParsedResult",
+      "id": 0,
+      "status": "partial",
+      "issues": [
+        "lookup in map t22 the model knows nothing about is havoc",
+        "== on interface{}: t25 is havoc (opaque-op)",
+        "lookup in map t26 the model knows nothing about is havoc",
+        "type assertion t28 on an interface value the model did not build is havoc",
+        "nil comparison t31 on a value of unknown nil-ness is havoc",
+        "lookup in map t32 the model knows nothing about is havoc",
+        "type assertion t34 on an interface value the model did not build is havoc",
+        "nil comparison t37 on a value of unknown nil-ness is havoc",
+        "== on interface{}: t39 is havoc (opaque-op)",
+        "lookup in map t29 the model knows nothing about is havoc",
+        "type assertion t41 on an interface value the model did not build is havoc",
+        "lookup in map t29 the model knows nothing about is havoc",
+        "lookup in map t47 the model knows nothing about is havoc",
+        "type assertion t49 on an interface value the model did not build is havoc",
+        "nil comparison t52 on a value of unknown nil-ness is havoc",
+        "== on interface{}: t54 is havoc (opaque-op)",
+        "lookup in map t35 the model knows nothing about is havoc",
+        "type assertion t56 on an interface value the model did not build is havoc",
+        "lookup in map t35 the model knows nothing about is havoc",
+        "type assertion t60 on an interface value the model did not build is havoc",
+        "lookup in map t35 the model knows nothing about is havoc",
+        "== on interface{}: t76 is havoc (opaque-op)",
+        "lookup in map t77 the model knows nothing about is havoc",
+        "type assertion t79 on an interface value the model did not build is havoc",
+        "nil comparison t82 on a value of unknown nil-ness is havoc",
+        "== on interface{}: t84 is havoc (opaque-op)",
+        "lookup in map t50 the model knows nothing about is havoc",
+        "== on interface{}: t87 is havoc (opaque-op)",
+        "lookup in map t50 the model knows nothing about is havoc",
+        "type assertion t89 on an interface value the model did not build is havoc",
+        "lookup in map t50 the model knows nothing about is havoc",
+        "type assertion t93 on an interface value the model did not build is havoc",
+        "== on interface{}: t97 is havoc (opaque-op)",
+        "lookup in map t50 the model knows nothing about is havoc",
+        "type assertion t100 on an interface value the model did not build is havoc",
+        "== on interface{}: t104 is havoc (opaque-op)",
+        "lookup in map t80 the model knows nothing about is havoc",
+        "type assertion t122 on an interface value the model did not build is havoc",
+        "lookup in map t126 the model knows nothing about is havoc"
+      ],
+      "consts": [
+        "18446744073709551615",
+        "1",
+        "0"
+      ],
+      "str_consts": [
+        "assistant",
+        "type",
+        "message_start",
+        "message",
+        "content_block",
+        "content_block_start",
+        "model",
+        "usage",
+        "delta",
+        "content_block_delta",
+        "id",
+        "name",
+        "tool_use",
+        "message_delta",
+        "text_delta",
+        "text",
+        "thinking",
+        "thinking_delta",
+        "partial_json",
+        "input_json_delta",
+        "stop_reason"
+      ],
+      "map_keys": [
+        "type",
+        "message",
+        "content_block",
+        "model",
+        "usage",
+        "delta",
+        "id",
+        "name",
+        "text",
+        "thinking",
+        "partial_json",
+        "stop_reason"
+      ],
+      "uses_json": true,
+      "calls": [
+        9,
+        13
+      ],
+      "exits": [
+        {
+          "block": 3,
+          "line": 374,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_sse/AssembleAnthropicStream.json"
+    },
+    {
+      "name": "AssembleGoogleStream",
+      "go_sig": "func(events []string) *github.com/tingly-dev/tingly-box/internal/protocol/sse.ParsedResult",
+      "id": 1,
+      "status": "partial",
+      "issues": [
+        "lookup in map t19 the model knows nothing about is havoc",
+        "type assertion t21 on an interface value the model did not build is havoc",
+        "AssembleGoogleStream: type assertion #0: assumed a slice of 0..3 zero values of interface{} (not modelled)",
+        "type assertion t28 on an interface value the model did not build is havoc",
+        "lookup in map t29 the model knows nothing about is havoc",
+        "type assertion t32 on an interface value the model did not build is havoc",
+        "nil comparison t35 on a value of unknown nil-ness is havoc",
+        "lookup in map t33 the model knows nothing about is havoc",
+        "type assertion t37 on an interface value the model did not build is havoc",
+        "AssembleGoogleStream: type assertion #0: assumed a slice of 0..3 zero values of interface{} (not modelled)",
+        "type assertion t46 on an interface value the model did not build is havoc",
+        "lookup in map t47 the model knows nothing about is havoc",
+        "type assertion t50 on an interface value the model did not build is havoc"
+      ],
+      "consts": [
+        "18446744073709551615",
+        "1",
+        "0"
+      ],
+      "str_consts": [
+        "assistant",
+        "candidates",
+        "content",
+        "parts",
+        "text"
+      ],
+      "map_keys": [
+        "candidates",
+        "content",
+        "parts",
+        "text"
+      ],
+      "uses_json": true,
+      "calls": [
+        9
+      ],
+      "exits": [
+        {
+          "block": 3,
+          "line": 426,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_sse/AssembleGoogleStream.json"
+    },
+    {
+      "name": "AssembleOpenAIChatStream",
+      "go_sig": "func(events []string) *github.com/tingly-dev/tingly-box/internal/protocol/sse.ParsedResult",
+      "id": 2,
+      "status": "partial",
+      "issues": [
+        "lookup in map t20 the model knows nothing about is havoc",
+        "type assertion t22 on an interface value the model did not build is havoc",
+        "lookup in map t26 the model knows nothing about is havoc",
+        "type assertion t28 on an interface value the model did not build is havoc",
+        "AssembleOpenAIChatStream: type assertion #0: assumed a slice of 0..3 zero values of interface{} (not modelled)",
+        "type assertion t38 on an interface value the model did not build is havoc",
+        "lookup in map t39 the model knows nothing about is havoc",
+        "type assertion t42 on an interface value the model did not build is havoc",
+        "lookup in map t39 the model knows nothing about is havoc",
+        "type assertion t47 on an interface value the model did not build is havoc",
+        "nil comparison t50 on a value of unknown nil-ness is havoc",
+        "lookup in map t48 the model knows nothing about is havoc",
+        "type assertion t53 on an interface value the model did not build is havoc",
+        "lookup in map t48 the model knows nothing about is havoc",
+        "type assertion t58 on an interface value the model did not build is havoc",
+        "AssembleOpenAIChatStream: type assertion #0: assumed a slice of 0..3 zero values of interface{} (not modelled)",
+        "type assertion t67 on an interface value the model did not build is havoc",
+        "lookup in map t68 the model knows nothing about is havoc",
+        "type assertion t71 on an interface value the model did not build is havoc",
+        "lookup in map t68 the model knows nothing about is havoc",
+        "type assertion t75 on an interface value the model did not build is havoc",
+        "lookup in map t72 the model knows nothing about is havoc",
+        "type assertion t79 on an interface value the model did not build is havoc",
+        "lookup in map t72 the model knows nothing about is havoc",
+        "type assertion t83 on an interface value the model did not build is havoc",
+        "lookup in map t68 the model knows nothing about is havoc"
+      ],
+      "consts": [
+        "18446744073709551615",
+        "1",
+        "0"
+      ],
+      "str_consts": [
+        "assistant",
+        "[DONE]",
+        "model",
+        "choices",
+        "",
+        "finish_reason",
+        "delta",
+        "content",
+        "tool_calls",
+        "function",
+        "id",
+        "name",
+        "arguments",
+        "index"
+      ],
+      "map_keys": [
+        "model",
+        "choices",
+        "finish_reason",
+        "delta",
+        "content",
+        "tool_calls",
+        "function",
+        "id",
+        "name",
+        "arguments",
+        "index"
+      ],
+      "uses_json": true,
+      "cmp_strs": [
+        "[DONE]",
+        ""
+      ],
+      "calls": [
+        9,
+        14
+      ],
+      "exits": [
+        {
+          "block": 3,
+          "line": 265,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_sse/AssembleOpenAIChatStream.json"
+    },
+    {
+      "name": "AssembleOpenAIResponsesStream",
+      "go_sig": "func(events []string) *github.com/tingly-dev/tingly-box/internal/protocol/sse.ParsedResult",
+      "id": 3,
+      "status": "partial",
+      "issues": [
+        "lookup in map t20 the model knows nothing about is havoc",
+        "type assertion t22 on an interface value the model did not build is havoc",
+        "lookup in map t26 the model knows nothing about is havoc",
+        "type assertion t28 on an interface value the model did not build is havoc",
+        "lookup in map t31 the model knows nothing about is havoc",
+        "type assertion t33 on an interface value the model did not build is havoc",
+        "lookup in map t38 the model knows nothing about is havoc",
+        "type assertion t40 on an interface value the model did not build is havoc",
+        "nil comparison t43 on a value of unknown nil-ness is havoc",
+        "lookup in map t60 the model knows nothing about is havoc",
+        "type assertion t62 on an interface value the model did not build is havoc",
+        "nil comparison t65 on a value of unknown nil-ness is havoc",
+        "lookup in map t41 the model knows nothing about is havoc",
+        "type assertion t68 on an interface value the model did not build is havoc",
+        "lookup in map t41 the model knows nothing about is havoc",
+        "type assertion t72 on an interface value the model did not build is havoc",
+        "lookup in map t41 the model knows nothing about is havoc",
+        "== on interface{}: t88 is havoc (opaque-op)",
+        "lookup in map t63 the model knows nothing about is havoc",
+        "type assertion t91 on an interface value the model did not build is havoc",
+        "lookup in map t63 the model knows nothing about is havoc",
+        "type assertion t96 on an interface value the model did not build is havoc",
+        "lookup in map t97 the model knows nothing about is havoc",
+        "lookup in map t97 the model knows nothing about is havoc"
+      ],
+      "consts": [
+        "18446744073709551615",
+        "1",
+        "0"
+      ],
+      "str_consts": [
+        "assistant",
+        "[DONE]",
+        "type",
+        "response.output_text.delta",
+        "delta",
+        "response.function_call_arguments.delta",
+        "item",
+        "response.output_item.added",
+        "response",
+        "response.completed",
+        "id",
+        "name",
+        "function_call",
+        "response.incomplete",
+        "status",
+        "usage",
+        "input_tokens",
+        "output_tokens"
+      ],
+      "map_keys": [
+        "type",
+        "delta",
+        "item",
+        "response",
+        "id",
+        "name",
+        "status",
+        "usage",
+        "input_tokens",
+        "output_tokens"
+      ],
+      "uses_json": true,
+      "cmp_strs": [
+        "[DONE]",
+        "response.output_text.delta",
+        "response.function_call_arguments.delta",
+        "response.output_item.added",
+        "response.completed",
+        "response.incomplete"
+      ],
+      "calls": [
+        9,
+        14
+      ],
+      "exits": [
+        {
+          "block": 3,
+          "line": 314,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_sse/AssembleOpenAIResponsesStream.json"
+    },
+    {
+      "name": "AssembleOpenAIStream",
+      "go_sig": "func(events []string) *github.com/tingly-dev/tingly-box/internal/protocol/sse.ParsedResult",
+      "id": 4,
+      "status": "complete",
+      "consts": [
+        "18446744073709551615",
+        "1"
+      ],
+      "str_consts": [
+        "response.output_text.delta",
+        "[DONE]",
+        "\"object\":\"response\""
+      ],
+      "cmp_strs": [
+        "[DONE]"
+      ],
+      "calls": [
+        9,
+        2,
+        3
+      ],
+      "exits": [
+        {
+          "block": 10,
+          "line": 443,
+          "last": true
+        },
+        {
+          "block": 12,
+          "line": 436
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_sse/AssembleOpenAIStream.json"
+    },
+    {
+      "name": "ParseAnthropicResult",
+      "go_sig": "func(m map[string]interface{}) *github.com/tingly-dev/tingly-box/internal/protocol/sse.ParsedResult",
+      "id": 5,
+      "status": "partial",
+      "issues": [
+        "lookup in map m the model knows nothing about is havoc",
+        "type assertion t2 on an interface value the model did not build is havoc",
+        "lookup in map m the model knows nothing about is havoc",
+        "type assertion t7 on an interface value the model did not build is havoc",
+        "lookup in map m the model knows nothing about is havoc",
+        "type assertion t12 on an interface value the model did not build is havoc",
+        "lookup in map m the model knows nothing about is havoc",
+        "type assertion t17 on an interface value the model did not build is havoc",
+        "ParseAnthropicResult: type assertion #0: assumed a slice of 0..3 zero values of interface{} (not modelled)",
+        "type assertion t26 on an interface value the model did not build is havoc",
+        "nil comparison t29 on a value of unknown nil-ness is havoc",
+        "lookup in map m the model knows nothing about is havoc",
+        "type assertion t31 on an interface value the model did not build is havoc",
+        "lookup in map t27 the model knows nothing about is havoc",
+        "== on interface{}: t36 is havoc (opaque-op)",
+        "lookup in map t27 the model knows nothing about is havoc",
+        "type assertion t38 on an interface value the model did not build is havoc",
+        "lookup in map t27 the model knows nothing about is havoc",
+        "type assertion t43 on an interface value the model did not build is havoc",
+        "== on interface{}: t48 is havoc (opaque-op)",
+        "lookup in map t27 the model knows nothing about is havoc",
+        "type assertion t50 on an interface value the model did not build is havoc",
+        "lookup in map t27 the model knows nothing about is havoc",
+        "type assertion t54 on an interface value the model did not build is havoc",
+        "lookup in map t27 the model knows nothing about is havoc",
+        "type assertion t58 on an interface value the model did not build is havoc",
+        "== on interface{}: t62 is havoc (opaque-op)",
+        "type assertion t81 on an interface value the model did not build is havoc",
+        "lookup in map t32 the model knows nothing about is havoc",
+        "lookup in map t32 the model knows nothing about is havoc"
+      ],
+      "consts": [
+        "18446744073709551615",
+        "1",
+        "0"
+      ],
+      "str_consts": [
+        "model",
+        "role",
+        "stop_reason",
+        "content",
+        "usage",
+        "type",
+        "text",
+        "thinking",
+        "id",
+        "name",
+        "input",
+        "tool_use",
+        "",
+        "input_tokens",
+        "output_tokens"
+      ],
+      "map_keys": [
+        "model",
+        "role",
+        "stop_reason",
+        "content",
+        "usage",
+        "type",
+        "text",
+        "thinking",
+        "id",
+        "name",
+        "input",
+        "input_tokens",
+        "output_tokens"
+      ],
+      "uses_json": true,
+      "calls": [
+        14
+      ],
+      "exits": [
+        {
+          "block": 17,
+          "line": 168,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_sse/ParseAnthropicResult.json"
+    },
+    {
+      "name": "ParseGoogleResult",
+      "go_sig": "func(m map[string]interface{}) *github.com/tingly-dev/tingly-box/internal/protocol/sse.ParsedResult",
+      "id": 6,
+      "status": "partial",
+      "issues": [
+        "lookup in map m the model knows nothing about is havoc",
+        "type assertion t2 on an interface value the model did not build is havoc",
+        "ParseGoogleResult: type assertion #0: assumed a slice of 0..3 zero values of interface{} (not modelled)",
+        "type assertion t9 on an interface value the model did not build is havoc",
+        "lookup in map t10 the model knows nothing about is havoc",
+        "type assertion t13 on an interface value the model did not build is havoc",
+        "lookup in map t10 the model knows nothing about is havoc",
+        "type assertion t18 on an interface value the model did not build is havoc",
+        "nil comparison t21 on a value of unknown nil-ness is havoc",
+        "lookup in map t19 the model knows nothing about is havoc",
+        "type assertion t24 on an interface value the model did not build is havoc",
+        "ParseGoogleResult: type assertion #0: assumed a slice of 0..3 zero values of interface{} (not modelled)",
+        "type assertion t33 on an interface value the model did not build is havoc",
+        "nil comparison t36 on a value of unknown nil-ness is havoc",
+        "lookup in map m the model knows nothing about is havoc",
+        "type assertion t38 on an interface value the model did not build is havoc",
+        "lookup in map t34 the model knows nothing about is havoc",
+        "type assertion t42 on an interface value the model did not build is havoc",
+        "lookup in map t34 the model knows nothing about is havoc",
+        "type assertion t47 on an interface value the model did not build is havoc",
+        "lookup in map t48 the model knows nothing about is havoc",
+        "type assertion t51 on an interface value the model did not build is havoc",
+        "lookup in map t48 the model knows nothing about is havoc",
+        "type assertion t55 on an interface value the model did not build is havoc",
+        "lookup in map t39 the model knows nothing about is havoc",
+        "lookup in map t39 the model knows nothing about is havoc"
+      ],
+      "consts": [
+        "0",
+        "18446744073709551615",
+        "1"
+      ],
+      "str_consts": [
+        "candidates",
+        "finishReason",
+        "content",
+        "assistant",
+        "parts",
+        "usageMetadata",
+        "text",
+        "functionCall",
+        "name",
+        "args",
+        "promptTokenCount",
+        "candidatesTokenCount"
+      ],
+      "map_keys": [
+        "candidates",
+        "finishReason",
+        "content",
+        "parts",
+        "usageMetadata",
+        "text",
+        "functionCall",
+        "name",
+        "args",
+        "promptTokenCount",
+        "candidatesTokenCount"
+      ],
+      "uses_json": true,
+      "calls": [
+        14
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 176
+        },
+        {
+          "block": 3,
+          "line": 182
+        },
+        {
+          "block": 13,
+          "line": 207,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_sse/ParseGoogleResult.json"
+    },
+    {
+      "name": "ParseOpenAIChatResult",
+      "go_sig": "func(m map[string]interface{}) *github.com/tingly-dev/tingly-box/internal/protocol/sse.ParsedResult",
+      "id": 7,
+      "status": "partial",
+      "issues": [
+        "lookup in map m the model knows nothing about is havoc",
+        "type assertion t2 on an interface value the model did not build is havoc",
+        "lookup in map m the model knows nothing about is havoc",
+        "type assertion t7 on an interface value the model did not build is havoc",
+        "ParseOpenAIChatResult: type assertion #0: assumed a slice of 0..3 zero values of interface{} (not modelled)",
+        "type assertion t14 on an interface value the model did not build is havoc",
+        "lookup in map t15 the model knows nothing about is havoc",
+        "type assertion t18 on an interface value the model did not build is havoc",
+        "lookup in map t15 the model knows nothing about is havoc",
+        "type assertion t23 on an interface value the model did not build is havoc",
+        "nil comparison t26 on a value of unknown nil-ness is havoc",
+        "lookup in map t24 the model knows nothing about is havoc",
+        "type assertion t28 on an interface value the model did not build is havoc",
+        "lookup in map t24 the model knows nothing about is havoc",
+        "type assertion t33 on an interface value the model did not build is havoc",
+        "lookup in map t24 the model knows nothing about is havoc",
+        "type assertion t38 on an interface value the model did not build is havoc",
+        "ParseOpenAIChatResult: type assertion #0: assumed a slice of 0..3 zero values of interface{} (not modelled)",
+        "lookup in map m the model knows nothing about is havoc",
+        "type assertion t42 on an interface value the model did not build is havoc",
+        "type assertion t51 on an interface value the model did not build is havoc",
+        "nil comparison t54 on a value of unknown nil-ness is havoc",
+        "lookup in map t52 the model knows nothing about is havoc",
+        "type assertion t56 on an interface value the model did not build is havoc",
+        "lookup in map t52 the model knows nothing about is havoc",
+        "type assertion t60 on an interface value the model did not build is havoc",
+        "lookup in map t61 the model knows nothing about is havoc",
+        "type assertion t64 on an interface value the model did not build is havoc",
+        "lookup in map t61 the model knows nothing about is havoc",
+        "type assertion t68 on an interface value the model did not build is havoc",
+        "lookup in map t43 the model knows nothing about is havoc",
+        "lookup in map t43 the model knows nothing about is havoc"
+      ],
+      "consts": [
+        "0",
+        "18446744073709551615",
+        "1"
+      ],
+      "str_consts": [
+        "model",
+        "choices",
+        "finish_reason",
+        "message",
+        "role",
+        "content",
+        "tool_calls",
+        "usage",
+        "id",
+        "function",
+        "name",
+        "arguments",
+        "prompt_tokens",
+        "completion_tokens"
+      ],
+      "map_keys": [
+        "model",
+        "choices",
+        "finish_reason",
+        "message",
+        "role",
+        "content",
+        "tool_calls",
+        "usage",
+        "id",
+        "function",
+        "name",
+        "arguments",
+        "prompt_tokens",
+        "completion_tokens"
+      ],
+      "calls": [
+        14
+      ],
+      "exits": [
+        {
+          "block": 3,
+          "line": 45
+        },
+        {
+          "block": 14,
+          "line": 75,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_sse/ParseOpenAIChatResult.json"
+    },
+    {
+      "name": "ParseOpenAIResponsesResult",
+      "go_sig": "func(m map[string]interface{}) *github.com/tingly-dev/tingly-box/internal/protocol/sse.ParsedResult",
+      "id": 8,
+      "status": "partial",
+      "issues": [
+        "lookup in map m the model knows nothing about is havoc",
+        "type assertion t3 on an interface value the model did not build is havoc",
+        "lookup in map m the model knows nothing about is havoc",
+        "type assertion t8 on an interface value the model did not build is havoc",
+        "lookup in map m the model knows nothing about is havoc",
+        "type assertion t13 on an interface value the model did not build is havoc",
+        "ParseOpenAIResponsesResult: type assertion #0: assumed a slice of 0..3 zero values of interface{} (not modelled)",
+        "type assertion t22 on an interface value the model did not build is havoc",
+        "nil comparison t25 on a value of unknown nil-ness is havoc",
+        "lookup in map m the model knows nothing about is havoc",
+        "type assertion t27 on an interface value the model did not build is havoc",
+        "lookup in map t23 the model knows nothing about is havoc",
+        "== on interface{}: t32 is havoc (opaque-op)",
+        "lookup in map t23 the model knows nothing about is havoc",
+        "type assertion t34 on an interface value the model did not build is havoc",
+        "lookup in map t23 the model knows nothing about is havoc",
+        "type assertion t39 on an interface value the model did not build is havoc",
+        "ParseOpenAIResponsesResult: type assertion #0: assumed a slice of 0..3 zero values of interface{} (not modelled)",
+        "lookup in map t23 the model knows nothing about is havoc",
+        "type assertion t45 on an interface value the model did not build is havoc",
+        "== on interface{}: t50 is havoc (opaque-op)",
+        "type assertion t56 on an interface value the model did not build is havoc",
+        "nil comparison t59 on a value of unknown nil-ness is havoc",
+        "lookup in map t57 the model knows nothing about is havoc",
+        "type assertion t61 on an interface value the model did not build is havoc",
+        "lookup in map t57 the model knows nothing about is havoc",
+        "== on interface{}: t67 is havoc (opaque-op)",
+        "lookup in map t23 the model knows nothing about is havoc",
+        "type assertion t69 on an interface value the model did not build is havoc",
+        "lookup in map t23 the model knows nothing about is havoc",
+        "type assertion t73 on an interface value the model did not build is havoc",
+        "== on interface{}: t78 is havoc (opaque-op)",
+        "== on interface{}: t80 is havoc (opaque-op)",
+        "== on interface{}: t82 is havoc (opaque-op)",
+        "lookup in map t23 the model knows nothing about is havoc",
+        "type assertion t85 on an interface value the model did not build is havoc",
+        "lookup in map t23 the model knows nothing about is havoc",
+        "type assertion t89 on an interface value the model did not build is havoc",
+        "lookup in map t28 the model knows nothing about is havoc",
+        "lookup in map t28 the model knows nothing about is havoc"
+      ],
+      "consts": [
+        "18446744073709551615",
+        "1",
+        "0"
+      ],
+      "str_consts": [
+        "assistant",
+        "model",
+        "status",
+        "output",
+        "usage",
+        "type",
+        "message",
+        "role",
+        "content",
+        "text",
+        "output_text",
+        "id",
+        "call_id",
+        "",
+        "function_call",
+        "custom_tool_call",
+        "mcp_call",
+        "name",
+        "arguments",
+        "input_tokens",
+        "output_tokens"
+      ],
+      "map_keys": [
+        "model",
+        "status",
+        "output",
+        "usage",
+        "type",
+        "role",
+        "content",
+        "text",
+        "id",
+        "call_id",
+        "name",
+        "arguments",
+        "input_tokens",
+        "output_tokens"
+      ],
+      "cmp_strs": [
+        ""
+      ],
+      "calls": [
+        14
+      ],
+      "exits": [
+        {
+          "block": 23,
+          "line": 126,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_sse/ParseOpenAIResponsesResult.json"
+    },
+    {
+      "name": "ParseSSEDataPayload",
+      "go_sig": "func(line string) (payload string, ok bool)",
+      "id": 9,
+      "status": "complete",
+      "str_consts": [
+        "data: ",
+        "data:",
+        ""
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 16
+        },
+        {
+          "block": 3,
+          "line": 19
+        },
+        {
+          "block": 4,
+          "line": 21,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_sse/ParseSSEDataPayload.json"
+    },
+    {
+      "name": "ReadSSELines",
+      "go_sig": "func(r io.Reader) (lines []string, raw []byte)",
+      "id": 10,
+      "status": "partial",
+      "issues": [
+        "ReadSSELines: call bufio.NewScanner: assumed a pointer to a fresh bufio.Scanner with havoc fields (not modelled)",
+        "call bufio.NewScanner: t0 is havoc (unmodeled-call)",
+        "call (*bufio.Scanner).Text: t2 is havoc (unmodeled-call)",
+        "call (*bufio.Scanner).Scan: t7 is havoc (unmodeled-call)"
+      ],
+      "consts": [
+        "0"
+      ],
+      "str_consts": [
+        "",
+        "\n"
+      ],
+      "cmp_strs": [
+        ""
+      ],
+      "exits": [
+        {
+          "block": 2,
+          "line": 38,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_sse/ReadSSELines.json"
+    },
+    {
+      "name": "SpecParseSSEDataPayloadPrefix",
+      "go_sig": "func(line string, ret0 string, ret1 bool) bool",
+      "id": 11,
+      "status": "complete",
+      "spec_for": "ParseSSEDataPayload",
+      "test_file": true,
+      "consts": [
+        "5"
+      ],
+      "str_consts": [
+        "data:",
+        "",
+        "data: "
+      ],
+      "cmp_strs": [
+        "data:",
+        ""
+      ],
+      "exits": [
+        {
+          "block": 3,
+          "line": 12
+        },
+        {
+          "block": 5,
+          "line": 15
+        },
+        {
+          "block": 8,
+          "line": 17,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_sse/SpecParseSSEDataPayloadPrefix.json"
+    },
+    {
+      "name": "WriteSSEResponse",
+      "go_sig": "func(w net/http.ResponseWriter, events []string)",
+      "id": 12,
+      "status": "partial",
+      "issues": [
+        "call w: t0 is havoc (unmodeled-call)",
+        "call to (net/http.Header).Set ignored (no result, effects not modelled)",
+        "call w: t2 is havoc (unmodeled-call)",
+        "call to (net/http.Header).Set ignored (no result, effects not modelled)",
+        "call w: t4 is havoc (unmodeled-call)",
+        "call to (net/http.Header).Set ignored (no result, effects not modelled)",
+        "type assertion t6 on an interface value the model did not build is havoc",
+        "call to net/http.Error ignored (no result, effects not modelled)",
+        "call fmt.Fprintf: t21 is havoc (unmodeled-call)",
+        "call to time.Sleep ignored (no result, effects not modelled)",
+        "call fmt.Fprintf: t33 is havoc (unmodeled-call)",
+        "call fmt.Fprintf: t43 is havoc (unmodeled-call)",
+        "call fmt.Fprintf: t46 is havoc (unmodeled-call)"
+      ],
+      "consts": [
+        "0",
+        "1"
+      ],
+      "str_consts": [
+        "event:",
+        "event: ",
+        "data:",
+        "data: "
+      ],
+      "xcalls": [
+        {
+          "package": "github.com/tingly-dev/tingly-box/internal/protocol/stream",
+          "id": 277
+        }
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 53,
+          "last": true
+        },
+        {
+          "block": 4,
+          "line": 0
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_sse/WriteSSEResponse.json"
+    },
+    {
+      "name": "mergeAnthropicUsage",
+      "go_sig": "func(r *github.com/tingly-dev/tingly-box/internal/protocol/sse.ParsedResult, v interface{})",
+      "id": 13,
+      "status": "partial",
+      "issues": [
+        "type assertion t0 on an interface value the model did not build is havoc",
+        "nil comparison t3 on a value of unknown nil-ness is havoc",
+        "lookup in map t1 the model knows nothing about is havoc",
+        "type assertion t10 on an interface value the model did not build is havoc",
+        "mergeAnthropicUsage: type assertion #0: assumed the zero value of float64 (not modelled)",
+        "conversion float64 -\u003e int: t15 is havoc (opaque-op)",
+        "lookup in map t1 the model knows nothing about is havoc",
+        "type assertion t18 on an interface value the model did not build is havoc",
+        "mergeAnthropicUsage: type assertion #0: assumed the zero value of float64 (not modelled)",
+        "\u003e on float64: t21 is havoc (opaque-op)",
+        "conversion float64 -\u003e int: t24 is havoc (opaque-op)",
+        "\u003e on float64: t26 is havoc (opaque-op)"
+      ],
+      "str_consts": [
+        "input_tokens",
+        "output_tokens"
+      ],
+      "map_keys": [
+        "input_tokens",
+        "output_tokens"
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 382,
+          "last": true
+        },
+        {
+          "block": 9,
+          "line": 0
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_sse/mergeAnthropicUsage.json"
+    },
+    {
+      "name": "parsedToInt",
+      "go_sig": "func(v interface{}) int",
+      "id": 14,
+      "status": "partial",
+      "issues": [
+        "type assertion t0 on an interface value the model did not build is havoc",
+        "parsedToInt: type assertion #0: assumed the zero value of float64 (not modelled)",
+        "conversion float64 -\u003e int: t3 is havoc (opaque-op)",
+        "type assertion t4 on an interface value the model did not build is havoc",
+        "type assertion t7 on an interface value the model did not build is havoc"
+      ],
+      "consts": [
+        "0"
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 452
+        },
+        {
+          "block": 3,
+          "line": 454
+        },
+        {
+          "block": 5,
+          "line": 456
+        },
+        {
+          "block": 6,
+          "line": 458,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_sse/parsedToInt.json"
+    }
+  ],
+  "havoc": [
+    {
+      "idx": 0,
+      "site": "AssembleAnthropicStream: call github.com/tingly-dev/tingly-box/internal/protocol/sse.ParseSSEDataPayload (callee stuck) #0",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 1,
+      "site": "AssembleAnthropicStream: call github.com/tingly-dev/tingly-box/internal/protocol/sse.ParseSSEDataPayload (callee stuck) #1",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 2,
+      "site": "AssembleAnthropicStream: == on interface{}",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 3,
+      "site": "AssembleAnthropicStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 4,
+      "site": "AssembleAnthropicStream: nil comparison",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 5,
+      "site": "AssembleAnthropicStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 6,
+      "site": "AssembleAnthropicStream: nil comparison",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 7,
+      "site": "AssembleAnthropicStream: == on interface{}",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 8,
+      "site": "AssembleAnthropicStream: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 9,
+      "site": "AssembleAnthropicStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 10,
+      "site": "AssembleAnthropicStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 11,
+      "site": "AssembleAnthropicStream: nil comparison",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 12,
+      "site": "AssembleAnthropicStream: == on interface{}",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 13,
+      "site": "AssembleAnthropicStream: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 14,
+      "site": "AssembleAnthropicStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 15,
+      "site": "AssembleAnthropicStream: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 16,
+      "site": "AssembleAnthropicStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 17,
+      "site": "AssembleAnthropicStream: == on interface{}",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 18,
+      "site": "AssembleAnthropicStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 19,
+      "site": "AssembleAnthropicStream: nil comparison",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 20,
+      "site": "AssembleAnthropicStream: == on interface{}",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 21,
+      "site": "AssembleAnthropicStream: == on interface{}",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 22,
+      "site": "AssembleAnthropicStream: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 23,
+      "site": "AssembleAnthropicStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 24,
+      "site": "AssembleAnthropicStream: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 25,
+      "site": "AssembleAnthropicStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 26,
+      "site": "AssembleAnthropicStream: == on interface{}",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 27,
+      "site": "AssembleAnthropicStream: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 28,
+      "site": "AssembleAnthropicStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 29,
+      "site": "AssembleAnthropicStream: == on interface{}",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 30,
+      "site": "AssembleAnthropicStream: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 31,
+      "site": "AssembleAnthropicStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 32,
+      "site": "AssembleGoogleStream: call github.com/tingly-dev/tingly-box/internal/protocol/sse.ParseSSEDataPayload (callee stuck) #0",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 33,
+      "site": "AssembleGoogleStream: call github.com/tingly-dev/tingly-box/internal/protocol/sse.ParseSSEDataPayload (callee stuck) #1",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 34,
+      "site": "AssembleGoogleStream: type assertion #0 (assumed)",
+      "reason": "assumed"
+    },
+    {
+      "idx": 35,
+      "site": "AssembleGoogleStream: type assertion #0 (length)",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 36,
+      "site": "AssembleGoogleStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 37,
+      "site": "AssembleGoogleStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 38,
+      "site": "AssembleGoogleStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 39,
+      "site": "AssembleGoogleStream: nil comparison",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 40,
+      "site": "AssembleGoogleStream: type assertion #0 (assumed)",
+      "reason": "assumed"
+    },
+    {
+      "idx": 41,
+      "site": "AssembleGoogleStream: type assertion #0 (length)",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 42,
+      "site": "AssembleGoogleStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 43,
+      "site": "AssembleGoogleStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 44,
+      "site": "AssembleGoogleStream: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 45,
+      "site": "AssembleGoogleStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 46,
+      "site": "AssembleOpenAIChatStream: call github.com/tingly-dev/tingly-box/internal/protocol/sse.ParseSSEDataPayload (callee stuck) #0",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 47,
+      "site": "AssembleOpenAIChatStream: call github.com/tingly-dev/tingly-box/internal/protocol/sse.ParseSSEDataPayload (callee stuck) #1",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 48,
+      "site": "AssembleOpenAIChatStream: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 49,
+      "site": "AssembleOpenAIChatStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 50,
+      "site": "AssembleOpenAIChatStream: type assertion #0 (assumed)",
+      "reason": "assumed"
+    },
+    {
+      "idx": 51,
+      "site": "AssembleOpenAIChatStream: type assertion #0 (length)",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 52,
+      "site": "AssembleOpenAIChatStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 53,
+      "site": "AssembleOpenAIChatStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 54,
+      "site": "AssembleOpenAIChatStream: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 55,
+      "site": "AssembleOpenAIChatStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 56,
+      "site": "AssembleOpenAIChatStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 57,
+      "site": "AssembleOpenAIChatStream: nil comparison",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 58,
+      "site": "AssembleOpenAIChatStream: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 59,
+      "site": "AssembleOpenAIChatStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 60,
+      "site": "AssembleOpenAIChatStream: type assertion #0 (assumed)",
+      "reason": "assumed"
+    },
+    {
+      "idx": 61,
+      "site": "AssembleOpenAIChatStream: type assertion #0 (length)",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 62,
+      "site": "AssembleOpenAIChatStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 63,
+      "site": "AssembleOpenAIChatStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 64,
+      "site": "AssembleOpenAIChatStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 65,
+      "site": "AssembleOpenAIChatStream: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 66,
+      "site": "AssembleOpenAIChatStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 67,
+      "site": "AssembleOpenAIChatStream: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 68,
+      "site": "AssembleOpenAIChatStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 69,
+      "site": "AssembleOpenAIChatStream: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 70,
+      "site": "AssembleOpenAIChatStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 71,
+      "site": "AssembleOpenAIChatStream: call github.com/tingly-dev/tingly-box/internal/protocol/sse.parsedToInt (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 72,
+      "site": "AssembleOpenAIResponsesStream: call github.com/tingly-dev/tingly-box/internal/protocol/sse.ParseSSEDataPayload (callee stuck) #0",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 73,
+      "site": "AssembleOpenAIResponsesStream: call github.com/tingly-dev/tingly-box/internal/protocol/sse.ParseSSEDataPayload (callee stuck) #1",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 74,
+      "site": "AssembleOpenAIResponsesStream: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 75,
+      "site": "AssembleOpenAIResponsesStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 76,
+      "site": "AssembleOpenAIResponsesStream: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 77,
+      "site": "AssembleOpenAIResponsesStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 78,
+      "site": "AssembleOpenAIResponsesStream: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 79,
+      "site": "AssembleOpenAIResponsesStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 80,
+      "site": "AssembleOpenAIResponsesStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 81,
+      "site": "AssembleOpenAIResponsesStream: nil comparison",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 82,
+      "site": "AssembleOpenAIResponsesStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 83,
+      "site": "AssembleOpenAIResponsesStream: nil comparison",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 84,
+      "site": "AssembleOpenAIResponsesStream: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 85,
+      "site": "AssembleOpenAIResponsesStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 86,
+      "site": "AssembleOpenAIResponsesStream: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 87,
+      "site": "AssembleOpenAIResponsesStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 88,
+      "site": "AssembleOpenAIResponsesStream: == on interface{}",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 89,
+      "site": "AssembleOpenAIResponsesStream: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 90,
+      "site": "AssembleOpenAIResponsesStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 91,
+      "site": "AssembleOpenAIResponsesStream: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 92,
+      "site": "AssembleOpenAIResponsesStream: call github.com/tingly-dev/tingly-box/internal/protocol/sse.parsedToInt (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 93,
+      "site": "AssembleOpenAIResponsesStream: call github.com/tingly-dev/tingly-box/internal/protocol/sse.parsedToInt (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 94,
+      "site": "AssembleOpenAIStream: call github.com/tingly-dev/tingly-box/internal/protocol/sse.ParseSSEDataPayload (callee stuck) #0",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 95,
+      "site": "AssembleOpenAIStream: call github.com/tingly-dev/tingly-box/internal/protocol/sse.ParseSSEDataPayload (callee stuck) #1",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 96,
+      "site": "AssembleOpenAIStream: call github.com/tingly-dev/tingly-box/internal/protocol/sse.AssembleOpenAIChatStream (callee stuck).Role",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 97,
+      "site": "AssembleOpenAIStream: call github.com/tingly-dev/tingly-box/internal/protocol/sse.AssembleOpenAIChatStream (callee stuck).Content",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 98,
+      "site": "AssembleOpenAIStream: call github.com/tingly-dev/tingly-box/internal/protocol/sse.AssembleOpenAIChatStream (callee stuck).Model",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 99,
+      "site": "AssembleOpenAIStream: call github.com/tingly-dev/tingly-box/internal/protocol/sse.AssembleOpenAIChatStream (callee stuck).FinishReason",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 100,
+      "site": "AssembleOpenAIStream: call github.com/tingly-dev/tingly-box/internal/protocol/sse.AssembleOpenAIChatStream (callee stuck).ThinkingContent",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 101,
+      "site": "AssembleOpenAIStream: call github.com/tingly-dev/tingly-box/internal/protocol/sse.AssembleOpenAIResponsesStream (callee stuck).Role",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 102,
+      "site": "AssembleOpenAIStream: call github.com/tingly-dev/tingly-box/internal/protocol/sse.AssembleOpenAIResponsesStream (callee stuck).Content",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 103,
+      "site": "AssembleOpenAIStream: call github.com/tingly-dev/tingly-box/internal/protocol/sse.AssembleOpenAIResponsesStream (callee stuck).Model",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 104,
+      "site": "AssembleOpenAIStream: call github.com/tingly-dev/tingly-box/internal/protocol/sse.AssembleOpenAIResponsesStream (callee stuck).FinishReason",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 105,
+      "site": "AssembleOpenAIStream: call github.com/tingly-dev/tingly-box/internal/protocol/sse.AssembleOpenAIResponsesStream (callee stuck).ThinkingContent",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 106,
+      "site": "ParseAnthropicResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 107,
+      "site": "ParseAnthropicResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 108,
+      "site": "ParseAnthropicResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 109,
+      "site": "ParseAnthropicResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 110,
+      "site": "ParseAnthropicResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 111,
+      "site": "ParseAnthropicResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 112,
+      "site": "ParseAnthropicResult: type assertion #0 (assumed)",
+      "reason": "assumed"
+    },
+    {
+      "idx": 113,
+      "site": "ParseAnthropicResult: type assertion #0 (length)",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 114,
+      "site": "ParseAnthropicResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 115,
+      "site": "ParseAnthropicResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 116,
+      "site": "ParseAnthropicResult: nil comparison",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 117,
+      "site": "ParseAnthropicResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 118,
+      "site": "ParseAnthropicResult: == on interface{}",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 119,
+      "site": "ParseAnthropicResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 120,
+      "site": "ParseAnthropicResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 121,
+      "site": "ParseAnthropicResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 122,
+      "site": "ParseAnthropicResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 123,
+      "site": "ParseAnthropicResult: == on interface{}",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 124,
+      "site": "ParseAnthropicResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 125,
+      "site": "ParseAnthropicResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 126,
+      "site": "ParseAnthropicResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 127,
+      "site": "ParseAnthropicResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 128,
+      "site": "ParseAnthropicResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 129,
+      "site": "ParseAnthropicResult: == on interface{}",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 130,
+      "site": "ParseAnthropicResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 131,
+      "site": "ParseAnthropicResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 132,
+      "site": "ParseAnthropicResult: call github.com/tingly-dev/tingly-box/internal/protocol/sse.parsedToInt (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 133,
+      "site": "ParseAnthropicResult: call github.com/tingly-dev/tingly-box/internal/protocol/sse.parsedToInt (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 134,
+      "site": "ParseGoogleResult: type assertion #0 (assumed)",
+      "reason": "assumed"
+    },
+    {
+      "idx": 135,
+      "site": "ParseGoogleResult: type assertion #0 (length)",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 136,
+      "site": "ParseGoogleResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 137,
+      "site": "ParseGoogleResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 138,
+      "site": "ParseGoogleResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 139,
+      "site": "ParseGoogleResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 140,
+      "site": "ParseGoogleResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 141,
+      "site": "ParseGoogleResult: nil comparison",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 142,
+      "site": "ParseGoogleResult: type assertion #0 (assumed)",
+      "reason": "assumed"
+    },
+    {
+      "idx": 143,
+      "site": "ParseGoogleResult: type assertion #0 (length)",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 144,
+      "site": "ParseGoogleResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 145,
+      "site": "ParseGoogleResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 146,
+      "site": "ParseGoogleResult: nil comparison",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 147,
+      "site": "ParseGoogleResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 148,
+      "site": "ParseGoogleResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 149,
+      "site": "ParseGoogleResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 150,
+      "site": "ParseGoogleResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 151,
+      "site": "ParseGoogleResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 152,
+      "site": "ParseGoogleResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 153,
+      "site": "ParseGoogleResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 154,
+      "site": "ParseGoogleResult: call github.com/tingly-dev/tingly-box/internal/protocol/sse.parsedToInt (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 155,
+      "site": "ParseGoogleResult: call github.com/tingly-dev/tingly-box/internal/protocol/sse.parsedToInt (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 156,
+      "site": "ParseOpenAIChatResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 157,
+      "site": "ParseOpenAIChatResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 158,
+      "site": "ParseOpenAIChatResult: type assertion #0 (assumed)",
+      "reason": "assumed"
+    },
+    {
+      "idx": 159,
+      "site": "ParseOpenAIChatResult: type assertion #0 (length)",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 160,
+      "site": "ParseOpenAIChatResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 161,
+      "site": "ParseOpenAIChatResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 162,
+      "site": "ParseOpenAIChatResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 163,
+      "site": "ParseOpenAIChatResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 164,
+      "site": "ParseOpenAIChatResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 165,
+      "site": "ParseOpenAIChatResult: nil comparison",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 166,
+      "site": "ParseOpenAIChatResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 167,
+      "site": "ParseOpenAIChatResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 168,
+      "site": "ParseOpenAIChatResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 169,
+      "site": "ParseOpenAIChatResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 170,
+      "site": "ParseOpenAIChatResult: type assertion #0 (assumed)",
+      "reason": "assumed"
+    },
+    {
+      "idx": 171,
+      "site": "ParseOpenAIChatResult: type assertion #0 (length)",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 172,
+      "site": "ParseOpenAIChatResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 173,
+      "site": "ParseOpenAIChatResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 174,
+      "site": "ParseOpenAIChatResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 175,
+      "site": "ParseOpenAIChatResult: nil comparison",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 176,
+      "site": "ParseOpenAIChatResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 177,
+      "site": "ParseOpenAIChatResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 178,
+      "site": "ParseOpenAIChatResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 179,
+      "site": "ParseOpenAIChatResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 180,
+      "site": "ParseOpenAIChatResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 181,
+      "site": "ParseOpenAIChatResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 182,
+      "site": "ParseOpenAIChatResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 183,
+      "site": "ParseOpenAIChatResult: call github.com/tingly-dev/tingly-box/internal/protocol/sse.parsedToInt (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 184,
+      "site": "ParseOpenAIChatResult: call github.com/tingly-dev/tingly-box/internal/protocol/sse.parsedToInt (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 185,
+      "site": "ParseOpenAIResponsesResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 186,
+      "site": "ParseOpenAIResponsesResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 187,
+      "site": "ParseOpenAIResponsesResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 188,
+      "site": "ParseOpenAIResponsesResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 189,
+      "site": "ParseOpenAIResponsesResult: type assertion #0 (assumed)",
+      "reason": "assumed"
+    },
+    {
+      "idx": 190,
+      "site": "ParseOpenAIResponsesResult: type assertion #0 (length)",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 191,
+      "site": "ParseOpenAIResponsesResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 192,
+      "site": "ParseOpenAIResponsesResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 193,
+      "site": "ParseOpenAIResponsesResult: nil comparison",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 194,
+      "site": "ParseOpenAIResponsesResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 195,
+      "site": "ParseOpenAIResponsesResult: == on interface{}",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 196,
+      "site": "ParseOpenAIResponsesResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 197,
+      "site": "ParseOpenAIResponsesResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 198,
+      "site": "ParseOpenAIResponsesResult: type assertion #0 (assumed)",
+      "reason": "assumed"
+    },
+    {
+      "idx": 199,
+      "site": "ParseOpenAIResponsesResult: type assertion #0 (length)",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 200,
+      "site": "ParseOpenAIResponsesResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 201,
+      "site": "ParseOpenAIResponsesResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 202,
+      "site": "ParseOpenAIResponsesResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 203,
+      "site": "ParseOpenAIResponsesResult: == on interface{}",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 204,
+      "site": "ParseOpenAIResponsesResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 205,
+      "site": "ParseOpenAIResponsesResult: nil comparison",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 206,
+      "site": "ParseOpenAIResponsesResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 207,
+      "site": "ParseOpenAIResponsesResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 208,
+      "site": "ParseOpenAIResponsesResult: == on interface{}",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 209,
+      "site": "ParseOpenAIResponsesResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 210,
+      "site": "ParseOpenAIResponsesResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 211,
+      "site": "ParseOpenAIResponsesResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 212,
+      "site": "ParseOpenAIResponsesResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 213,
+      "site": "ParseOpenAIResponsesResult: == on interface{}",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 214,
+      "site": "ParseOpenAIResponsesResult: == on interface{}",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 215,
+      "site": "ParseOpenAIResponsesResult: == on interface{}",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 216,
+      "site": "ParseOpenAIResponsesResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 217,
+      "site": "ParseOpenAIResponsesResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 218,
+      "site": "ParseOpenAIResponsesResult: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 219,
+      "site": "ParseOpenAIResponsesResult: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 220,
+      "site": "ParseOpenAIResponsesResult: call github.com/tingly-dev/tingly-box/internal/protocol/sse.parsedToInt (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 221,
+      "site": "ParseOpenAIResponsesResult: call github.com/tingly-dev/tingly-box/internal/protocol/sse.parsedToInt (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 222,
+      "site": "ReadSSELines: call bufio.NewScanner.maxTokenSize",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 223,
+      "site": "ReadSSELines: call bufio.NewScanner.start",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 224,
+      "site": "ReadSSELines: call bufio.NewScanner.end",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 225,
+      "site": "ReadSSELines: call bufio.NewScanner.err",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 226,
+      "site": "ReadSSELines: call bufio.NewScanner.empties",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 227,
+      "site": "ReadSSELines: call bufio.NewScanner.scanCalled",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 228,
+      "site": "ReadSSELines: call bufio.NewScanner.done",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 229,
+      "site": "ReadSSELines: call (*bufio.Scanner).Text",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 230,
+      "site": "ReadSSELines: call (*bufio.Scanner).Scan",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 231,
+      "site": "WriteSSEResponse: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 232,
+      "site": "WriteSSEResponse: call fmt.Fprintf #0",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 233,
+      "site": "WriteSSEResponse: call fmt.Fprintf #1",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 234,
+      "site": "WriteSSEResponse: call fmt.Fprintf #0",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 235,
+      "site": "WriteSSEResponse: call fmt.Fprintf #1",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 236,
+      "site": "WriteSSEResponse: call fmt.Fprintf #0",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 237,
+      "site": "WriteSSEResponse: call fmt.Fprintf #1",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 238,
+      "site": "WriteSSEResponse: call fmt.Fprintf #0",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 239,
+      "site": "WriteSSEResponse: call fmt.Fprintf #1",
+      "reason": "unmodeled-call"
+    },
+    {
+      "idx": 240,
+      "site": "mergeAnthropicUsage: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 241,
+      "site": "mergeAnthropicUsage: nil comparison",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 242,
+      "site": "mergeAnthropicUsage: type assertion #0 (assumed)",
+      "reason": "assumed"
+    },
+    {
+      "idx": 243,
+      "site": "mergeAnthropicUsage: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 244,
+      "site": "mergeAnthropicUsage: conversion float64 -\u003e int",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 245,
+      "site": "mergeAnthropicUsage: type assertion #0 (assumed)",
+      "reason": "assumed"
+    },
+    {
+      "idx": 246,
+      "site": "mergeAnthropicUsage: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 247,
+      "site": "mergeAnthropicUsage: \u003e on float64",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 248,
+      "site": "mergeAnthropicUsage: conversion float64 -\u003e int",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 249,
+      "site": "mergeAnthropicUsage: \u003e on float64",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 250,
+      "site": "parsedToInt: type assertion #0 (assumed)",
+      "reason": "assumed"
+    },
+    {
+      "idx": 251,
+      "site": "parsedToInt: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 252,
+      "site": "parsedToInt: conversion float64 -\u003e int",
+      "reason": "opaque-op"
+    },
+    {
+      "idx": 253,
+      "site": "parsedToInt: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 254,
+      "site": "parsedToInt: type assertion #1",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 255,
+      "site": "parsedToInt: type assertion #0",
+      "reason": "opaque-assert"
+    },
+    {
+      "idx": 256,
+      "site": "parsedToInt: type assertion #1",
+      "reason": "opaque-assert"
+    }
+  ]
+}

@@ -1,0 +1,36 @@
+{
+  "package": "github.com/tingly-dev/tingly-box/internal/typ",
+  "frontend": "gossa",
+  "lean_module": "Go2Lean.Generated.gossa.github_com_tingly_dev_tingly_box_internal_typ",
+  "lean_file": "lean/Go2Lean/Generated/gossa/github_com_tingly_dev_tingly_box_internal_typ.lean",
+  "funcs": [
+    {
+      "name": "ThinkingEffortFromBudget",
+      "go_sig": "func(budget int64) github.com/tingly-dev/tingly-box/internal/typ.ThinkingEffortLevel",
+      "id": 0,
+      "status": "complete",
+      "xcalls": [
+        {
+          "package": "github.com/tingly-dev/tingly-box/internal/protocol/thinking",
+          "id": 2
+        }
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 136,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_typ/ThinkingEffortFromBudget.json"
+    }
+  ],
+  "havoc": [
+    {
+      "idx": 0,
+      "site": "ThinkingEffortFromBudget: call github.com/tingly-dev/tingly-box/internal/protocol/thinking.EffortFromBudget (callee stuck)",
+      "reason": "callee-stuck"
+    }
+  ],
+  "dependency": true
+}

@@ -1,0 +1,346 @@
+{
+  "package": "github.com/tingly-dev/tingly-box/internal/protocol/wire",
+  "frontend": "gossa",
+  "lean_module": "Go2Lean.Generated.gossa.github_com_tingly_dev_tingly_box_internal_protocol_wire",
+  "lean_file": "lean/Go2Lean/Generated/gossa/github_com_tingly_dev_tingly_box_internal_protocol_wire.lean",
+  "funcs": [
+    {
+      "name": "ChatCompletionMessageWire.MarshalJSON",
+      "go_sig": "func (m github.com/tingly-dev/tingly-box/internal/protocol/wire.ChatCompletionMessageWire) MarshalJSON() ([]byte, error)",
+      "id": 0,
+      "status": "complete",
+      "consts": [
+        "0"
+      ],
+      "str_consts": [
+        ""
+      ],
+      "uses_json": true,
+      "cmp_strs": [
+        ""
+      ],
+      "exits": [
+        {
+          "block": 6,
+          "line": 134,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_wire/ChatCompletionMessageWire.MarshalJSON.json"
+    },
+    {
+      "name": "ChatCompletionWire.ToMap",
+      "go_sig": "func (r github.com/tingly-dev/tingly-box/internal/protocol/wire.ChatCompletionWire) ToMap() map[string]any",
+      "id": 1,
+      "status": "complete",
+      "uses_json": true,
+      "exits": [
+        {
+          "block": 0,
+          "line": 99,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_wire/ChatCompletionWire.ToMap.json"
+    },
+    {
+      "name": "NewResponsesStreamErrorEvent",
+      "go_sig": "func(seq int64, code string, message string) github.com/tingly-dev/tingly-box/internal/protocol/wire.ResponsesStreamErrorEvent",
+      "id": 2,
+      "status": "complete",
+      "str_consts": [
+        "error"
+      ],
+      "exits": [
+        {
+          "block": 0,
+          "line": 41,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_wire/NewResponsesStreamErrorEvent.json"
+    },
+    {
+      "name": "ResponsesCompletedEvent.EventType",
+      "go_sig": "func (e github.com/tingly-dev/tingly-box/internal/protocol/wire.ResponsesCompletedEvent) EventType() string",
+      "id": 3,
+      "status": "complete",
+      "exits": [
+        {
+          "block": 0,
+          "line": 17,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_wire/ResponsesCompletedEvent.EventType.json"
+    },
+    {
+      "name": "ResponsesContentPartAddedEvent.EventType",
+      "go_sig": "func (e github.com/tingly-dev/tingly-box/internal/protocol/wire.ResponsesContentPartAddedEvent) EventType() string",
+      "id": 4,
+      "status": "complete",
+      "exits": [
+        {
+          "block": 0,
+          "line": 21,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_wire/ResponsesContentPartAddedEvent.EventType.json"
+    },
+    {
+      "name": "ResponsesContentPartDoneEvent.EventType",
+      "go_sig": "func (e github.com/tingly-dev/tingly-box/internal/protocol/wire.ResponsesContentPartDoneEvent) EventType() string",
+      "id": 5,
+      "status": "complete",
+      "exits": [
+        {
+          "block": 0,
+          "line": 22,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_wire/ResponsesContentPartDoneEvent.EventType.json"
+    },
+    {
+      "name": "ResponsesContentPartWire.MarshalJSON",
+      "go_sig": "func (p github.com/tingly-dev/tingly-box/internal/protocol/wire.ResponsesContentPartWire) MarshalJSON() ([]byte, error)",
+      "id": 6,
+      "status": "partial",
+      "issues": [
+        "map update t1[\"type\":string] on a map the model knows nothing about ignored",
+        "map update t1[\"text\":string] on a map the model knows nothing about ignored",
+        "map update t1[\"annotations\":string] on a map the model knows nothing about ignored",
+        "map update t1[\"annotations\":string] on a map the model knows nothing about ignored",
+        "map update t1[\"text\":string] on a map the model knows nothing about ignored",
+        "map update t1[\"annotations\":string] on a map the model knows nothing about ignored"
+      ],
+      "str_consts": [
+        "type",
+        "output_text",
+        "text",
+        "",
+        "annotations"
+      ],
+      "map_keys": [
+        "type",
+        "text",
+        "annotations"
+      ],
+      "uses_json": true,
+      "cmp_strs": [
+        "output_text",
+        ""
+      ],
+      "exits": [
+        {
+          "block": 4,
+          "line": 170
+        },
+        {
+          "block": 9,
+          "line": 178,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_wire/ResponsesContentPartWire.MarshalJSON.json"
+    },
+    {
+      "name": "ResponsesCreatedEvent.EventType",
+      "go_sig": "func (e github.com/tingly-dev/tingly-box/internal/protocol/wire.ResponsesCreatedEvent) EventType() string",
+      "id": 7,
+      "status": "complete",
+      "exits": [
+        {
+          "block": 0,
+          "line": 15,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_wire/ResponsesCreatedEvent.EventType.json"
+    },
+    {
+      "name": "ResponsesFunctionCallArgumentsDeltaEvent.EventType",
+      "go_sig": "func (e github.com/tingly-dev/tingly-box/internal/protocol/wire.ResponsesFunctionCallArgumentsDeltaEvent) EventType() string",
+      "id": 8,
+      "status": "complete",
+      "exits": [
+        {
+          "block": 0,
+          "line": 25,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_wire/ResponsesFunctionCallArgumentsDeltaEvent.EventType.json"
+    },
+    {
+      "name": "ResponsesFunctionCallArgumentsDoneEvent.EventType",
+      "go_sig": "func (e github.com/tingly-dev/tingly-box/internal/protocol/wire.ResponsesFunctionCallArgumentsDoneEvent) EventType() string",
+      "id": 9,
+      "status": "complete",
+      "exits": [
+        {
+          "block": 0,
+          "line": 26,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_wire/ResponsesFunctionCallArgumentsDoneEvent.EventType.json"
+    },
+    {
+      "name": "ResponsesInProgressEvent.EventType",
+      "go_sig": "func (e github.com/tingly-dev/tingly-box/internal/protocol/wire.ResponsesInProgressEvent) EventType() string",
+      "id": 10,
+      "status": "complete",
+      "exits": [
+        {
+          "block": 0,
+          "line": 16,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_wire/ResponsesInProgressEvent.EventType.json"
+    },
+    {
+      "name": "ResponsesIncompleteEvent.EventType",
+      "go_sig": "func (e github.com/tingly-dev/tingly-box/internal/protocol/wire.ResponsesIncompleteEvent) EventType() string",
+      "id": 11,
+      "status": "complete",
+      "exits": [
+        {
+          "block": 0,
+          "line": 18,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_wire/ResponsesIncompleteEvent.EventType.json"
+    },
+    {
+      "name": "ResponsesOutputItemAddedEvent.EventType",
+      "go_sig": "func (e github.com/tingly-dev/tingly-box/internal/protocol/wire.ResponsesOutputItemAddedEvent) EventType() string",
+      "id": 12,
+      "status": "complete",
+      "exits": [
+        {
+          "block": 0,
+          "line": 19,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_wire/ResponsesOutputItemAddedEvent.EventType.json"
+    },
+    {
+      "name": "ResponsesOutputItemDoneEvent.EventType",
+      "go_sig": "func (e github.com/tingly-dev/tingly-box/internal/protocol/wire.ResponsesOutputItemDoneEvent) EventType() string",
+      "id": 13,
+      "status": "complete",
+      "exits": [
+        {
+          "block": 0,
+          "line": 20,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_wire/ResponsesOutputItemDoneEvent.EventType.json"
+    },
+    {
+      "name": "ResponsesOutputTextDeltaEvent.EventType",
+      "go_sig": "func (e github.com/tingly-dev/tingly-box/internal/protocol/wire.ResponsesOutputTextDeltaEvent) EventType() string",
+      "id": 14,
+      "status": "complete",
+      "exits": [
+        {
+          "block": 0,
+          "line": 23,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_wire/ResponsesOutputTextDeltaEvent.EventType.json"
+    },
+    {
+      "name": "ResponsesOutputTextDeltaEvent.MarshalJSON",
+      "go_sig": "func (e github.com/tingly-dev/tingly-box/internal/protocol/wire.ResponsesOutputTextDeltaEvent) MarshalJSON() ([]byte, error)",
+      "id": 15,
+      "status": "complete",
+      "uses_json": true,
+      "exits": [
+        {
+          "block": 2,
+          "line": 215,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_wire/ResponsesOutputTextDeltaEvent.MarshalJSON.json"
+    },
+    {
+      "name": "ResponsesOutputTextDoneEvent.EventType",
+      "go_sig": "func (e github.com/tingly-dev/tingly-box/internal/protocol/wire.ResponsesOutputTextDoneEvent) EventType() string",
+      "id": 16,
+      "status": "complete",
+      "exits": [
+        {
+          "block": 0,
+          "line": 24,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_wire/ResponsesOutputTextDoneEvent.EventType.json"
+    },
+    {
+      "name": "ResponsesOutputTextDoneEvent.MarshalJSON",
+      "go_sig": "func (e github.com/tingly-dev/tingly-box/internal/protocol/wire.ResponsesOutputTextDoneEvent) MarshalJSON() ([]byte, error)",
+      "id": 17,
+      "status": "complete",
+      "uses_json": true,
+      "exits": [
+        {
+          "block": 2,
+          "line": 234,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_wire/ResponsesOutputTextDoneEvent.MarshalJSON.json"
+    },
+    {
+      "name": "ResponsesStreamErrorEvent.EventType",
+      "go_sig": "func (e github.com/tingly-dev/tingly-box/internal/protocol/wire.ResponsesStreamErrorEvent) EventType() string",
+      "id": 18,
+      "status": "complete",
+      "wrapped_by": "ResponsesStreamErrorEvent.EventType~NewResponsesStreamErrorEvent",
+      "exits": [
+        {
+          "block": 0,
+          "line": 14,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_wire/ResponsesStreamErrorEvent.EventType.json"
+    },
+    {
+      "name": "ResponsesWireResponse.ToMap",
+      "go_sig": "func (r github.com/tingly-dev/tingly-box/internal/protocol/wire.ResponsesWireResponse) ToMap() map[string]any",
+      "id": 19,
+      "status": "complete",
+      "uses_json": true,
+      "exits": [
+        {
+          "block": 0,
+          "line": 94,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_wire/ResponsesWireResponse.ToMap.json"
+    },
+    {
+      "name": "ResponsesStreamErrorEvent.EventType~NewResponsesStreamErrorEvent",
+      "go_sig": "func() string via NewResponsesStreamErrorEvent",
+      "id": 20,
+      "status": "complete",
+      "calls": [
+        2,
+        18
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_wire/ResponsesStreamErrorEvent.EventType~NewResponsesStreamErrorEvent.json"
+    }
+  ]
+}

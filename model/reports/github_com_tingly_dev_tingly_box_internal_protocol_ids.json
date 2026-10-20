@@ -1,0 +1,150 @@
+{
+  "package": "github.com/tingly-dev/tingly-box/internal/protocol/ids",
+  "frontend": "gossa",
+  "lean_module": "Go2Lean.Generated.gossa.github_com_tingly_dev_tingly_box_internal_protocol_ids",
+  "lean_file": "lean/Go2Lean/Generated/gossa/github_com_tingly_dev_tingly_box_internal_protocol_ids.lean",
+  "funcs": [
+    {
+      "name": "Call",
+      "go_sig": "func() string",
+      "id": 0,
+      "status": "complete",
+      "str_consts": [
+        "call"
+      ],
+      "calls": [
+        3
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 66,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_ids/Call.json"
+    },
+    {
+      "name": "FunctionCall",
+      "go_sig": "func() string",
+      "id": 1,
+      "status": "complete",
+      "str_consts": [
+        "fc"
+      ],
+      "calls": [
+        3
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 59,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_ids/FunctionCall.json"
+    },
+    {
+      "name": "Message",
+      "go_sig": "func() string",
+      "id": 2,
+      "status": "complete",
+      "str_consts": [
+        "msg"
+      ],
+      "calls": [
+        3
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 54,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_ids/Message.json"
+    },
+    {
+      "name": "New",
+      "go_sig": "func(prefix string) string",
+      "id": 3,
+      "status": "complete",
+      "str_consts": [
+        "_"
+      ],
+      "calls": [
+        5
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 46,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_ids/New.json"
+    },
+    {
+      "name": "Response",
+      "go_sig": "func() string",
+      "id": 4,
+      "status": "complete",
+      "str_consts": [
+        "resp"
+      ],
+      "calls": [
+        3
+      ],
+      "exits": [
+        {
+          "block": 1,
+          "line": 50,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_ids/Response.json"
+    },
+    {
+      "name": "randomHex",
+      "go_sig": "func() string",
+      "id": 5,
+      "status": "complete",
+      "exits": [
+        {
+          "block": 0,
+          "line": 41,
+          "last": true
+        }
+      ],
+      "abi": "models/gossa/github_com_tingly_dev_tingly_box_internal_protocol_ids/randomHex.json"
+    }
+  ],
+  "havoc": [
+    {
+      "idx": 0,
+      "site": "Call: call github.com/tingly-dev/tingly-box/internal/protocol/ids.New (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 1,
+      "site": "FunctionCall: call github.com/tingly-dev/tingly-box/internal/protocol/ids.New (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 2,
+      "site": "Message: call github.com/tingly-dev/tingly-box/internal/protocol/ids.New (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 3,
+      "site": "New: call t1 (callee stuck)",
+      "reason": "callee-stuck"
+    },
+    {
+      "idx": 4,
+      "site": "Response: call github.com/tingly-dev/tingly-box/internal/protocol/ids.New (callee stuck)",
+      "reason": "callee-stuck"
+    }
+  ],
+  "dependency": true
+}
