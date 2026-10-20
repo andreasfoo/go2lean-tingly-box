@@ -55,7 +55,7 @@ declare -A finding=(
   [NonStreamUsageExcludesCachedInput]="usage-nonstream-cached-input (new)"
 )
 status=0
-printf '\n%-36s  %-11s  %s\n' test result finding
+printf '\n%-40s  %-11s  %s\n' test result finding
 for t in "${!finding[@]}"; do
   if grep -q -- "--- FAIL: TestGo2LeanRepro_$t " <<<"$out"; then r=reproduces
   elif grep -q -- "--- PASS: TestGo2LeanRepro_$t " <<<"$out"; then r=fixed
