@@ -42,3 +42,15 @@ gemini-anthropic-safety-content-filter.md	SpecMapGoogleFinishReasonToAnthropicAg
 gemini-client-responses-coverage.md	SpecHandleAnthropicToGoogleConservation SpecHandleAnthropicToGoogleStopReason SpecHandleAnthropicToGoogleUsage SpecHandleOpenAIToGoogleConservation
 gemini-request-sampling-dropped.md	SpecConvertAnthropicToGoogleRequestSamplingConserved
 gemini-anthropic-stream-block-index.md	
+gemini-thought-signature-dropped.md	
+gemini-chat-stream-parallel-tool-calls.md	
+anthropic-request-tool-use-input-missing.md	
+tool-arguments-number-precision.md	
+gemini-argumentless-call-input-null.md	
+chat-responses-stream-reasoning-dropped.md	
+chat-responses-stream-refusal-dropped.md	
+responses-chat-stream-reasoning-dropped.md	
+responses-chat-stream-errors.md	
+chat-stream-late-tool-call-id-name.md	
+gemini-thought-text-as-answer.md	
+chat-completion-ids-collide.md	

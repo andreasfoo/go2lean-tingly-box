@@ -22,7 +22,7 @@ record of every run.
 
 ## Findings
 
-**62 bugs**, each confirmed by a failing `go test` on tingly-box `b788a3b` (except two found by reading, marked in the table): 1 critical, 16 high, 23 medium, 22 low (6 of them latent: in code no gateway path calls). 3 were already tracked upstream ([#1921](https://github.com/tingly-dev/tingly-box/issues/1921), [#1923](https://github.com/tingly-dev/tingly-box/issues/1923), [#1924](https://github.com/tingly-dev/tingly-box/issues/1924)); the rest are new.
+**74 bugs**, each confirmed by a failing `go test` on tingly-box `b788a3b` (except two found by reading, marked in the table): 1 critical, 19 high, 26 medium, 28 low (7 of them latent: in code no gateway path calls). 3 were already tracked upstream ([#1921](https://github.com/tingly-dev/tingly-box/issues/1921), [#1923](https://github.com/tingly-dev/tingly-box/issues/1923), [#1924](https://github.com/tingly-dev/tingly-box/issues/1924)); the rest are new.
 
 Most of them lose or change something a client sent or a provider returned while converting between the Anthropic, OpenAI Chat, OpenAI Responses and Gemini protocols: parameters and content parts dropped (sampling, `tool_choice`, structured output, documents, images, tool schemas), tool calls broken (ids, indexes, arguments), thinking and refusals lost, stop reasons and usage reported wrong. Two go further: the gateway's own environment credentials are sent to every upstream (#6), and a malformed `user_id` panics the Anthropic Beta transform (#35; since upstream `9b15a58` the gateway no longer reaches that transform with the triggering request).
 
