@@ -44,7 +44,8 @@ Reported upstream as one issue, marked draft for now, [tingly-dev/tingly-box#214
 | 62 | high | [Gemini -> Anthropic streams number the first tool_use block 0 after a text block 0: the client's SDK rejects the stream and the tool call is lost](gemini-anthropic-stream-block-index.md) | Gemini -> Anthropic V1 and Beta stream (Google-style providers) | new (SDK as oracle) | `repro/internal/protocol/stream/` |
 | 63 | high | [Gemini thoughtSignature dropped from function calls: the next turn of a tool loop lacks it (Gemini 3 rejects it)](gemini-thought-signature-dropped.md) | Gemini -> Anthropic V1/Beta and Gemini -> Chat, stream and non-stream, and the next request (Google-style providers) | new (SDK as oracle) | `repro/internal/protocol/stream/` |
 | 64 | high | [Gemini -> Chat streams send parallel tool calls without an index: the client merges them into one](gemini-chat-stream-parallel-tool-calls.md) | Gemini -> Chat stream (Google-style providers) | new (SDK as oracle) | `repro/internal/protocol/stream/` |
-| 65 | high | [tool_use without `input` when replayed arguments are empty, invalid or `null`: Anthropic rejects the request](anthropic-request-tool-use-input-missing.md) | Chat -> Anthropic, Responses -> Anthropic requests | new (SDK as oracle; common trigger: #24) | `repro/internal/protocol/request/` |
+| 65 | high | [tool_use without `input` when replayed arguments are empty, invalid or `null`: Anthropic rejects the request](anthropic-request-tool-use-input-missing.md) | Chat -> Anthropic, Responses -> Anthropic requests; Chat -> Anthropic non-stream (`"null"` arguments) | new (SDK as oracle; common trigger: #24; non-stream trigger: go2lean, issue specs) | `repro/internal/protocol/{request,nonstream}/` |
+| 75 | high | [Anthropic -> Gemini requests drop `role:"system"` messages inside `messages` (Claude Code's environment block)](anthropic-gemini-inline-system-dropped.md) | Anthropic V1/Beta -> Gemini (Google-style providers) request | new (go2lean, issue specs; #1921 class) | `repro/internal/protocol/request/` |
 | 4 | medium | [reasoning_content empty without streaming](reasoning-content-nonstream.md) | Anthropic -> Chat non-stream | new | `poc/round3/` |
 | 5 | medium | [refusal lost when streaming](responses-chat-stream-refusal.md) | Responses -> Chat stream | new | direct test, below |
 | 7 | medium | [cache reads counted twice without streaming](usage-nonstream-cached-input.md) | usage tracking, Chat passthrough | new | `repro/internal/protocolserver/` |
@@ -62,7 +63,7 @@ Reported upstream as one issue, marked draft for now, [tingly-dev/tingly-box#214
 | 39 | medium | [Gemini tool schemas: exclusive bounds overwrite minimum/maximum at random, nested schemas not filtered](gemini-schema-exclusive-bounds.md) | Chat -> Gemini (Google, Poe) request | new | `repro/internal/protocol/ops/` |
 | 45 | medium | [tool_choice "none" becomes auto](anthropic-tool-choice-none-responses-gemini.md) | Anthropic -> Responses, Anthropic -> Gemini requests | new (go2lean, blind specs) | `repro/internal/protocol/request/` |
 | 46 | medium | [Chat -> Responses requests drop developer messages](chat-responses-developer-dropped.md) | Chat -> Responses request | new (go2lean, blind specs) | `repro/internal/protocol/request/` |
-| 47 | medium | [Chat -> Gemini requests drop max_completion_tokens, developer and array-form system text, user images](chat-gemini-request-coverage.md) | Chat -> Gemini (Google-style providers) request | new (go2lean, blind specs) | `repro/internal/protocol/request/` |
+| 47 | medium | [Chat -> Gemini requests drop max_completion_tokens, developer and array-form system text, user images](chat-gemini-request-coverage.md) | Chat -> Gemini (Google-style providers) request; also assistant array-form text (go2lean, issue specs) | new (go2lean, blind specs) | `repro/internal/protocol/request/` |
 | 48 | medium | [finish_reason "stop" with tool calls becomes end_turn](chat-stop-with-tool-calls-end-turn.md) | Chat -> Anthropic non-stream and stream | new (go2lean, blind specs) | `repro/internal/protocol/{nonstream,stream}/` |
 | 49 | medium | [Gemini thoughtsTokenCount not counted as output](gemini-thoughts-tokens-dropped.md) | Gemini -> Anthropic, Gemini -> Chat responses, usage tracking | new (go2lean, blind specs) | `repro/internal/protocol/nonstream/` |
 | 50 | medium | [base64 images encoded twice](anthropic-gemini-image-double-encoded.md) | Anthropic -> Gemini (Google-style providers) request | new (found by hand, triaging the blind run) | `repro/internal/protocol/request/` |
@@ -70,6 +71,9 @@ Reported upstream as one issue, marked draft for now, [tingly-dev/tingly-box#214
 | 66 | medium | [tool-argument integers above 2^53 rounded](tool-arguments-number-precision.md) | Chat -> Anthropic, Responses -> Anthropic requests; Chat -> Anthropic, Responses -> Anthropic non-stream | new (SDK as oracle) | `repro/internal/protocol/{request,nonstream}/` |
 | 67 | medium | [a Gemini function call without args becomes `input: null` / arguments `"null"`](gemini-argumentless-call-input-null.md) | Gemini -> Anthropic V1/Beta and Gemini -> Chat, stream and non-stream | new (SDK as oracle) | `repro/internal/protocol/{stream,nonstream}/` |
 | 68 | medium | [Chat -> Responses streams drop `reasoning_content`](chat-responses-stream-reasoning-dropped.md) | Chat -> Responses stream (non-stream by reading) | new (SDK as oracle) | `repro/internal/protocol/stream/` |
+| 76 | medium | [tool-call ids from another provider (Kimi's `functions.<name>:<n>`) sent to Anthropic unchanged: the request is rejected](anthropic-request-foreign-tool-ids.md) | Chat -> Anthropic, Responses -> Anthropic requests | new (go2lean, issue specs; #1401 class) | `repro/internal/protocol/request/` |
+| 77 | medium | [a user turn with only a file or a `file_id` image becomes an empty text block: the request is rejected](responses-anthropic-empty-text-block.md) | Responses -> Anthropic request | new (go2lean, issue specs; #1251 class) | `repro/internal/protocol/request/` |
+| 78 | medium | [images inside tool_result dropped](anthropic-gemini-tool-result-images.md) | Anthropic V1/Beta -> Gemini (Google-style providers) request | new (go2lean, issue specs; known gap in `.design/multimodal-content.md`, #1613 follow-up) | `repro/internal/protocol/request/` |
 | 11 | low | [Chat -> Anthropic stream opens a block while another is open](chat-anthropic-interleaved-blocks.md) | Chat -> Anthropic stream | found by go2lean, minor | `repro/internal/protocol/stream/` |
 | 12 | low | [recordings keep the request URL's query string](recording-client-credentials.md) | recording (client headers only when the chain fails before the client snapshot: latent) | new, minor (scope corrected 2026-10-20) | `repro/internal/protocolserver/` |
 | 27 | low | [one assistant turn becomes two assistant messages](responses-chat-split-assistant-turn.md) | Responses -> Chat request | new | `repro/internal/protocol/request/` |
@@ -94,11 +98,15 @@ Reported upstream as one issue, marked draft for now, [tingly-dev/tingly-box#214
 | 59 | low | [Gemini SAFETY becomes stop_reason "content_filter"](gemini-anthropic-safety-content-filter.md) | Gemini -> Anthropic v1 non-stream and stream | new (go2lean, M2 agent specs) | `repro/internal/protocol/{nonstream,stream}/` |
 | 60 | low | [Anthropic and Chat -> Gemini responses drop thinking, refusals and cached prompt tokens](gemini-client-responses-coverage.md) | Anthropic -> Gemini, Chat -> Gemini responses (no gateway caller) | new, latent (go2lean, M2 agent specs) | `repro/internal/protocol/nonstream/` |
 | 69 | low | [a Chat refusal dropped when streaming](chat-responses-stream-refusal-dropped.md) | Chat -> Responses stream | new (SDK as oracle; stream version of #55) | `repro/internal/protocol/stream/` |
-| 70 | low | [Responses -> Chat streams drop reasoning summaries and text](responses-chat-stream-reasoning-dropped.md) | Responses -> Chat stream (only upstreams that send reasoning unasked) | new (SDK as oracle) | `repro/internal/protocol/stream/` |
+| 70 | low | [Responses -> Chat streams drop reasoning summaries and text](responses-chat-stream-reasoning-dropped.md) | Responses -> Chat stream (only upstreams that send reasoning unasked); non-stream too (go2lean, issue specs) | new (SDK as oracle) | `repro/internal/protocol/{stream,nonstream}/` |
 | 71 | low | [`response.failed` message lost; `error` code taken from `param`](responses-chat-stream-errors.md) | Responses -> Chat stream | new (SDK as oracle; related: #20) | `repro/internal/protocol/stream/` |
 | 72 | low | [tool-call id and name taken only from the first delta](chat-stream-late-tool-call-id-name.md) | Chat -> Responses, Chat -> Anthropic streams | new, minor (SDK as oracle; no provider known to send this shape) | `repro/internal/protocol/stream/` |
 | 73 | low | [Gemini thought parts shown as part of the answer](gemini-thought-text-as-answer.md) | Gemini -> Chat, Gemini -> Anthropic, stream and non-stream (thoughts never requested) | new, latent (SDK as oracle) | `repro/internal/protocol/{stream,nonstream}/` |
 | 74 | low | [Chat completion ids from the Unix second: answers in the same second share an id](chat-completion-ids-collide.md) | Gemini -> Chat, Anthropic -> Chat | new, minor (SDK as oracle) | `repro/internal/protocol/stream/` |
+| 79 | low | [the client's thinking budget or effort never reaches a native Gemini provider](gemini-thinking-intent-dropped.md) | Anthropic V1/Beta -> Gemini, Chat -> Gemini (Google-style providers) request | new (go2lean, issue specs; #1897 class) | `repro/internal/protocol/request/` |
+| 80 | low | [Gemini cached prompt tokens dropped for Chat clients](gemini-chat-cached-tokens-dropped.md) | Gemini -> Chat non-stream | new (go2lean, issue specs; #1181 class) | `repro/internal/protocol/nonstream/` |
+| 81 | low | [a content-filtered response streams as `end_turn` (`refusal` without streaming)](responses-anthropic-stream-content-filter-end-turn.md) | Responses -> Anthropic stream | new (go2lean, issue specs; #1132 class) | `repro/internal/protocol/stream/` |
+| 82 | low | [an image-only Gemini content becomes a message without content](gemini-anthropic-empty-message.md) | Gemini -> Anthropic request (no gateway caller) | new, latent (go2lean, issue specs; #1251 class) | `repro/internal/protocol/request/` |
 
 Findings 6-11 came from reading code for the four spec directions
 (usage, credentials, routing, config) and from the bug classes of similar
@@ -151,6 +159,24 @@ the oracle: the provider's answer (or the client's request) and what
 tingly-box makes of it were both fed to the SDK the client uses
 (anthropic-sdk-go, openai-go, go-genai), and the two views compared; every
 difference was confirmed with `go test` on the converter.
+
+Findings 75-82 (from `anthropic-gemini-inline-system-dropped` to
+`gemini-anthropic-empty-message`) were found by go2lean from issue-derived
+specs: one spec per bug class of the tingly-box tracker (issues and PRs on
+protocol conversion, e.g. #1921, #1401, #1251, #1613, #1897, #1181, #1132),
+each carried over to the conversion directions the issue did not name;
+go2lean searched them, `go test` confirmed the counterexamples, and triage
+separated the new bugs from the known ones and the wrong specs. Of that
+run's 28 confirmed counterexamples, 16 are these findings or further
+triggers of #47, #65 and #70; 9 are earlier findings (#2, #65, #69, #70) or
+open upstream issues; 3 came from wrong specs. The issue specs also
+reproduce open upstream [#1863](https://github.com/tingly-dev/tingly-box/issues/1863)
+(Chat `reasoning` / `reasoning_details` never become an Anthropic thinking
+block, stream and non-stream) and [#1922](https://github.com/tingly-dev/tingly-box/issues/1922)
+(a Responses message item streamed without `content`) at `b788a3b`; both
+are tracked upstream and not recorded as findings. `index.tsv` lists the
+issue specs that refuted each finding; the repro tests were written
+afterwards.
 
 Not bugs (the converters' intended repairs, recorded so they are not
 reported): orphan tool calls get an "aborted" result, an unmatched

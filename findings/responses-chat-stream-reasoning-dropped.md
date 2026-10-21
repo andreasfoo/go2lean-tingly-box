@@ -32,3 +32,13 @@ How it was found: with the clients' own SDKs as the oracle, as for
 
 Repro: `TestGo2LeanRepro_ResponsesToChatStreamKeepsReasoning`
 (`repro/internal/protocol/stream/zz_go2lean_repro_sdk_test.go`).
+
+Further trigger, non-stream: `ConvertResponsesToOpenAIChat`
+(`internal/protocol/nonstream/openai_to_chat.go:39-106`) reads message and
+function-call items only and ignores `reasoning` items, so a Responses
+answer with a reasoning summary "**Greeting** The user says hi." reaches
+the Chat client with `reasoning_content` empty
+(`stage/openaibridge/responses.go:83`). Found by go2lean from the
+issue-derived specs (`SpecConvertResponsesToOpenAIChatIssue1773ReasoningKept`).
+Repro: `TestGo2LeanRepro_ResponsesToChatNonStreamKeepsReasoning`
+(`repro/internal/protocol/nonstream/zz_go2lean_repro_issues1_test.go`).

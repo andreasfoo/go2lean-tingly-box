@@ -65,6 +65,15 @@ agent's temperature 0 becomes the model's default. A request with
 `"temperature":0,"stop":["END"]` gives `generationConfig`
 `{"maxOutputTokens":4096}`.
 
+Found by go2lean from the issue-derived specs
+(`SpecConvertOpenAIToGoogleRequestIssue1427AssistantArrayText`, the class
+of #1427): the assistant branch (`request/any_to_google.go:121-131`) reads
+`Content.OfString` only, so an assistant turn sent as an array of text
+parts (`{"role":"assistant","content":[{"type":"text","text":"I pick 42."}]}`)
+is missing from the Gemini contents, and the model no longer sees its own
+answer. Repro: `TestGo2LeanRepro_ChatToGeminiAssistantArrayText`
+(`repro/internal/protocol/request/zz_go2lean_repro_issues1_test.go`).
+
 ## General property
 
 For every Chat request: `maxOutputTokens` equals `max_completion_tokens`

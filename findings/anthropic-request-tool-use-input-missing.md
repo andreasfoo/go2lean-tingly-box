@@ -42,3 +42,15 @@ Anthropic API accepts.
 Repro: `TestGo2LeanRepro_ToolUseInputPresentInAnthropicRequest`
 (`repro/internal/protocol/request/zz_go2lean_repro_sdk_test.go`), Chat and
 Responses clients, `""`, invalid JSON and `"null"`.
+
+Further trigger, response direction: the Chat -> Anthropic non-stream
+converters (`internal/protocol/nonstream/openai_to_anthropic.go:91-96`,
+`:143-148`) unmarshal the upstream's `arguments` into a nil map; `""` and
+invalid JSON become `{}`, but `"null"` (what tool parsers that serialise a
+missing value send for a parameterless call) leaves the map nil, so the
+Anthropic client gets `"input": null`, V1 and Beta
+(`stage/anthropicbridge/bridge.go:119`). Replayed, that turn hits this
+finding's request path. Found by go2lean from the issue-derived specs
+(`SpecConvertOpenAIChatToAnthropicBetaIssue1840ToolInputIsObject`). Repro:
+`TestGo2LeanRepro_ChatToAnthropicNullArgumentsInputIsObject`
+(`repro/internal/protocol/nonstream/zz_go2lean_repro_issues1_test.go`).
