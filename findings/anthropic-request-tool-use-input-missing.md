@@ -1,8 +1,18 @@
-# Finding 65: Chat and Responses -> Anthropic requests send a tool_use without `input` when the arguments are empty, invalid or `null` (new, not reported)
+# Finding 65: Chat and Responses -> Anthropic requests send a tool_use without `input` when the arguments are empty, invalid or `null` (request side: open PR #1840; non-stream trigger new)
 
 Severity: **high** (see [the findings table](README.md)); medium once
 [finding 24](parameterless-tool-stream-arguments.md), its common trigger,
 is gone.
+
+Upstream: open PR
+[#1840](https://github.com/tingly-dev/tingly-box/pull/1840) (2026-09-25,
+not merged at `3498ce8`) describes the same bug on the request side: a
+history converted from Chat / Responses (or Google) with blank, `"null"`
+or malformed arguments gives a `tool_use` without `input` (or with
+`"input": null`), and Anthropic answers "Field required". So this finding
+is not new on the request side; the non-stream trigger below (an
+upstream's `"null"` arguments in Chat -> Anthropic responses) is not in
+#1840 and is new.
 
 `ConvertOpenAIToAnthropicRequest`
 (`internal/protocol/request/openai_to_anthropic.go:94-99`) leaves

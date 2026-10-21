@@ -35,8 +35,9 @@ Beta, with the Anthropic SDK's `Message.Accumulate` as the client.
 
 Further trigger, non-stream: the `stop_reason` half also holds without
 streaming. `HandleGoogleToAnthropic` and `HandleGoogleToAnthropicBeta`
-(`internal/protocol/nonstream/google_to_any.go:168`, `:262`) map Gemini's
-`finishReason` alone (`STOP` becomes `end_turn`, `:199-200`), so an answer
+(`internal/protocol/nonstream/google_to_any.go:170`, `:264`) map Gemini's
+`finishReason` alone (`STOP` becomes `end_turn`, `:199-200`; Beta
+`:293-294`), so an answer
 that is a function call (`{"functionCall":{"id":"call_1","name":"get_weather","args":{"city":"Paris"}}}`,
 `finishReason: STOP`) reaches the client as `content: [tool_use]` with
 `stop_reason: "end_turn"` instead of `tool_use`, V1 and Beta

@@ -1,8 +1,15 @@
-# Finding 71: Responses -> Chat streams lose the `response.failed` message and take the `error` code from `param` (new, not reported)
+# Finding 71: Responses -> Chat streams lose the `response.failed` message and take the `error` code from `param` (`response.failed` half: draft PR #1805; `error` code half new)
 
 Severity: **low** (see [the findings table](README.md)). Related to
 [finding 20](upstream-errors-not-translated.md) (errors before the stream
 starts); this one is about errors inside the stream.
+
+Upstream: draft PR
+[#1805](https://github.com/tingly-dev/tingly-box/pull/1805) (open, not
+merged at `3498ce8`) adds a `response.failed` case to this converter,
+carrying the upstream's message and code: the first half of this finding.
+It keeps `Code: evt.Param` for `error` events, so the second half is not
+in #1805 and is new.
 
 `responsesToChatConverter.processEvent`
 (`internal/protocol/stream/openai_responses_to_chat_converter.go:106-228`):

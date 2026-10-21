@@ -9,7 +9,7 @@ maps `response.incomplete` with `incomplete_details.reason:
 non-stream converter `HandleResponsesToAnthropicBeta`
 (`nonstream/openai_to_anthropic.go:208-213`) gives `refusal` for the same
 response. The stream mapping dates from #1132; the non-stream one moved to
-`refusal` later (#2110).
+`refusal` later, in `4721cf6c4` (#1504).
 
 Path: an Anthropic client with a Responses provider (OpenAI, Azure OpenAI
 with its content filter), streaming: `stage/anthropicbridge/responses_stream.go:23`.
