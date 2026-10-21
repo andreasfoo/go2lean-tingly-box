@@ -41,3 +41,4 @@ responses-chat-parallel-tool-calls.md	SpecConvertOpenAIResponsesToChatParallelTo
 gemini-anthropic-safety-content-filter.md	SpecMapGoogleFinishReasonToAnthropicAgreesWithBeta
 gemini-client-responses-coverage.md	SpecHandleAnthropicToGoogleConservation SpecHandleAnthropicToGoogleStopReason SpecHandleAnthropicToGoogleUsage SpecHandleOpenAIToGoogleConservation
 gemini-request-sampling-dropped.md	SpecConvertAnthropicToGoogleRequestSamplingConserved
+gemini-anthropic-stream-block-index.md	

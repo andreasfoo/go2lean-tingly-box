@@ -110,6 +110,7 @@ declare -A finding=(
   [StreamCounterResetClearsUpstream]="stream-counter-reset-upstream (new, latent)"
   [AnthropicToGeminiKeepsToolUseArgs]="anthropic-gemini-tool-use-args (new, go2lean blind specs)"
   [GeminiRequestKeepsSampling]="gemini-request-sampling-dropped (new, go2lean M2 agent specs)"
+  [GeminiToAnthropicStreamAccumulates]="gemini-anthropic-stream-block-index (new, SDK as oracle)"
   [AnthropicToolChoiceNoneReachesResponses]="anthropic-tool-choice-none-responses-gemini, Responses (new, go2lean blind specs)"
   [AnthropicToolChoiceNoneReachesGemini]="anthropic-tool-choice-none-responses-gemini, Gemini (new, go2lean blind specs)"
   [ChatDeveloperMessageReachesResponses]="chat-responses-developer-dropped (new, go2lean blind specs)"
