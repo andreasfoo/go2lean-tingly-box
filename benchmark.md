@@ -6,7 +6,7 @@ checking the bug classes of similar gateways
 are used as a benchmark for the tool: for each, the general property a
 reviewer would state is written as a spec (no trigger input in it), go2lean
 searches blind, and `go test` confirms what it finds. A miss names a gap in
-go2lean, which is then closed (go2lean `docs/design.md` §9c).
+go2lean, which is then closed (go2lean `docs/history.md` §9c).
 
 | finding | spec (in `specs/`) | go2lean `bac5535` | what it took |
 |---|---|---|---|
@@ -15,7 +15,7 @@ go2lean, which is then closed (go2lean `docs/design.md` §9c).
 | #9 [responses-done-only-arguments](findings/responses-done-only-arguments.md) | `SpecResponsesToChatConverterProcessEventArgumentsAnySchedule` | found at trial 13, confirmed | spec: the event schedule is an input (the earlier stream specs replayed one fixed schedule) |
 | (found by go2lean) #11 [chat-anthropic-interleaved-blocks](findings/chat-anthropic-interleaved-blocks.md) | `SpecOpenAIToAnthropicConverterProcessChunkOneOpenBlock` | found at trial 24, confirmed | harness: an empty map is not nil |
 | #8 [chat-anthropic-reasoning-null](findings/chat-anthropic-reasoning-null.md), stream | `SpecOpenAIToAnthropicConverterProcessChunkOneOpenTextBlock` | found at trial 80, confirmed (a delta with `reasoning_content` after text) | go2lean: map and interface inputs, `json.Unmarshal`, SDK raw JSON (`RawJSON()`) generated from compared strings, documented enums (`// Any of ...`); harness: SDK values decoded from one JSON document, inline union variants; spec: finish reasons cleared, converter without a token counter (tiktoken out of reach) |
-| #8 [chat-anthropic-reasoning-null](findings/chat-anthropic-reasoning-null.md), non-stream | `SpecConvertOpenAIChatToAnthropicBetaThinkingIsText` | go2lean `74f24df`: found at trial 160, confirmed | struct JSON encoding and decoding (`JDesc` tables, go2lean `docs/design.md` §9c); pointers to SDK types described by their element |
+| #8 [chat-anthropic-reasoning-null](findings/chat-anthropic-reasoning-null.md), non-stream | `SpecConvertOpenAIChatToAnthropicBetaThinkingIsText` | go2lean `74f24df`: found at trial 160, confirmed | struct JSON encoding and decoding (`JDesc` tables, go2lean `docs/history.md` §9c); pointers to SDK types described by their element |
 | #7 [usage-nonstream-cached-input](findings/usage-nonstream-cached-input.md) | — | out of reach | inline in an HTTP handler |
 | #6 [env-credentials-upstream](findings/env-credentials-upstream.md) | — | out of reach | the environment is read inside the SDK |
 | #12 [recording-client-credentials](findings/recording-client-credentials.md) | — | no property yet | — |

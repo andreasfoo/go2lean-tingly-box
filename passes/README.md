@@ -3,7 +3,7 @@
 Every package of tingly-box, every function: a templated `no_panic`
 property each, plus the specs installed from `specs/`, hunted by
 go2lean and verified with `go test`. Rows are copied from go2lean's
-`docs/design.md` (section 9b), which keeps the model changes between
+`docs/history.md` (section 9b), which keeps the model changes between
 passes.
 
 | pass | result |
