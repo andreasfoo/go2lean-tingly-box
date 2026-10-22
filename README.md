@@ -22,11 +22,11 @@ record of every run.
 
 ## Findings
 
-**82 bugs**, each confirmed by a failing `go test` on tingly-box `b788a3b` (except two found by reading, marked in the table): 1 critical, 20 high, 28 medium, 33 low (8 of them latent: in code no gateway path calls). 3 were already tracked upstream ([#1921](https://github.com/tingly-dev/tingly-box/issues/1921), [#1923](https://github.com/tingly-dev/tingly-box/issues/1923), [#1924](https://github.com/tingly-dev/tingly-box/issues/1924)); the rest are new.
+**85 bugs**, each confirmed by a failing `go test` on tingly-box `b788a3b` (83-85 on `bc460f6`; except two found by reading, marked in the table): 1 critical, 20 high, 30 medium, 34 low (9 of them latent: in code no gateway path calls). 3 were already tracked upstream ([#1921](https://github.com/tingly-dev/tingly-box/issues/1921), [#1923](https://github.com/tingly-dev/tingly-box/issues/1923), [#1924](https://github.com/tingly-dev/tingly-box/issues/1924)); the rest are new.
 
 Most of them lose or change something a client sent or a provider returned while converting between the Anthropic, OpenAI Chat, OpenAI Responses and Gemini protocols: parameters and content parts dropped (sampling, `tool_choice`, structured output, documents, images, tool schemas), tool calls broken (ids, indexes, arguments), thinking and refusals lost, stop reasons and usage reported wrong. Two go further: the gateway's own environment credentials are sent to every upstream (#6), and a malformed `user_id` panics the Anthropic Beta transform (#35; since upstream `9b15a58` the gateway no longer reaches that transform with the triggering request).
 
-**Reported upstream** as one issue, still marked draft (`[DRAFT]` in its title, not handed over yet), [tingly-dev/tingly-box#2148](https://github.com/tingly-dev/tingly-box/issues/2148) (2026-10-20): every finding below except 1-3 (tracked in their own issues) and 35 (fixed upstream on the gateway path by `9b15a58`), re-checked on upstream main `bc460f6`.
+**Reported upstream** as one issue, still marked draft (`[DRAFT]` in its title, not handed over yet), [tingly-dev/tingly-box#2148](https://github.com/tingly-dev/tingly-box/issues/2148) (2026-10-20): every finding below except 1-3 (tracked in their own issues) and 35 (fixed upstream on the gateway path by `9b15a58`); 83-85 were found after it, re-checked on upstream main `bc460f6`.
 
 Each row links to its page (root cause with file:line, trigger, observed and expected output, repro test); [findings/README.md](findings/README.md) has the full table with status and evidence, severity legend and how each was found.
 

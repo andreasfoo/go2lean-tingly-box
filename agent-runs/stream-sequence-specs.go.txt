@@ -1,0 +1,1566 @@
+// go2lean M2 agent (Claude as spec writer), tingly-box internal/protocol/stream,
+// 2026-10-22 on bc460f6: the 10 go2lean:sequence specs of round 1, as written.
+
+package stream
+
+import (
+	"encoding/json"
+
+	"github.com/anthropics/anthropic-sdk-go"
+	"github.com/openai/openai-go/v3/responses"
+
+	"github.com/tingly-dev/tingly-box/internal/protocol/wire"
+)
+
+// go2leanSeqEvent is one generated upstream stream event. Kind selects the
+// event type, Sub its variant (block type, delta type, stop reason, item
+// type), Ref the block or item it refers to, Text its payload.
+type go2leanSeqEvent struct {
+	Kind int
+	Sub  int
+	Ref  int
+	Text string
+}
+
+// ---------------------------------------------------------------------------
+// Anthropic Beta -> OpenAI Chat (anthropicToOpenAIConverter)
+// ---------------------------------------------------------------------------
+
+// go2lean:sequence anthropicToOpenAIConverter.processEvent
+// SeqAnthropicToChatConservesDeltas: after every event, the text, tool
+// argument and thinking bytes received so far equal the content, argument and
+// reasoning_content bytes emitted so far, and every chunk has one choice.
+func SeqAnthropicToChatConservesDeltas(events []go2leanSeqEvent) bool {
+	c := newAnthropicToOpenAIConverter(nil, "m", false, nil)
+	blockTypes := []string{"text", "tool_use", "thinking", "redacted_thinking"}
+	deltaTypes := []string{"text_delta", "input_json_delta", "thinking_delta", "signature_delta"}
+	stops := []string{"", "end_turn", "max_tokens", "tool_use", "stop_sequence"}
+	recvText, recvArgs, recvThink := "", "", ""
+	outText, outArgs, outThink := "", "", ""
+	nStarts := 0
+	for _, e := range events {
+		if c.done {
+			break
+		}
+		k := e.Kind % 6
+		if k < 0 {
+			k = -k
+		}
+		s := e.Sub % 5
+		if s < 0 {
+			s = -s
+		}
+		var ev anthropic.BetaRawMessageStreamEventUnion
+		switch k {
+		case 0:
+			ev.Type = "message_start"
+		case 1:
+			ev.Type = "content_block_start"
+			ev.Index = int64(nStarts)
+			ev.ContentBlock.Type = blockTypes[s%4]
+			if s%4 == 1 {
+				ev.ContentBlock.ID = "toolu_" + string(rune('a'+nStarts%26))
+				ev.ContentBlock.Name = "fn"
+			}
+			nStarts++
+		case 2:
+			ev.Type = "content_block_delta"
+			ev.Index = int64(e.Ref)
+			ev.Delta.Type = deltaTypes[s%4]
+			switch s % 4 {
+			case 0:
+				ev.Delta.Text = e.Text
+				recvText += e.Text
+			case 1:
+				ev.Delta.PartialJSON = e.Text
+				recvArgs += e.Text
+			case 2:
+				ev.Delta.Thinking = e.Text
+				recvThink += e.Text
+			case 3:
+				ev.Delta.Signature = e.Text
+			}
+		case 3:
+			ev.Type = "content_block_stop"
+			ev.Index = int64(e.Ref)
+		case 4:
+			ev.Type = "message_delta"
+			ev.Delta.StopReason = anthropic.BetaStopReason(stops[s])
+		case 5:
+			ev.Type = "message_stop"
+		}
+		c.processEvent(&ev)
+		for _, p := range c.pending {
+			ch, ok := p.(wire.ChatStreamChunk)
+			if !ok || len(ch.Choices) != 1 {
+				return false
+			}
+			d := ch.Choices[0].Delta
+			outText += d.Content
+			outThink += d.ReasoningContent
+			for _, tc := range d.ToolCalls {
+				if tc.Function.Arguments != nil {
+					outArgs += *tc.Function.Arguments
+				}
+			}
+		}
+		c.pending = nil
+		if outText != recvText || outArgs != recvArgs || outThink != recvThink {
+			return false
+		}
+	}
+	return true
+}
+
+// go2lean:sequence anthropicToOpenAIConverter.processEvent
+// SeqAnthropicToChatToolIndexesPair: tool call indexes pair up in the Chat
+// stream: every tool-call start chunk (one carrying an id) uses an index no
+// earlier tool call used, and every argument chunk after a start uses the
+// index of the tool call that is currently streaming.
+func SeqAnthropicToChatToolIndexesPair(events []go2leanSeqEvent) bool {
+	c := newAnthropicToOpenAIConverter(nil, "m", false, nil)
+	blockTypes := []string{"text", "tool_use", "thinking", "redacted_thinking"}
+	deltaTypes := []string{"text_delta", "input_json_delta", "thinking_delta", "signature_delta"}
+	stops := []string{"", "end_turn", "max_tokens", "tool_use", "stop_sequence"}
+	started := map[int]bool{}
+	current := -1
+	nStarts := 0
+	for _, e := range events {
+		if c.done {
+			break
+		}
+		k := e.Kind % 6
+		if k < 0 {
+			k = -k
+		}
+		s := e.Sub % 5
+		if s < 0 {
+			s = -s
+		}
+		var ev anthropic.BetaRawMessageStreamEventUnion
+		switch k {
+		case 0:
+			ev.Type = "message_start"
+		case 1:
+			ev.Type = "content_block_start"
+			ev.Index = int64(nStarts)
+			ev.ContentBlock.Type = blockTypes[s%4]
+			if s%4 == 1 {
+				ev.ContentBlock.ID = "toolu_" + string(rune('a'+nStarts%26))
+				ev.ContentBlock.Name = "fn"
+			}
+			nStarts++
+		case 2:
+			ev.Type = "content_block_delta"
+			ev.Index = int64(e.Ref)
+			ev.Delta.Type = deltaTypes[s%4]
+			ev.Delta.Text = e.Text
+			ev.Delta.PartialJSON = e.Text
+			ev.Delta.Thinking = e.Text
+		case 3:
+			ev.Type = "content_block_stop"
+			ev.Index = int64(e.Ref)
+		case 4:
+			ev.Type = "message_delta"
+			ev.Delta.StopReason = anthropic.BetaStopReason(stops[s])
+		case 5:
+			ev.Type = "message_stop"
+		}
+		c.processEvent(&ev)
+		for _, p := range c.pending {
+			ch, ok := p.(wire.ChatStreamChunk)
+			if !ok || len(ch.Choices) != 1 {
+				return false
+			}
+			for _, tc := range ch.Choices[0].Delta.ToolCalls {
+				if tc.ID != "" {
+					if started[tc.Index] {
+						return false
+					}
+					started[tc.Index] = true
+					current = tc.Index
+				} else if current >= 0 && tc.Index != current {
+					return false
+				}
+			}
+		}
+		c.pending = nil
+	}
+	return true
+}
+
+// go2lean:sequence anthropicToOpenAIConverter.processEvent
+// SeqAnthropicToChatFinishReason: no chunk carries a finish_reason before
+// message_stop; after message_stop exactly one chunk does, it is the last one,
+// and its value agrees with the non-streaming Anthropic->Chat mapping of the
+// stop_reason (max_tokens -> length, tool_use -> tool_calls, else stop).
+func SeqAnthropicToChatFinishReason(events []go2leanSeqEvent) bool {
+	c := newAnthropicToOpenAIConverter(nil, "m", false, nil)
+	blockTypes := []string{"text", "tool_use", "thinking", "redacted_thinking"}
+	deltaTypes := []string{"text_delta", "input_json_delta", "thinking_delta", "signature_delta"}
+	stops := []string{"", "end_turn", "max_tokens", "tool_use", "stop_sequence"}
+	lastStop := ""
+	anyTool := false
+	stopSeen := false
+	finishes := 0
+	finish := ""
+	nStarts := 0
+	for _, e := range events {
+		if c.done {
+			break
+		}
+		k := e.Kind % 6
+		if k < 0 {
+			k = -k
+		}
+		s := e.Sub % 5
+		if s < 0 {
+			s = -s
+		}
+		var ev anthropic.BetaRawMessageStreamEventUnion
+		switch k {
+		case 0:
+			ev.Type = "message_start"
+		case 1:
+			ev.Type = "content_block_start"
+			ev.Index = int64(nStarts)
+			ev.ContentBlock.Type = blockTypes[s%4]
+			if s%4 == 1 {
+				ev.ContentBlock.ID = "toolu_" + string(rune('a'+nStarts%26))
+				ev.ContentBlock.Name = "fn"
+				anyTool = true
+			}
+			nStarts++
+		case 2:
+			ev.Type = "content_block_delta"
+			ev.Index = int64(e.Ref)
+			ev.Delta.Type = deltaTypes[s%4]
+			ev.Delta.Text = e.Text
+			ev.Delta.PartialJSON = e.Text
+			ev.Delta.Thinking = e.Text
+		case 3:
+			ev.Type = "content_block_stop"
+			ev.Index = int64(e.Ref)
+		case 4:
+			ev.Type = "message_delta"
+			ev.Delta.StopReason = anthropic.BetaStopReason(stops[s])
+			if stops[s] != "" {
+				lastStop = stops[s]
+			}
+		case 5:
+			ev.Type = "message_stop"
+			stopSeen = true
+		}
+		c.processEvent(&ev)
+		for i, p := range c.pending {
+			ch, ok := p.(wire.ChatStreamChunk)
+			if !ok || len(ch.Choices) != 1 {
+				return false
+			}
+			fr := ch.Choices[0].FinishReason
+			if fr != nil {
+				if !stopSeen || i != len(c.pending)-1 {
+					return false
+				}
+				finishes++
+				finish = *fr
+			}
+		}
+		c.pending = nil
+	}
+	if !stopSeen {
+		return finishes == 0
+	}
+	if finishes != 1 {
+		return false
+	}
+	if lastStop == "max_tokens" {
+		return finish == "length"
+	}
+	if anyTool {
+		return finish == "tool_calls"
+	}
+	if lastStop == "tool_use" {
+		// tool_use stop reason with no streamed tool block: either is acceptable.
+		return finish == "tool_calls" || finish == "stop"
+	}
+	return finish == "stop"
+}
+
+// ---------------------------------------------------------------------------
+// Anthropic Beta -> OpenAI Responses (anthropicBetaToResponsesConverter)
+// ---------------------------------------------------------------------------
+
+// go2lean:sequence anthropicBetaToResponsesConverter.processEvent
+// SeqAnthropicToResponsesOutputConserved: protocol shape and conservation.
+// Always: sequence numbers run 0,1,2,... with no gap, response.created is the
+// first event and appears once, and no terminal event precedes message_stop.
+// Eventually (after message_stop): exactly one terminal event, incomplete iff
+// stop_reason is max_tokens, its output has one item per text/tool_use block
+// in block order, and every text / argument byte received for a block is both
+// in the streamed deltas of its item and in the final item.
+func SeqAnthropicToResponsesOutputConserved(events []go2leanSeqEvent) bool {
+	c := newAnthropicBetaToResponsesConverter(nil, "m")
+	deltaTypes := []string{"text_delta", "input_json_delta", "thinking_delta", "signature_delta"}
+	stops := []string{"", "end_turn", "max_tokens", "tool_use", "stop_sequence"}
+	all := append([]go2leanSeqEvent{{Kind: 0}}, events...)
+	kinds := []int{} // 0 text, 1 tool_use, 2 thinking, 3 redacted_thinking
+	texts := []string{}
+	outIdx := []int{}
+	nOut := 0
+	emitted := map[int]string{}
+	var seq int64
+	created := 0
+	terminals := 0
+	incomplete := false
+	stopSeen := false
+	lastStop := ""
+	var final wire.ResponsesWireResponse
+	for i, e := range all {
+		if c.finished {
+			break
+		}
+		k := e.Kind % 6
+		if k < 0 {
+			k = -k
+		}
+		if i > 0 && k == 0 {
+			k = 4 // a single message_start opens the stream
+		}
+		s := e.Sub % 5
+		if s < 0 {
+			s = -s
+		}
+		ref := e.Ref
+		if ref < 0 {
+			ref = -ref
+		}
+		var ev anthropic.BetaRawMessageStreamEventUnion
+		switch k {
+		case 0:
+			ev.Type = "message_start"
+		case 1:
+			b := len(kinds)
+			bk := s % 4
+			ev.Type = "content_block_start"
+			ev.Index = int64(b)
+			ev.ContentBlock.Type = []string{"text", "tool_use", "thinking", "redacted_thinking"}[bk]
+			if bk == 1 {
+				ev.ContentBlock.ID = "toolu_" + string(rune('a'+b%26))
+				ev.ContentBlock.Name = "fn"
+			}
+			kinds = append(kinds, bk)
+			texts = append(texts, "")
+			outIdx = append(outIdx, nOut)
+			if bk < 2 {
+				nOut++
+			}
+		case 2:
+			n := len(kinds)
+			r := ref % (n + 1)
+			dt := s % 4
+			ev.Type = "content_block_delta"
+			ev.Index = int64(r)
+			ev.Delta.Type = deltaTypes[dt]
+			switch dt {
+			case 0:
+				ev.Delta.Text = e.Text
+			case 1:
+				ev.Delta.PartialJSON = e.Text
+			case 2:
+				ev.Delta.Thinking = e.Text
+			case 3:
+				ev.Delta.Signature = e.Text
+			}
+			if r < n && dt == 0 && kinds[r] == 0 {
+				texts[r] += e.Text
+			}
+			if r < n && dt == 1 && kinds[r] == 1 {
+				texts[r] += e.Text
+			}
+		case 3:
+			n := len(kinds)
+			ev.Type = "content_block_stop"
+			ev.Index = int64(ref % (n + 1))
+		case 4:
+			ev.Type = "message_delta"
+			ev.Delta.StopReason = anthropic.BetaStopReason(stops[s])
+			if stops[s] != "" {
+				lastStop = stops[s]
+			}
+		case 5:
+			ev.Type = "message_stop"
+			stopSeen = true
+		}
+		c.processEvent(&ev)
+		for _, p := range c.pending {
+			var sn int64
+			switch x := p.(type) {
+			case wire.ResponsesCreatedEvent:
+				sn = x.SequenceNumber
+				if seq != 0 {
+					return false
+				}
+				created++
+			case wire.ResponsesInProgressEvent:
+				sn = x.SequenceNumber
+			case wire.ResponsesOutputItemAddedEvent:
+				sn = x.SequenceNumber
+			case wire.ResponsesContentPartAddedEvent:
+				sn = x.SequenceNumber
+			case wire.ResponsesOutputTextDeltaEvent:
+				sn = x.SequenceNumber
+				emitted[x.OutputIndex] += x.Delta
+			case wire.ResponsesFunctionCallArgumentsDeltaEvent:
+				sn = x.SequenceNumber
+				emitted[x.OutputIndex] += x.Delta
+			case wire.ResponsesOutputTextDoneEvent:
+				sn = x.SequenceNumber
+			case wire.ResponsesContentPartDoneEvent:
+				sn = x.SequenceNumber
+			case wire.ResponsesOutputItemDoneEvent:
+				sn = x.SequenceNumber
+			case wire.ResponsesFunctionCallArgumentsDoneEvent:
+				sn = x.SequenceNumber
+			case wire.ResponsesCompletedEvent:
+				sn = x.SequenceNumber
+				terminals++
+				final = x.Response
+			case wire.ResponsesIncompleteEvent:
+				sn = x.SequenceNumber
+				terminals++
+				incomplete = true
+				final = x.Response
+			default:
+				return false
+			}
+			if sn != seq {
+				return false
+			}
+			seq++
+		}
+		c.pending = nil
+		if terminals > 0 && !stopSeen {
+			return false
+		}
+	}
+	if created != 1 {
+		return false
+	}
+	if !stopSeen {
+		return terminals == 0
+	}
+	if terminals != 1 {
+		return false
+	}
+	if incomplete != (lastStop == "max_tokens") {
+		return false
+	}
+	if len(final.Output) != nOut {
+		return false
+	}
+	for b := range kinds {
+		if kinds[b] > 1 {
+			continue
+		}
+		o := final.Output[outIdx[b]]
+		if emitted[outIdx[b]] != texts[b] {
+			return false
+		}
+		if kinds[b] == 0 {
+			if o.Type != "message" || len(o.Content) == 0 || o.Content[0].Text != texts[b] {
+				return false
+			}
+		} else {
+			if o.Type != "function_call" || o.Arguments == nil || *o.Arguments != texts[b] {
+				return false
+			}
+			if o.CallID != "toolu_"+string(rune('a'+b%26)) || o.Name != "fn" {
+				return false
+			}
+		}
+	}
+	return true
+}
+
+// ---------------------------------------------------------------------------
+// OpenAI Responses -> OpenAI Chat (responsesToChatConverter)
+// ---------------------------------------------------------------------------
+
+// go2lean:sequence responsesToChatConverter.processEvent
+// SeqResponsesToChatToolIndexesDense: Chat tool call indexes pair up and are
+// dense: the k-th tool call started in the Chat stream has index k (0, 1, 2,
+// ... in order of appearance, whatever other output items precede it), and
+// every argument chunk uses the index of a started tool call.
+func SeqResponsesToChatToolIndexesDense(events []go2leanSeqEvent) bool {
+	c := newResponsesToChatConverter(nil, "m", false)
+	all := append([]go2leanSeqEvent{{Kind: 0}}, events...)
+	itemTypes := []string{"function_call", "message", "reasoning"}
+	itID := []string{}
+	fns := []int{}
+	closed := []bool{}
+	deltaArgs := []string{}
+	doneArgs := []string{}
+	started := map[int]bool{}
+	nStarts := 0
+	for i, e := range all {
+		if c.completed {
+			break
+		}
+		k := e.Kind % 8
+		if k < 0 {
+			k = -k
+		}
+		s := e.Sub % 3
+		if s < 0 {
+			s = -s
+		}
+		ref := e.Ref
+		if ref < 0 {
+			ref = -ref
+		}
+		var ev responses.ResponseStreamEventUnion
+		switch k {
+		case 0:
+			if i == 0 {
+				ev.Type = "response.created"
+				ev.Response.ID = "resp_1"
+			} else {
+				ev.Type = "response.in_progress"
+			}
+		case 1:
+			ev.Type = "response.output_text.delta"
+			ev.Delta = e.Text
+		case 2:
+			n := len(itID)
+			letter := string(rune('a' + n%26))
+			ev.Type = "response.output_item.added"
+			ev.OutputIndex = int64(n)
+			ev.Item.Type = itemTypes[s]
+			ev.Item.ID = "item_" + letter
+			if s == 0 {
+				ev.Item.CallID = "call_" + letter
+				ev.Item.Name = "fn"
+				fns = append(fns, n)
+				closed = append(closed, false)
+				deltaArgs = append(deltaArgs, "")
+				doneArgs = append(doneArgs, "")
+			}
+			itID = append(itID, ev.Item.ID)
+		case 3, 4, 5:
+			if len(fns) == 0 {
+				continue
+			}
+			f := ref % len(fns)
+			it := fns[f]
+			if k == 3 {
+				if closed[f] {
+					continue
+				}
+				ev.Type = "response.function_call_arguments.delta"
+				ev.ItemID = itID[it]
+				ev.OutputIndex = int64(it)
+				ev.Delta = e.Text
+				deltaArgs[f] += e.Text
+			} else {
+				full := deltaArgs[f]
+				if full == "" {
+					full = doneArgs[f]
+				}
+				if full == "" {
+					full = e.Text
+				}
+				doneArgs[f] = full
+				closed[f] = true
+				ev.OutputIndex = int64(it)
+				if k == 4 {
+					ev.Type = "response.function_call_arguments.done"
+					ev.ItemID = itID[it]
+					ev.Arguments = full
+				} else {
+					ev.Type = "response.output_item.done"
+					ev.Item.Type = "function_call"
+					ev.Item.ID = itID[it]
+					ev.Item.CallID = "call_" + string(rune('a'+it%26))
+					ev.Item.Name = "fn"
+					ev.Item.Arguments.OfString = full
+				}
+			}
+		case 6:
+			ev.Type = "response.output_text.done"
+		case 7:
+			if s == 0 {
+				ev.Type = "response.completed"
+				ev.Response.Status = responses.ResponseStatusCompleted
+			} else {
+				ev.Type = "response.incomplete"
+				ev.Response.Status = responses.ResponseStatusIncomplete
+				if s == 1 {
+					ev.Response.IncompleteDetails.Reason = "max_output_tokens"
+				} else {
+					ev.Response.IncompleteDetails.Reason = "content_filter"
+				}
+			}
+		}
+		c.processEvent(&ev)
+		for _, p := range c.pending {
+			ch, ok := p.(wire.ChatStreamChunk)
+			if !ok || len(ch.Choices) != 1 {
+				return false
+			}
+			for _, tc := range ch.Choices[0].Delta.ToolCalls {
+				if tc.ID != "" {
+					if started[tc.Index] || tc.Index != nStarts {
+						return false
+					}
+					started[tc.Index] = true
+					nStarts++
+				} else if !started[tc.Index] {
+					return false
+				}
+			}
+		}
+		c.pending = nil
+	}
+	return true
+}
+
+// go2lean:sequence responsesToChatConverter.processEvent
+// SeqResponsesToChatArgumentsConserved: conservation. Always: the content
+// emitted so far equals the output_text deltas received so far. Eventually
+// (after the terminal event): every function_call item reaches the Chat
+// stream with its full arguments, whether the upstream streamed them as
+// deltas or delivered them only in function_call_arguments.done /
+// output_item.done.
+func SeqResponsesToChatArgumentsConserved(events []go2leanSeqEvent) bool {
+	c := newResponsesToChatConverter(nil, "m", false)
+	all := append([]go2leanSeqEvent{{Kind: 0}}, events...)
+	itemTypes := []string{"function_call", "message", "reasoning"}
+	itID := []string{}
+	fns := []int{}
+	closed := []bool{}
+	deltaArgs := []string{}
+	doneArgs := []string{}
+	recvText := ""
+	outText := ""
+	startIdx := map[string]int{}
+	argsByIdx := map[int]string{}
+	terminal := false
+	for i, e := range all {
+		if c.completed {
+			break
+		}
+		k := e.Kind % 8
+		if k < 0 {
+			k = -k
+		}
+		s := e.Sub % 3
+		if s < 0 {
+			s = -s
+		}
+		ref := e.Ref
+		if ref < 0 {
+			ref = -ref
+		}
+		var ev responses.ResponseStreamEventUnion
+		switch k {
+		case 0:
+			if i == 0 {
+				ev.Type = "response.created"
+				ev.Response.ID = "resp_1"
+			} else {
+				ev.Type = "response.in_progress"
+			}
+		case 1:
+			ev.Type = "response.output_text.delta"
+			ev.Delta = e.Text
+			recvText += e.Text
+		case 2:
+			n := len(itID)
+			letter := string(rune('a' + n%26))
+			ev.Type = "response.output_item.added"
+			ev.OutputIndex = int64(n)
+			ev.Item.Type = itemTypes[s]
+			ev.Item.ID = "item_" + letter
+			if s == 0 {
+				ev.Item.CallID = "call_" + letter
+				ev.Item.Name = "fn"
+				fns = append(fns, n)
+				closed = append(closed, false)
+				deltaArgs = append(deltaArgs, "")
+				doneArgs = append(doneArgs, "")
+			}
+			itID = append(itID, ev.Item.ID)
+		case 3, 4, 5:
+			if len(fns) == 0 {
+				continue
+			}
+			f := ref % len(fns)
+			it := fns[f]
+			if k == 3 {
+				if closed[f] {
+					continue
+				}
+				ev.Type = "response.function_call_arguments.delta"
+				ev.ItemID = itID[it]
+				ev.OutputIndex = int64(it)
+				ev.Delta = e.Text
+				deltaArgs[f] += e.Text
+			} else {
+				full := deltaArgs[f]
+				if full == "" {
+					full = doneArgs[f]
+				}
+				if full == "" {
+					full = e.Text
+				}
+				doneArgs[f] = full
+				closed[f] = true
+				ev.OutputIndex = int64(it)
+				if k == 4 {
+					ev.Type = "response.function_call_arguments.done"
+					ev.ItemID = itID[it]
+					ev.Arguments = full
+				} else {
+					ev.Type = "response.output_item.done"
+					ev.Item.Type = "function_call"
+					ev.Item.ID = itID[it]
+					ev.Item.CallID = "call_" + string(rune('a'+it%26))
+					ev.Item.Name = "fn"
+					ev.Item.Arguments.OfString = full
+				}
+			}
+		case 6:
+			ev.Type = "response.output_text.done"
+			ev.Text = recvText
+		case 7:
+			terminal = true
+			if s == 0 {
+				ev.Type = "response.completed"
+				ev.Response.Status = responses.ResponseStatusCompleted
+			} else {
+				ev.Type = "response.incomplete"
+				ev.Response.Status = responses.ResponseStatusIncomplete
+				if s == 1 {
+					ev.Response.IncompleteDetails.Reason = "max_output_tokens"
+				} else {
+					ev.Response.IncompleteDetails.Reason = "content_filter"
+				}
+			}
+		}
+		c.processEvent(&ev)
+		for _, p := range c.pending {
+			ch, ok := p.(wire.ChatStreamChunk)
+			if !ok || len(ch.Choices) != 1 {
+				return false
+			}
+			d := ch.Choices[0].Delta
+			outText += d.Content
+			for _, tc := range d.ToolCalls {
+				if tc.ID != "" {
+					startIdx[tc.ID] = tc.Index
+				} else if tc.Function.Arguments != nil {
+					argsByIdx[tc.Index] += *tc.Function.Arguments
+				}
+			}
+		}
+		c.pending = nil
+		if outText != recvText {
+			return false
+		}
+	}
+	if !terminal {
+		return true
+	}
+	for f, it := range fns {
+		idx, ok := startIdx["call_"+string(rune('a'+it%26))]
+		if !ok {
+			return false
+		}
+		want := deltaArgs[f]
+		if want == "" {
+			want = doneArgs[f]
+		}
+		if argsByIdx[idx] != want {
+			return false
+		}
+	}
+	return true
+}
+
+// go2lean:sequence responsesToChatConverter.processEvent
+// SeqResponsesToChatSingleTerminal: protocol shape and agreement. Always: the
+// first chunk is the role chunk and no later chunk repeats the role; no chunk
+// has a finish_reason before the terminal event. Eventually: exactly one
+// finish chunk, it is the last chunk, it is tool_calls iff a function_call
+// item was streamed, and otherwise an incomplete reason R round-trips:
+// chatFinishReasonToIncomplete(finish) == (true, R); completed gives stop.
+func SeqResponsesToChatSingleTerminal(events []go2leanSeqEvent) bool {
+	c := newResponsesToChatConverter(nil, "m", false)
+	all := append([]go2leanSeqEvent{{Kind: 0}}, events...)
+	itemTypes := []string{"function_call", "message", "reasoning"}
+	itID := []string{}
+	fns := []int{}
+	nChunks := 0
+	finishes := 0
+	finish := ""
+	terminal := false
+	termSub := 0
+	for i, e := range all {
+		if c.completed {
+			break
+		}
+		k := e.Kind % 8
+		if k < 0 {
+			k = -k
+		}
+		s := e.Sub % 3
+		if s < 0 {
+			s = -s
+		}
+		ref := e.Ref
+		if ref < 0 {
+			ref = -ref
+		}
+		var ev responses.ResponseStreamEventUnion
+		switch k {
+		case 0:
+			if i == 0 {
+				ev.Type = "response.created"
+				ev.Response.ID = "resp_1"
+			} else {
+				ev.Type = "response.in_progress"
+			}
+		case 1:
+			ev.Type = "response.output_text.delta"
+			ev.Delta = e.Text
+		case 2:
+			n := len(itID)
+			letter := string(rune('a' + n%26))
+			ev.Type = "response.output_item.added"
+			ev.OutputIndex = int64(n)
+			ev.Item.Type = itemTypes[s]
+			ev.Item.ID = "item_" + letter
+			if s == 0 {
+				ev.Item.CallID = "call_" + letter
+				ev.Item.Name = "fn"
+				fns = append(fns, n)
+			}
+			itID = append(itID, ev.Item.ID)
+		case 3, 4, 5:
+			if len(fns) == 0 {
+				continue
+			}
+			it := fns[ref%len(fns)]
+			ev.OutputIndex = int64(it)
+			if k == 3 {
+				ev.Type = "response.function_call_arguments.delta"
+				ev.ItemID = itID[it]
+				ev.Delta = e.Text
+			} else if k == 4 {
+				ev.Type = "response.function_call_arguments.done"
+				ev.ItemID = itID[it]
+				ev.Arguments = e.Text
+			} else {
+				ev.Type = "response.output_item.done"
+				ev.Item.Type = "function_call"
+				ev.Item.ID = itID[it]
+				ev.Item.CallID = "call_" + string(rune('a'+it%26))
+				ev.Item.Name = "fn"
+				ev.Item.Arguments.OfString = e.Text
+			}
+		case 6:
+			ev.Type = "response.output_text.done"
+		case 7:
+			terminal = true
+			termSub = s
+			if s == 0 {
+				ev.Type = "response.completed"
+				ev.Response.Status = responses.ResponseStatusCompleted
+			} else {
+				ev.Type = "response.incomplete"
+				ev.Response.Status = responses.ResponseStatusIncomplete
+				if s == 1 {
+					ev.Response.IncompleteDetails.Reason = "max_output_tokens"
+				} else {
+					ev.Response.IncompleteDetails.Reason = "content_filter"
+				}
+			}
+		}
+		c.processEvent(&ev)
+		for j, p := range c.pending {
+			ch, ok := p.(wire.ChatStreamChunk)
+			if !ok || len(ch.Choices) != 1 {
+				return false
+			}
+			d := ch.Choices[0].Delta
+			if nChunks == 0 && d.Role != "assistant" {
+				return false
+			}
+			if nChunks > 0 && d.Role != "" {
+				return false
+			}
+			nChunks++
+			fr := ch.Choices[0].FinishReason
+			if fr != nil {
+				if !terminal || j != len(c.pending)-1 {
+					return false
+				}
+				finishes++
+				finish = *fr
+			}
+		}
+		c.pending = nil
+	}
+	if !terminal {
+		return finishes == 0
+	}
+	if finishes != 1 {
+		return false
+	}
+	if len(fns) > 0 {
+		return finish == "tool_calls"
+	}
+	if termSub == 0 {
+		return finish == "stop"
+	}
+	want := "max_output_tokens"
+	if termSub == 2 {
+		want = "content_filter"
+	}
+	inc, reason := chatFinishReasonToIncomplete(finish)
+	return inc && reason == want
+}
+
+// ---------------------------------------------------------------------------
+// OpenAI Responses -> Anthropic (responsesToAnthropicConverter)
+// ---------------------------------------------------------------------------
+
+// go2lean:sequence responsesToAnthropicConverter.processEvent
+// SeqResponsesToAnthropicBlockGrammar: the emitted Anthropic stream obeys the
+// block grammar. Always: message_start comes first and once; block indexes
+// are started 0,1,2,... in order; a delta or stop only targets an open block
+// and the delta type matches the block type; message_delta comes once with no
+// block left open; message_stop comes once after it. Eventually (after the
+// terminal Responses event): message_stop has been emitted.
+func SeqResponsesToAnthropicBlockGrammar(events []go2leanSeqEvent) bool {
+	r := newResponsesToAnthropicConverter(nil, nil, "m")
+	r.emitMessageStart()
+	r.messageStartSent = true
+	mk := func(m map[string]interface{}) responses.ResponseStreamEventUnion {
+		var ev responses.ResponseStreamEventUnion
+		raw, err := json.Marshal(m)
+		if err == nil {
+			_ = json.Unmarshal(raw, &ev)
+		}
+		return ev
+	}
+	toolKind := []int{}
+	toolID := []string{}
+	toolDone := []bool{}
+	toolArgs := []string{}
+	nItems := 0
+	blockType := map[int]string{}
+	open := map[int]bool{}
+	nStarted := 0
+	nEvents := 0
+	deltaSeen := false
+	stopSeen := false
+	terminal := false
+	process := func() bool {
+		for _, p := range r.pending {
+			ae, ok := p.(anthropicStreamEvent)
+			if !ok {
+				return false
+			}
+			if stopSeen {
+				return false
+			}
+			switch ae.eventType {
+			case "message_start":
+				if nEvents != 0 {
+					return false
+				}
+			case "content_block_start":
+				d, ok := ae.data.(anthropicContentBlockStartEvent)
+				if !ok || d.Index != nStarted || deltaSeen {
+					return false
+				}
+				blockType[d.Index] = d.ContentBlock.Type
+				open[d.Index] = true
+				nStarted++
+			case "content_block_delta":
+				d, ok := ae.data.(anthropicContentBlockDeltaEvent)
+				if !ok || !open[d.Index] {
+					return false
+				}
+				bt := blockType[d.Index]
+				switch d.Delta.Type {
+				case "text_delta":
+					if bt != "text" {
+						return false
+					}
+				case "thinking_delta", "signature_delta":
+					if bt != "thinking" {
+						return false
+					}
+				case "input_json_delta":
+					if bt != "tool_use" {
+						return false
+					}
+				default:
+					return false
+				}
+			case "content_block_stop":
+				d, ok := ae.data.(anthropicContentBlockStopEvent)
+				if !ok || !open[d.Index] {
+					return false
+				}
+				open[d.Index] = false
+			case "message_delta":
+				if deltaSeen {
+					return false
+				}
+				for i := 0; i < nStarted; i++ {
+					if open[i] {
+						return false
+					}
+				}
+				deltaSeen = true
+			case "message_stop":
+				if !deltaSeen {
+					return false
+				}
+				stopSeen = true
+			default:
+				return false
+			}
+			nEvents++
+		}
+		r.pending = nil
+		return true
+	}
+	if !process() {
+		return false
+	}
+	for _, e := range events {
+		if r.done {
+			break
+		}
+		k := e.Kind % 10
+		if k < 0 {
+			k = -k
+		}
+		s := e.Sub % 5
+		if s < 0 {
+			s = -s
+		}
+		ref := e.Ref
+		if ref < 0 {
+			ref = -ref
+		}
+		m := map[string]interface{}{"sequence_number": 0, "item_id": "msg_x", "output_index": 0, "content_index": 0, "summary_index": 0}
+		switch k {
+		case 0:
+			m["type"] = "response.output_text.delta"
+			m["delta"] = e.Text
+			m["logprobs"] = []interface{}{}
+		case 1:
+			m["type"] = "response.content_part.added"
+			m["part"] = map[string]interface{}{"type": "output_text", "text": e.Text, "annotations": []interface{}{}}
+		case 2:
+			if s%2 == 0 {
+				m["type"] = "response.output_text.done"
+				m["text"] = ""
+				m["logprobs"] = []interface{}{}
+			} else {
+				m["type"] = "response.content_part.done"
+				m["part"] = map[string]interface{}{"type": "output_text", "text": "", "annotations": []interface{}{}}
+			}
+		case 3:
+			if s%3 == 0 {
+				m["type"] = "response.reasoning_text.delta"
+				m["delta"] = e.Text
+			} else if s%3 == 1 {
+				m["type"] = "response.reasoning_summary_text.delta"
+				m["delta"] = e.Text
+			} else {
+				m["type"] = "response.reasoning_summary_part.added"
+				m["part"] = map[string]interface{}{"type": "summary_text", "text": e.Text}
+			}
+		case 4:
+			if s%3 == 0 {
+				m["type"] = "response.reasoning_text.done"
+				m["text"] = ""
+			} else if s%3 == 1 {
+				m["type"] = "response.reasoning_summary_text.done"
+				m["text"] = ""
+			} else {
+				m["type"] = "response.reasoning_summary_part.done"
+				m["part"] = map[string]interface{}{"type": "summary_text", "text": ""}
+			}
+		case 5:
+			if s%2 == 0 {
+				m["type"] = "response.refusal.delta"
+				m["delta"] = e.Text
+			} else {
+				m["type"] = "response.refusal.done"
+				m["refusal"] = ""
+			}
+		case 6:
+			letter := string(rune('a' + nItems%26))
+			m["type"] = "response.output_item.added"
+			m["output_index"] = nItems
+			var item map[string]interface{}
+			switch s {
+			case 0:
+				item = map[string]interface{}{"type": "function_call", "id": "fc_" + letter, "call_id": "call_" + letter, "name": "fn", "arguments": "", "status": "in_progress"}
+			case 1:
+				item = map[string]interface{}{"type": "custom_tool_call", "id": "ctc_" + letter, "call_id": "call_" + letter, "name": "fn", "input": ""}
+			case 2:
+				item = map[string]interface{}{"type": "mcp_call", "id": "mcp_" + letter, "name": "fn", "arguments": "", "server_label": "srv"}
+			case 3:
+				item = map[string]interface{}{"type": "message", "id": "msg_" + letter, "role": "assistant", "status": "in_progress", "content": []interface{}{}}
+			default:
+				item = map[string]interface{}{"type": "reasoning", "id": "rs_" + letter, "summary": []interface{}{}}
+			}
+			if s < 3 {
+				toolKind = append(toolKind, s)
+				toolID = append(toolID, item["id"].(string))
+				toolDone = append(toolDone, false)
+				toolArgs = append(toolArgs, "")
+			}
+			m["item"] = item
+			nItems++
+		case 7, 8:
+			if len(toolKind) == 0 {
+				continue
+			}
+			t := ref % len(toolKind)
+			if toolDone[t] {
+				continue
+			}
+			m["item_id"] = toolID[t]
+			if k == 7 {
+				m["delta"] = e.Text
+				toolArgs[t] += e.Text
+				m["type"] = []string{"response.function_call_arguments.delta", "response.custom_tool_call_input.delta", "response.mcp_call_arguments.delta"}[toolKind[t]]
+			} else {
+				toolDone[t] = true
+				m["type"] = []string{"response.function_call_arguments.done", "response.custom_tool_call_input.done", "response.mcp_call_arguments.done"}[toolKind[t]]
+				m["arguments"] = toolArgs[t]
+				m["input"] = toolArgs[t]
+			}
+		case 9:
+			terminal = true
+			resp := map[string]interface{}{"id": "resp_1", "object": "response", "created_at": 0, "model": "m", "output": []interface{}{}}
+			if s%3 == 0 {
+				m["type"] = "response.completed"
+				resp["status"] = "completed"
+			} else {
+				m["type"] = "response.incomplete"
+				resp["status"] = "incomplete"
+				if s%3 == 1 {
+					resp["incomplete_details"] = map[string]interface{}{"reason": "max_output_tokens"}
+				} else {
+					resp["incomplete_details"] = map[string]interface{}{"reason": "content_filter"}
+				}
+			}
+			m["response"] = resp
+		}
+		r.processEvent(mk(m))
+		if !process() {
+			return false
+		}
+	}
+	if terminal {
+		return stopSeen
+	}
+	return true
+}
+
+// go2lean:sequence responsesToAnthropicConverter.processEvent
+// SeqResponsesToAnthropicContentConserved: after every event, the text
+// received (output_text deltas, output_text part text, refusal deltas) equals
+// the text_delta text emitted, the reasoning received (reasoning text and
+// summary deltas, summary part text) equals the thinking_delta text emitted,
+// and the tool arguments received equal the input_json_delta text emitted.
+func SeqResponsesToAnthropicContentConserved(events []go2leanSeqEvent) bool {
+	r := newResponsesToAnthropicConverter(nil, nil, "m")
+	r.emitMessageStart()
+	r.messageStartSent = true
+	r.pending = nil
+	mk := func(m map[string]interface{}) responses.ResponseStreamEventUnion {
+		var ev responses.ResponseStreamEventUnion
+		raw, err := json.Marshal(m)
+		if err == nil {
+			_ = json.Unmarshal(raw, &ev)
+		}
+		return ev
+	}
+	toolKind := []int{}
+	toolID := []string{}
+	toolDone := []bool{}
+	toolArgs := []string{}
+	nItems := 0
+	recvText, recvThink, recvArgs := "", "", ""
+	outText, outThink, outArgs := "", "", ""
+	for _, e := range events {
+		if r.done {
+			break
+		}
+		k := e.Kind % 10
+		if k < 0 {
+			k = -k
+		}
+		s := e.Sub % 5
+		if s < 0 {
+			s = -s
+		}
+		ref := e.Ref
+		if ref < 0 {
+			ref = -ref
+		}
+		m := map[string]interface{}{"sequence_number": 0, "item_id": "msg_x", "output_index": 0, "content_index": 0, "summary_index": 0}
+		switch k {
+		case 0:
+			m["type"] = "response.output_text.delta"
+			m["delta"] = e.Text
+			m["logprobs"] = []interface{}{}
+			recvText += e.Text
+		case 1:
+			m["type"] = "response.content_part.added"
+			m["part"] = map[string]interface{}{"type": "output_text", "text": e.Text, "annotations": []interface{}{}}
+			recvText += e.Text
+		case 2:
+			if s%2 == 0 {
+				m["type"] = "response.output_text.done"
+				m["text"] = ""
+				m["logprobs"] = []interface{}{}
+			} else {
+				m["type"] = "response.content_part.done"
+				m["part"] = map[string]interface{}{"type": "output_text", "text": "", "annotations": []interface{}{}}
+			}
+		case 3:
+			if s%3 == 0 {
+				m["type"] = "response.reasoning_text.delta"
+				m["delta"] = e.Text
+			} else if s%3 == 1 {
+				m["type"] = "response.reasoning_summary_text.delta"
+				m["delta"] = e.Text
+			} else {
+				m["type"] = "response.reasoning_summary_part.added"
+				m["part"] = map[string]interface{}{"type": "summary_text", "text": e.Text}
+			}
+			recvThink += e.Text
+		case 4:
+			if s%3 == 0 {
+				m["type"] = "response.reasoning_text.done"
+				m["text"] = ""
+			} else if s%3 == 1 {
+				m["type"] = "response.reasoning_summary_text.done"
+				m["text"] = ""
+			} else {
+				m["type"] = "response.reasoning_summary_part.done"
+				m["part"] = map[string]interface{}{"type": "summary_text", "text": ""}
+			}
+		case 5:
+			if s%2 == 0 {
+				m["type"] = "response.refusal.delta"
+				m["delta"] = e.Text
+				recvText += e.Text
+			} else {
+				m["type"] = "response.refusal.done"
+				m["refusal"] = ""
+			}
+		case 6:
+			letter := string(rune('a' + nItems%26))
+			m["type"] = "response.output_item.added"
+			m["output_index"] = nItems
+			var item map[string]interface{}
+			switch s {
+			case 0:
+				item = map[string]interface{}{"type": "function_call", "id": "fc_" + letter, "call_id": "call_" + letter, "name": "fn", "arguments": "", "status": "in_progress"}
+			case 1:
+				item = map[string]interface{}{"type": "custom_tool_call", "id": "ctc_" + letter, "call_id": "call_" + letter, "name": "fn", "input": ""}
+			case 2:
+				item = map[string]interface{}{"type": "mcp_call", "id": "mcp_" + letter, "name": "fn", "arguments": "", "server_label": "srv"}
+			case 3:
+				item = map[string]interface{}{"type": "message", "id": "msg_" + letter, "role": "assistant", "status": "in_progress", "content": []interface{}{}}
+			default:
+				item = map[string]interface{}{"type": "reasoning", "id": "rs_" + letter, "summary": []interface{}{}}
+			}
+			if s < 3 {
+				toolKind = append(toolKind, s)
+				toolID = append(toolID, item["id"].(string))
+				toolDone = append(toolDone, false)
+				toolArgs = append(toolArgs, "")
+			}
+			m["item"] = item
+			nItems++
+		case 7, 8:
+			if len(toolKind) == 0 {
+				continue
+			}
+			t := ref % len(toolKind)
+			if toolDone[t] {
+				continue
+			}
+			m["item_id"] = toolID[t]
+			if k == 7 {
+				m["delta"] = e.Text
+				toolArgs[t] += e.Text
+				recvArgs += e.Text
+				m["type"] = []string{"response.function_call_arguments.delta", "response.custom_tool_call_input.delta", "response.mcp_call_arguments.delta"}[toolKind[t]]
+			} else {
+				toolDone[t] = true
+				m["type"] = []string{"response.function_call_arguments.done", "response.custom_tool_call_input.done", "response.mcp_call_arguments.done"}[toolKind[t]]
+				m["arguments"] = toolArgs[t]
+				m["input"] = toolArgs[t]
+			}
+		case 9:
+			resp := map[string]interface{}{"id": "resp_1", "object": "response", "created_at": 0, "model": "m", "output": []interface{}{}}
+			if s%3 == 0 {
+				m["type"] = "response.completed"
+				resp["status"] = "completed"
+			} else {
+				m["type"] = "response.incomplete"
+				resp["status"] = "incomplete"
+				if s%3 == 1 {
+					resp["incomplete_details"] = map[string]interface{}{"reason": "max_output_tokens"}
+				} else {
+					resp["incomplete_details"] = map[string]interface{}{"reason": "content_filter"}
+				}
+			}
+			m["response"] = resp
+		}
+		r.processEvent(mk(m))
+		for _, p := range r.pending {
+			ae, ok := p.(anthropicStreamEvent)
+			if !ok {
+				return false
+			}
+			if ae.eventType != "content_block_delta" {
+				continue
+			}
+			d, ok := ae.data.(anthropicContentBlockDeltaEvent)
+			if !ok {
+				return false
+			}
+			if d.Delta.Text != nil {
+				outText += *d.Delta.Text
+			}
+			if d.Delta.Thinking != nil {
+				outThink += *d.Delta.Thinking
+			}
+			if d.Delta.PartialJSON != nil {
+				outArgs += *d.Delta.PartialJSON
+			}
+		}
+		r.pending = nil
+		if outText != recvText || outThink != recvThink || outArgs != recvArgs {
+			return false
+		}
+	}
+	return true
+}
+
+// go2lean:sequence responsesToAnthropicConverter.processEvent
+// SeqResponsesToAnthropicStopReason: after the terminal Responses event there
+// is exactly one message_delta, and its stop_reason agrees with the content:
+// completed -> tool_use iff a tool_use block was emitted, else end_turn;
+// incomplete max_output_tokens -> max_tokens; incomplete content_filter ->
+// end_turn. No message_delta is emitted before the terminal event.
+func SeqResponsesToAnthropicStopReason(events []go2leanSeqEvent) bool {
+	r := newResponsesToAnthropicConverter(nil, nil, "m")
+	r.emitMessageStart()
+	r.messageStartSent = true
+	r.pending = nil
+	mk := func(m map[string]interface{}) responses.ResponseStreamEventUnion {
+		var ev responses.ResponseStreamEventUnion
+		raw, err := json.Marshal(m)
+		if err == nil {
+			_ = json.Unmarshal(raw, &ev)
+		}
+		return ev
+	}
+	toolKind := []int{}
+	toolID := []string{}
+	toolDone := []bool{}
+	toolArgs := []string{}
+	nItems := 0
+	toolBlock := false
+	deltas := 0
+	stopReason := ""
+	terminal := false
+	termSub := 0
+	for _, e := range events {
+		if r.done {
+			break
+		}
+		k := e.Kind % 10
+		if k < 0 {
+			k = -k
+		}
+		s := e.Sub % 5
+		if s < 0 {
+			s = -s
+		}
+		ref := e.Ref
+		if ref < 0 {
+			ref = -ref
+		}
+		m := map[string]interface{}{"sequence_number": 0, "item_id": "msg_x", "output_index": 0, "content_index": 0, "summary_index": 0}
+		switch k {
+		case 0:
+			m["type"] = "response.output_text.delta"
+			m["delta"] = e.Text
+			m["logprobs"] = []interface{}{}
+		case 1:
+			m["type"] = "response.content_part.added"
+			m["part"] = map[string]interface{}{"type": "output_text", "text": e.Text, "annotations": []interface{}{}}
+		case 2:
+			if s%2 == 0 {
+				m["type"] = "response.output_text.done"
+				m["text"] = ""
+				m["logprobs"] = []interface{}{}
+			} else {
+				m["type"] = "response.content_part.done"
+				m["part"] = map[string]interface{}{"type": "output_text", "text": "", "annotations": []interface{}{}}
+			}
+		case 3:
+			if s%2 == 0 {
+				m["type"] = "response.reasoning_text.delta"
+			} else {
+				m["type"] = "response.reasoning_summary_text.delta"
+			}
+			m["delta"] = e.Text
+		case 4:
+			if s%2 == 0 {
+				m["type"] = "response.reasoning_text.done"
+			} else {
+				m["type"] = "response.reasoning_summary_text.done"
+			}
+			m["text"] = ""
+		case 5:
+			if s%2 == 0 {
+				m["type"] = "response.refusal.delta"
+				m["delta"] = e.Text
+			} else {
+				m["type"] = "response.refusal.done"
+				m["refusal"] = ""
+			}
+		case 6:
+			letter := string(rune('a' + nItems%26))
+			m["type"] = "response.output_item.added"
+			m["output_index"] = nItems
+			var item map[string]interface{}
+			switch s {
+			case 0:
+				item = map[string]interface{}{"type": "function_call", "id": "fc_" + letter, "call_id": "call_" + letter, "name": "fn", "arguments": "", "status": "in_progress"}
+			case 1:
+				item = map[string]interface{}{"type": "custom_tool_call", "id": "ctc_" + letter, "call_id": "call_" + letter, "name": "fn", "input": ""}
+			case 2:
+				item = map[string]interface{}{"type": "mcp_call", "id": "mcp_" + letter, "name": "fn", "arguments": "", "server_label": "srv"}
+			case 3:
+				item = map[string]interface{}{"type": "message", "id": "msg_" + letter, "role": "assistant", "status": "in_progress", "content": []interface{}{}}
+			default:
+				item = map[string]interface{}{"type": "reasoning", "id": "rs_" + letter, "summary": []interface{}{}}
+			}
+			if s < 3 {
+				toolKind = append(toolKind, s)
+				toolID = append(toolID, item["id"].(string))
+				toolDone = append(toolDone, false)
+				toolArgs = append(toolArgs, "")
+			}
+			m["item"] = item
+			nItems++
+		case 7, 8:
+			if len(toolKind) == 0 {
+				continue
+			}
+			t := ref % len(toolKind)
+			if toolDone[t] {
+				continue
+			}
+			m["item_id"] = toolID[t]
+			if k == 7 {
+				m["delta"] = e.Text
+				toolArgs[t] += e.Text
+				m["type"] = []string{"response.function_call_arguments.delta", "response.custom_tool_call_input.delta", "response.mcp_call_arguments.delta"}[toolKind[t]]
+			} else {
+				toolDone[t] = true
+				m["type"] = []string{"response.function_call_arguments.done", "response.custom_tool_call_input.done", "response.mcp_call_arguments.done"}[toolKind[t]]
+				m["arguments"] = toolArgs[t]
+				m["input"] = toolArgs[t]
+			}
+		case 9:
+			terminal = true
+			termSub = s % 3
+			resp := map[string]interface{}{"id": "resp_1", "object": "response", "created_at": 0, "model": "m", "output": []interface{}{}}
+			if s%3 == 0 {
+				m["type"] = "response.completed"
+				resp["status"] = "completed"
+			} else {
+				m["type"] = "response.incomplete"
+				resp["status"] = "incomplete"
+				if s%3 == 1 {
+					resp["incomplete_details"] = map[string]interface{}{"reason": "max_output_tokens"}
+				} else {
+					resp["incomplete_details"] = map[string]interface{}{"reason": "content_filter"}
+				}
+			}
+			m["response"] = resp
+		}
+		r.processEvent(mk(m))
+		for _, p := range r.pending {
+			ae, ok := p.(anthropicStreamEvent)
+			if !ok {
+				return false
+			}
+			if ae.eventType == "content_block_start" {
+				d, ok := ae.data.(anthropicContentBlockStartEvent)
+				if ok && d.ContentBlock.Type == "tool_use" {
+					toolBlock = true
+				}
+			}
+			if ae.eventType == "message_delta" {
+				if !terminal {
+					return false
+				}
+				deltas++
+				dm, ok := ae.data.(map[string]interface{})
+				if !ok {
+					return false
+				}
+				inner, ok := dm["delta"].(map[string]interface{})
+				if !ok {
+					return false
+				}
+				sr, ok := inner["stop_reason"].(string)
+				if !ok {
+					return false
+				}
+				stopReason = sr
+			}
+		}
+		r.pending = nil
+	}
+	if !terminal {
+		return deltas == 0
+	}
+	if deltas != 1 {
+		return false
+	}
+	switch termSub {
+	case 0:
+		if toolBlock {
+			return stopReason == "tool_use"
+		}
+		return stopReason == "end_turn"
+	case 1:
+		return stopReason == "max_tokens"
+	default:
+		return stopReason == "end_turn"
+	}
+}

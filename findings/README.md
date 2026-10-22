@@ -74,6 +74,8 @@ Reported upstream as one issue, marked draft for now, [tingly-dev/tingly-box#214
 | 76 | medium | [tool-call ids from another provider (Kimi's `functions.<name>:<n>`) sent to Anthropic unchanged: the request is rejected](anthropic-request-foreign-tool-ids.md) | Chat -> Anthropic, Responses -> Anthropic requests | new (go2lean, issue specs; #1401 class) | `repro/internal/protocol/request/` |
 | 77 | medium | [a user turn with only a file or a `file_id` image becomes an empty text block: the request is rejected](responses-anthropic-empty-text-block.md) | Responses -> Anthropic request | new (go2lean, issue specs; #1251 class) | `repro/internal/protocol/request/` |
 | 78 | medium | [images inside tool_result dropped](anthropic-gemini-tool-result-images.md) | Anthropic V1/Beta -> Gemini (Google-style providers) request | new (go2lean, issue specs; known gap in `.design/multimodal-content.md`, #1613 follow-up) | `repro/internal/protocol/request/` |
+| 83 | medium | [a tool call followed by text streams as `end_turn`](responses-anthropic-stream-tool-then-text-end-turn.md) | Responses -> Anthropic stream | new (go2lean sequence-spec triage; found in Go runs, not by go2lean's search) | `repro/internal/protocol/stream/` |
+| 84 | medium | [a tool_use block left open when the response is cut short](responses-anthropic-stream-incomplete-open-tool.md) | Responses -> Anthropic stream (`max_output_tokens` during a tool call) | new (go2lean sequence-spec triage; found in Go runs, not by go2lean's search) | `repro/internal/protocol/stream/` |
 | 11 | low | [Chat -> Anthropic stream opens a block while another is open](chat-anthropic-interleaved-blocks.md) | Chat -> Anthropic stream | found by go2lean, minor | `repro/internal/protocol/stream/` |
 | 12 | low | [recordings keep the request URL's query string](recording-client-credentials.md) | recording (client headers only when the chain fails before the client snapshot: latent) | new, minor (scope corrected 2026-10-20) | `repro/internal/protocolserver/` |
 | 27 | low | [one assistant turn becomes two assistant messages](responses-chat-split-assistant-turn.md) | Responses -> Chat request | new | `repro/internal/protocol/request/` |
@@ -107,6 +109,7 @@ Reported upstream as one issue, marked draft for now, [tingly-dev/tingly-box#214
 | 80 | low | [Gemini cached prompt tokens dropped for Chat clients](gemini-chat-cached-tokens-dropped.md) | Gemini -> Chat non-stream | new (go2lean, issue specs; #1181 class) | `repro/internal/protocol/nonstream/` |
 | 81 | low | [a content-filtered response streams as `end_turn` (`refusal` without streaming)](responses-anthropic-stream-content-filter-end-turn.md) | Responses -> Anthropic stream | new (go2lean, issue specs; #1132 class) | `repro/internal/protocol/stream/` |
 | 82 | low | [an image-only Gemini content becomes a message without content](gemini-anthropic-empty-message.md) | Gemini -> Anthropic request (no gateway caller) | new, latent (go2lean, issue specs; #1251 class) | `repro/internal/protocol/request/` |
+| 85 | low | [reasoning summary text in `reasoning_summary_part.added` dropped](responses-anthropic-stream-summary-part-text.md) | Responses -> Anthropic stream (only providers that put the text in the part) | new, latent (go2lean sequence-spec triage; found in Go runs) | `repro/internal/protocol/stream/` |
 
 Findings 6-11 came from reading code for the four spec directions
 (usage, credentials, routing, config) and from the bug classes of similar
@@ -177,6 +180,24 @@ block, stream and non-stream) and [#1922](https://github.com/tingly-dev/tingly-b
 are tracked upstream and not recorded as findings. `index.tsv` lists the
 issue specs that refuted each finding; the repro tests were written
 afterwards.
+
+Findings 83-85 (from `responses-anthropic-stream-tool-then-text-end-turn`
+to `responses-anthropic-stream-summary-part-text`) came from go2lean's
+sequence specs (`go2lean:sequence`: a property of a whole event stream fed
+to a stream converter, checked by bounded model checking). go2lean's M2
+agent loop, with a Claude agent as the spec writer, wrote 10 sequence specs
+for the stream package blind (2026-10-22, tingly-box `bc460f6`). go2lean
+reported 7 violated, `go test` confirmed 5: 4 are known bugs found again
+(#1923 = finding 3, twice: stop reason and indexes; findings 9 and 14) and 1 a spec that
+overflowed on `-MinInt64`; the 2 not confirmed came from a model gap (event
+payloads decoded from JSON and read through the SDK union's `AsXxx`, which
+the model does not follow). Those 2 were about the Responses -> Anthropic
+converter; asked to triage them, the agent ran that converter on event
+sequences of its own in Go and found these three bugs. So the specs stated
+the right properties, and go2lean's search did not find these bugs; no
+spec refutation shows them, so `index.tsv` has no row for them. The specs
+are in [`agent-runs/stream-sequence-specs.go.txt`](../agent-runs/stream-sequence-specs.go.txt);
+the repro tests were written afterwards and fail on `bc460f6`.
 
 Not bugs (the converters' intended repairs, recorded so they are not
 reported): orphan tool calls get an "aborted" result, an unmatched
